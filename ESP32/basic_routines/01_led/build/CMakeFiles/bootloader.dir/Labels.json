@@ -2,34 +2,34 @@
 	"sources" : 
 	[
 		{
-			"file" : "J:/code/ESP32/basic_routines/01_led/build/CMakeFiles/bootloader"
+			"file" : "J:/github/test-code/ESP32/basic_routines/01_led/build/CMakeFiles/bootloader"
 		},
 		{
-			"file" : "J:/code/ESP32/basic_routines/01_led/build/CMakeFiles/bootloader.rule"
+			"file" : "J:/github/test-code/ESP32/basic_routines/01_led/build/CMakeFiles/bootloader.rule"
 		},
 		{
-			"file" : "J:/code/ESP32/basic_routines/01_led/build/CMakeFiles/bootloader-complete.rule"
+			"file" : "J:/github/test-code/ESP32/basic_routines/01_led/build/CMakeFiles/bootloader-complete.rule"
 		},
 		{
-			"file" : "J:/code/ESP32/basic_routines/01_led/build/bootloader-prefix/src/bootloader-stamp/bootloader-build.rule"
+			"file" : "J:/github/test-code/ESP32/basic_routines/01_led/build/bootloader-prefix/src/bootloader-stamp/bootloader-build.rule"
 		},
 		{
-			"file" : "J:/code/ESP32/basic_routines/01_led/build/bootloader-prefix/src/bootloader-stamp/bootloader-configure.rule"
+			"file" : "J:/github/test-code/ESP32/basic_routines/01_led/build/bootloader-prefix/src/bootloader-stamp/bootloader-configure.rule"
 		},
 		{
-			"file" : "J:/code/ESP32/basic_routines/01_led/build/bootloader-prefix/src/bootloader-stamp/bootloader-download.rule"
+			"file" : "J:/github/test-code/ESP32/basic_routines/01_led/build/bootloader-prefix/src/bootloader-stamp/bootloader-download.rule"
 		},
 		{
-			"file" : "J:/code/ESP32/basic_routines/01_led/build/bootloader-prefix/src/bootloader-stamp/bootloader-install.rule"
+			"file" : "J:/github/test-code/ESP32/basic_routines/01_led/build/bootloader-prefix/src/bootloader-stamp/bootloader-install.rule"
 		},
 		{
-			"file" : "J:/code/ESP32/basic_routines/01_led/build/bootloader-prefix/src/bootloader-stamp/bootloader-mkdir.rule"
+			"file" : "J:/github/test-code/ESP32/basic_routines/01_led/build/bootloader-prefix/src/bootloader-stamp/bootloader-mkdir.rule"
 		},
 		{
-			"file" : "J:/code/ESP32/basic_routines/01_led/build/bootloader-prefix/src/bootloader-stamp/bootloader-patch.rule"
+			"file" : "J:/github/test-code/ESP32/basic_routines/01_led/build/bootloader-prefix/src/bootloader-stamp/bootloader-patch.rule"
 		},
 		{
-			"file" : "J:/code/ESP32/basic_routines/01_led/build/bootloader-prefix/src/bootloader-stamp/bootloader-update.rule"
+			"file" : "J:/github/test-code/ESP32/basic_routines/01_led/build/bootloader-prefix/src/bootloader-stamp/bootloader-update.rule"
 		}
 	],
 	"target" : 

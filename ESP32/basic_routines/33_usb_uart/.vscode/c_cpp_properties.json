@@ -2,26 +2,21 @@
     "configurations": [
         {
             "name": "ESP-IDF",
+
+            // 由idf.py reconfigure或idf.py build生成。
+            "compileCommands": "${workspaceFolder}/build/compile_commands.json",
+
+            // compile_commands.json尚未生成时，
+            // 至少允许解析当前工程自己的头文件。
             "includePath": [
-                "${config:idf.espIdfPath}/components/**",
-                "${config:idf.espIdfPathWin}/components/**",
-                "${config:idf.espAdfPath}/components/**",
-				"${config:idf.espAdfPathWin}/components/**",
-				"${config:idf.espAdfPathWin}/components/**",
                 "${workspaceFolder}/**"
             ],
-            "browse": {
-                "path": [
-                    "${config:idf.espIdfPath}/components",
-                    "${config:idf.espIdfPathWin}/components",
-                    "${config:idf.espAdfPath}/components/**",
-                    "${config:idf.espAdfPathWin}/components/**",
-                    "${workspaceFolder}"
-                ],
-                "limitSymbolsToIncludedHeaders": false
-			},
-			"configurationProvider": "ms-vscode.cmake-tools"  /* 解决 browse.path 中未找到包含文件 */
-//            "compileCommands": "${workspaceFolder}/build/compile_commands.json"
+
+            // ESP-IDF使用GNU C17。
+            "cStandard": "gnu17",
+
+            // ESP-IDF中的C++组件通常使用GNU C++17。
+            "cppStandard": "gnu++17"
         }
     ],
     "version": 4

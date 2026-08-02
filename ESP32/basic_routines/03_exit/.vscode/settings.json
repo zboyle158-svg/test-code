@@ -12,5 +12,6 @@
     "exti.h": "c",
     "sdkconfig.h": "c",
     "exit.h": "c"
-}
+},
+"idf.currentSetup": "I:\\Espressif\\frameworks\\esp-idf-v5.1.2"
 }

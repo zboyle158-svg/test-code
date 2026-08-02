@@ -1,4 +1,4 @@
-/* * Data converted from J:/code/ESP32/basic_routines/01_led/build/esp-idf/mbedtls/x509_crt_bundle
+/* * Data converted from J:/github/test-code/ESP32/basic_routines/01_led/build/esp-idf/mbedtls/x509_crt_bundle
  */
 .data
 .section .rodata.embedded

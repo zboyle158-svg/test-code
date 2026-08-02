@@ -39,7 +39,7 @@ endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
-  include("J:/code/ESP32/basic_routines/02_key/build/bootloader/esp-idf/cmake_install.cmake")
+  include("J:/github/test-code/ESP32/basic_routines/02_key/build/bootloader/esp-idf/cmake_install.cmake")
 endif()
 
 if(CMAKE_INSTALL_COMPONENT)
@@ -50,5 +50,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "J:/code/ESP32/basic_routines/02_key/build/bootloader/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "J:/github/test-code/ESP32/basic_routines/02_key/build/bootloader/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")

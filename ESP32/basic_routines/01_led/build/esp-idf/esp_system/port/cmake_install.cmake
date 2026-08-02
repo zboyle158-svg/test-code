@@ -39,6 +39,6 @@ endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
-  include("J:/code/ESP32/basic_routines/01_led/build/esp-idf/esp_system/port/soc/esp32s3/cmake_install.cmake")
+  include("J:/github/test-code/ESP32/basic_routines/01_led/build/esp-idf/esp_system/port/soc/esp32s3/cmake_install.cmake")
 endif()
 

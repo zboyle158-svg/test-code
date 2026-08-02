@@ -1,4 +1,4 @@
-# Install script for directory: J:/code/ESP32/basic_routines/02_key/main
+# Install script for directory: J:/github/test-code/ESP32/basic_routines/02_key/main
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
