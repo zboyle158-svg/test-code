@@ -1,0 +1,11 @@
+{
+  "files.associations": {
+    "ap3216c.h": "c",
+    "xl9555.h": "c",
+    "camera.h": "c"
+  },
+  "cmake.sourceDirectory": "C:/Users/YUAN/Desktop/basic_routines/00_Basic_project",
+  "files.autoGuessEncoding": true,
+  "idf.currentSetup": "I:/Espressif/frameworks/esp-idf-v5.1.2/",
+  "idf.customExtraVars": {}
+}

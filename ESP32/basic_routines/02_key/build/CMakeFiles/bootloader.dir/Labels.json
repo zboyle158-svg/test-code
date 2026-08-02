@@ -1,0 +1,43 @@
+{
+	"sources" : 
+	[
+		{
+			"file" : "J:/code/ESP32/basic_routines/02_key/build/CMakeFiles/bootloader"
+		},
+		{
+			"file" : "J:/code/ESP32/basic_routines/02_key/build/CMakeFiles/bootloader.rule"
+		},
+		{
+			"file" : "J:/code/ESP32/basic_routines/02_key/build/CMakeFiles/bootloader-complete.rule"
+		},
+		{
+			"file" : "J:/code/ESP32/basic_routines/02_key/build/bootloader-prefix/src/bootloader-stamp/bootloader-build.rule"
+		},
+		{
+			"file" : "J:/code/ESP32/basic_routines/02_key/build/bootloader-prefix/src/bootloader-stamp/bootloader-configure.rule"
+		},
+		{
+			"file" : "J:/code/ESP32/basic_routines/02_key/build/bootloader-prefix/src/bootloader-stamp/bootloader-download.rule"
+		},
+		{
+			"file" : "J:/code/ESP32/basic_routines/02_key/build/bootloader-prefix/src/bootloader-stamp/bootloader-install.rule"
+		},
+		{
+			"file" : "J:/code/ESP32/basic_routines/02_key/build/bootloader-prefix/src/bootloader-stamp/bootloader-mkdir.rule"
+		},
+		{
+			"file" : "J:/code/ESP32/basic_routines/02_key/build/bootloader-prefix/src/bootloader-stamp/bootloader-patch.rule"
+		},
+		{
+			"file" : "J:/code/ESP32/basic_routines/02_key/build/bootloader-prefix/src/bootloader-stamp/bootloader-update.rule"
+		}
+	],
+	"target" : 
+	{
+		"labels" : 
+		[
+			"bootloader"
+		],
+		"name" : "bootloader"
+	}
+}
