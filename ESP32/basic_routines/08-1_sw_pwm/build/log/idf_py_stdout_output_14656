@@ -1,0 +1,78 @@
+-- Found Git: I:/git/Git/cmd/git.exe (found version "2.54.0.windows.1") 
+-- The C compiler identification is GNU 12.2.0
+-- The CXX compiler identification is GNU 12.2.0
+-- The ASM compiler identification is GNU
+-- Found assembler: I:/Espressif/tools/xtensa-esp32s3-elf/esp-12.2.0_20230208/xtensa-esp32s3-elf/bin/xtensa-esp32s3-elf-gcc.exe
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: I:/Espressif/tools/xtensa-esp32s3-elf/esp-12.2.0_20230208/xtensa-esp32s3-elf/bin/xtensa-esp32s3-elf-gcc.exe - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: I:/Espressif/tools/xtensa-esp32s3-elf/esp-12.2.0_20230208/xtensa-esp32s3-elf/bin/xtensa-esp32s3-elf-g++.exe - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Building ESP-IDF components for target esp32s3
+-- Project sdkconfig file J:/github/test-code/ESP32/basic_routines/08-1_sw_pwm/sdkconfig
+J:/github/test-code/ESP32/basic_routines/08-1_sw_pwm/sdkconfig:286 CONFIG_APP_BUILD_TYPE_ELF_RAM was replaced with CONFIG_APP_BUILD_TYPE_RAM
+J:/github/test-code/ESP32/basic_routines/08-1_sw_pwm/sdkconfig:955 CONFIG_ESP32_WIFI_ENABLED was replaced with CONFIG_ESP_WIFI_ENABLED
+J:/github/test-code/ESP32/basic_routines/08-1_sw_pwm/sdkconfig:956 CONFIG_ESP32_WIFI_STATIC_RX_BUFFER_NUM was replaced with CONFIG_ESP_WIFI_STATIC_RX_BUFFER_NUM
+J:/github/test-code/ESP32/basic_routines/08-1_sw_pwm/sdkconfig:957 CONFIG_ESP32_WIFI_DYNAMIC_RX_BUFFER_NUM was replaced with CONFIG_ESP_WIFI_DYNAMIC_RX_BUFFER_NUM
+J:/github/test-code/ESP32/basic_routines/08-1_sw_pwm/sdkconfig:958 CONFIG_ESP32_WIFI_STATIC_TX_BUFFER was replaced with CONFIG_ESP_WIFI_STATIC_TX_BUFFER
+J:/github/test-code/ESP32/basic_routines/08-1_sw_pwm/sdkconfig:959 CONFIG_ESP32_WIFI_TX_BUFFER_TYPE was replaced with CONFIG_ESP_WIFI_TX_BUFFER_TYPE
+J:/github/test-code/ESP32/basic_routines/08-1_sw_pwm/sdkconfig:960 CONFIG_ESP32_WIFI_STATIC_TX_BUFFER_NUM was replaced with CONFIG_ESP_WIFI_STATIC_TX_BUFFER_NUM
+J:/github/test-code/ESP32/basic_routines/08-1_sw_pwm/sdkconfig:961 CONFIG_ESP32_WIFI_CACHE_TX_BUFFER_NUM was replaced with CONFIG_ESP_WIFI_CACHE_TX_BUFFER_NUM
+J:/github/test-code/ESP32/basic_routines/08-1_sw_pwm/sdkconfig:962 CONFIG_ESP32_WIFI_CSI_ENABLED was replaced with CONFIG_ESP_WIFI_CSI_ENABLED
+J:/github/test-code/ESP32/basic_routines/08-1_sw_pwm/sdkconfig:963 CONFIG_ESP32_WIFI_AMPDU_TX_ENABLED was replaced with CONFIG_ESP_WIFI_AMPDU_TX_ENABLED
+J:/github/test-code/ESP32/basic_routines/08-1_sw_pwm/sdkconfig:964 CONFIG_ESP32_WIFI_TX_BA_WIN was replaced with CONFIG_ESP_WIFI_TX_BA_WIN
+J:/github/test-code/ESP32/basic_routines/08-1_sw_pwm/sdkconfig:965 CONFIG_ESP32_WIFI_AMPDU_RX_ENABLED was replaced with CONFIG_ESP_WIFI_AMPDU_RX_ENABLED
+J:/github/test-code/ESP32/basic_routines/08-1_sw_pwm/sdkconfig:966 CONFIG_ESP32_WIFI_RX_BA_WIN was replaced with CONFIG_ESP_WIFI_RX_BA_WIN
+J:/github/test-code/ESP32/basic_routines/08-1_sw_pwm/sdkconfig:967 CONFIG_ESP32_WIFI_AMSDU_TX_ENABLED was replaced with CONFIG_ESP_WIFI_AMSDU_TX_ENABLED
+J:/github/test-code/ESP32/basic_routines/08-1_sw_pwm/sdkconfig:968 CONFIG_ESP32_WIFI_NVS_ENABLED was replaced with CONFIG_ESP_WIFI_NVS_ENABLED
+J:/github/test-code/ESP32/basic_routines/08-1_sw_pwm/sdkconfig:969 CONFIG_ESP32_WIFI_TASK_PINNED_TO_CORE_0 was replaced with CONFIG_ESP_WIFI_TASK_PINNED_TO_CORE_0
+J:/github/test-code/ESP32/basic_routines/08-1_sw_pwm/sdkconfig:970 CONFIG_ESP32_WIFI_TASK_PINNED_TO_CORE_1 was replaced with CONFIG_ESP_WIFI_TASK_PINNED_TO_CORE_1
+J:/github/test-code/ESP32/basic_routines/08-1_sw_pwm/sdkconfig:971 CONFIG_ESP32_WIFI_SOFTAP_BEACON_MAX_LEN was replaced with CONFIG_ESP_WIFI_SOFTAP_BEACON_MAX_LEN
+J:/github/test-code/ESP32/basic_routines/08-1_sw_pwm/sdkconfig:972 CONFIG_ESP32_WIFI_MGMT_SBUF_NUM was replaced with CONFIG_ESP_WIFI_MGMT_SBUF_NUM
+J:/github/test-code/ESP32/basic_routines/08-1_sw_pwm/sdkconfig:973 CONFIG_ESP32_WIFI_IRAM_OPT was replaced with CONFIG_ESP_WIFI_IRAM_OPT
+J:/github/test-code/ESP32/basic_routines/08-1_sw_pwm/sdkconfig:974 CONFIG_ESP32_WIFI_RX_IRAM_OPT was replaced with CONFIG_ESP_WIFI_RX_IRAM_OPT
+J:/github/test-code/ESP32/basic_routines/08-1_sw_pwm/sdkconfig:975 CONFIG_ESP32_WIFI_ENABLE_WPA3_SAE was replaced with CONFIG_ESP_WIFI_ENABLE_WPA3_SAE
+J:/github/test-code/ESP32/basic_routines/08-1_sw_pwm/sdkconfig:976 CONFIG_ESP32_WIFI_ENABLE_WPA3_OWE_STA was replaced with CONFIG_ESP_WIFI_ENABLE_WPA3_OWE_STA
+J:/github/test-code/ESP32/basic_routines/08-1_sw_pwm/sdkconfig:980 CONFIG_ESP_WIFI_EXTERNAL_COEXIST_ENABLE was replaced with CONFIG_ESP_COEX_EXTERNAL_COEXIST_ENABLE
+J:/github/test-code/ESP32/basic_routines/08-1_sw_pwm/sdkconfig:1658 CONFIG_WPA_MBEDTLS_CRYPTO was replaced with CONFIG_ESP_WIFI_MBEDTLS_CRYPTO
+J:/github/test-code/ESP32/basic_routines/08-1_sw_pwm/sdkconfig:1659 CONFIG_WPA_MBEDTLS_TLS_CLIENT was replaced with CONFIG_ESP_WIFI_MBEDTLS_TLS_CLIENT
+J:/github/test-code/ESP32/basic_routines/08-1_sw_pwm/sdkconfig:1660 CONFIG_WPA_WAPI_PSK was replaced with CONFIG_ESP_WIFI_WAPI_PSK
+J:/github/test-code/ESP32/basic_routines/08-1_sw_pwm/sdkconfig:1661 CONFIG_WPA_SUITE_B_192 was replaced with CONFIG_ESP_WIFI_SUITE_B_192
+J:/github/test-code/ESP32/basic_routines/08-1_sw_pwm/sdkconfig:1662 CONFIG_WPA_DEBUG_PRINT was replaced with CONFIG_ESP_WIFI_DEBUG_PRINT
+J:/github/test-code/ESP32/basic_routines/08-1_sw_pwm/sdkconfig:1663 CONFIG_WPA_TESTING_OPTIONS was replaced with CONFIG_ESP_WIFI_TESTING_OPTIONS
+J:/github/test-code/ESP32/basic_routines/08-1_sw_pwm/sdkconfig:1664 CONFIG_WPA_WPS_STRICT was replaced with CONFIG_ESP_WIFI_WPS_STRICT
+J:/github/test-code/ESP32/basic_routines/08-1_sw_pwm/sdkconfig:1665 CONFIG_WPA_11KV_SUPPORT was replaced with CONFIG_ESP_WIFI_11KV_SUPPORT
+J:/github/test-code/ESP32/basic_routines/08-1_sw_pwm/sdkconfig:1666 CONFIG_WPA_MBO_SUPPORT was replaced with CONFIG_ESP_WIFI_MBO_SUPPORT
+J:/github/test-code/ESP32/basic_routines/08-1_sw_pwm/sdkconfig:1667 CONFIG_WPA_DPP_SUPPORT was replaced with CONFIG_ESP_WIFI_DPP_SUPPORT
+J:/github/test-code/ESP32/basic_routines/08-1_sw_pwm/sdkconfig:1668 CONFIG_WPA_11R_SUPPORT was replaced with CONFIG_ESP_WIFI_11R_SUPPORT
+J:/github/test-code/ESP32/basic_routines/08-1_sw_pwm/sdkconfig:1669 CONFIG_WPA_WPS_SOFTAP_REGISTRAR was replaced with CONFIG_ESP_WIFI_WPS_SOFTAP_REGISTRAR
+-- Looking for sys/types.h
+-- Looking for sys/types.h - found
+-- Looking for stdint.h
+-- Looking for stdint.h - found
+-- Looking for stddef.h
+-- Looking for stddef.h - found
+-- Check size of time_t
+-- Check size of time_t - done
+-- Found Python3: I:/Espressif/python_env/idf5.1_py3.11_env/Scripts/python.exe (found version "3.11.2") found components: Interpreter 
+-- Performing Test C_COMPILER_SUPPORTS_WFORMAT_SIGNEDNESS
+-- Performing Test C_COMPILER_SUPPORTS_WFORMAT_SIGNEDNESS - Success
+-- App "08-1_sw_pwm" version: c1425be-dirty
+-- Adding linker script J:/github/test-code/ESP32/basic_routines/08-1_sw_pwm/build/esp-idf/esp_system/ld/memory.ld
+-- Adding linker script I:/Espressif/frameworks/esp-idf-v5.1.2/components/esp_system/ld/esp32s3/sections.ld.in
+-- Adding linker script I:/Espressif/frameworks/esp-idf-v5.1.2/components/esp_rom/esp32s3/ld/esp32s3.rom.ld
+-- Adding linker script I:/Espressif/frameworks/esp-idf-v5.1.2/components/esp_rom/esp32s3/ld/esp32s3.rom.api.ld
+-- Adding linker script I:/Espressif/frameworks/esp-idf-v5.1.2/components/esp_rom/esp32s3/ld/esp32s3.rom.libgcc.ld
+-- Adding linker script I:/Espressif/frameworks/esp-idf-v5.1.2/components/esp_rom/esp32s3/ld/esp32s3.rom.newlib.ld
+-- Adding linker script I:/Espressif/frameworks/esp-idf-v5.1.2/components/esp_rom/esp32s3/ld/esp32s3.rom.version.ld
+-- Adding linker script I:/Espressif/frameworks/esp-idf-v5.1.2/components/soc/esp32s3/ld/esp32s3.peripherals.ld
+-- Components: BSP app_trace app_update bootloader bootloader_support bt cmock console cxx driver efuse esp-tls esp_adc esp_app_format esp_coex esp_common esp_eth esp_event esp_gdbstub esp_hid esp_http_client esp_http_server esp_https_ota esp_https_server esp_hw_support esp_lcd esp_local_ctrl esp_mm esp_netif esp_netif_stack esp_partition esp_phy esp_pm esp_psram esp_ringbuf esp_rom esp_system esp_timer esp_wifi espcoredump esptool_py fatfs freertos hal heap http_parser idf_test ieee802154 json log lwip main mbedtls mqtt newlib nvs_flash openthread partition_table perfmon protobuf-c protocomm pthread sdmmc soc spi_flash spiffs tcp_transport touch_element ulp unity usb vfs wear_levelling wifi_provisioning wpa_supplicant xtensa
+-- Component paths: J:/github/test-code/ESP32/basic_routines/08-1_sw_pwm/components/BSP I:/Espressif/frameworks/esp-idf-v5.1.2/components/app_trace I:/Espressif/frameworks/esp-idf-v5.1.2/components/app_update I:/Espressif/frameworks/esp-idf-v5.1.2/components/bootloader I:/Espressif/frameworks/esp-idf-v5.1.2/components/bootloader_support I:/Espressif/frameworks/esp-idf-v5.1.2/components/bt I:/Espressif/frameworks/esp-idf-v5.1.2/components/cmock I:/Espressif/frameworks/esp-idf-v5.1.2/components/console I:/Espressif/frameworks/esp-idf-v5.1.2/components/cxx I:/Espressif/frameworks/esp-idf-v5.1.2/components/driver I:/Espressif/frameworks/esp-idf-v5.1.2/components/efuse I:/Espressif/frameworks/esp-idf-v5.1.2/components/esp-tls I:/Espressif/frameworks/esp-idf-v5.1.2/components/esp_adc I:/Espressif/frameworks/esp-idf-v5.1.2/components/esp_app_format I:/Espressif/frameworks/esp-idf-v5.1.2/components/esp_coex I:/Espressif/frameworks/esp-idf-v5.1.2/components/esp_common I:/Espressif/frameworks/esp-idf-v5.1.2/components/esp_eth I:/Espressif/frameworks/esp-idf-v5.1.2/components/esp_event I:/Espressif/frameworks/esp-idf-v5.1.2/components/esp_gdbstub I:/Espressif/frameworks/esp-idf-v5.1.2/components/esp_hid I:/Espressif/frameworks/esp-idf-v5.1.2/components/esp_http_client I:/Espressif/frameworks/esp-idf-v5.1.2/components/esp_http_server I:/Espressif/frameworks/esp-idf-v5.1.2/components/esp_https_ota I:/Espressif/frameworks/esp-idf-v5.1.2/components/esp_https_server I:/Espressif/frameworks/esp-idf-v5.1.2/components/esp_hw_support I:/Espressif/frameworks/esp-idf-v5.1.2/components/esp_lcd I:/Espressif/frameworks/esp-idf-v5.1.2/components/esp_local_ctrl I:/Espressif/frameworks/esp-idf-v5.1.2/components/esp_mm I:/Espressif/frameworks/esp-idf-v5.1.2/components/esp_netif I:/Espressif/frameworks/esp-idf-v5.1.2/components/esp_netif_stack I:/Espressif/frameworks/esp-idf-v5.1.2/components/esp_partition I:/Espressif/frameworks/esp-idf-v5.1.2/components/esp_phy I:/Espressif/frameworks/esp-idf-v5.1.2/components/esp_pm I:/Espressif/frameworks/esp-idf-v5.1.2/components/esp_psram I:/Espressif/frameworks/esp-idf-v5.1.2/components/esp_ringbuf I:/Espressif/frameworks/esp-idf-v5.1.2/components/esp_rom I:/Espressif/frameworks/esp-idf-v5.1.2/components/esp_system I:/Espressif/frameworks/esp-idf-v5.1.2/components/esp_timer I:/Espressif/frameworks/esp-idf-v5.1.2/components/esp_wifi I:/Espressif/frameworks/esp-idf-v5.1.2/components/espcoredump I:/Espressif/frameworks/esp-idf-v5.1.2/components/esptool_py I:/Espressif/frameworks/esp-idf-v5.1.2/components/fatfs I:/Espressif/frameworks/esp-idf-v5.1.2/components/freertos I:/Espressif/frameworks/esp-idf-v5.1.2/components/hal I:/Espressif/frameworks/esp-idf-v5.1.2/components/heap I:/Espressif/frameworks/esp-idf-v5.1.2/components/http_parser I:/Espressif/frameworks/esp-idf-v5.1.2/components/idf_test I:/Espressif/frameworks/esp-idf-v5.1.2/components/ieee802154 I:/Espressif/frameworks/esp-idf-v5.1.2/components/json I:/Espressif/frameworks/esp-idf-v5.1.2/components/log I:/Espressif/frameworks/esp-idf-v5.1.2/components/lwip J:/github/test-code/ESP32/basic_routines/08-1_sw_pwm/main I:/Espressif/frameworks/esp-idf-v5.1.2/components/mbedtls I:/Espressif/frameworks/esp-idf-v5.1.2/components/mqtt I:/Espressif/frameworks/esp-idf-v5.1.2/components/newlib I:/Espressif/frameworks/esp-idf-v5.1.2/components/nvs_flash I:/Espressif/frameworks/esp-idf-v5.1.2/components/openthread I:/Espressif/frameworks/esp-idf-v5.1.2/components/partition_table I:/Espressif/frameworks/esp-idf-v5.1.2/components/perfmon I:/Espressif/frameworks/esp-idf-v5.1.2/components/protobuf-c I:/Espressif/frameworks/esp-idf-v5.1.2/components/protocomm I:/Espressif/frameworks/esp-idf-v5.1.2/components/pthread I:/Espressif/frameworks/esp-idf-v5.1.2/components/sdmmc I:/Espressif/frameworks/esp-idf-v5.1.2/components/soc I:/Espressif/frameworks/esp-idf-v5.1.2/components/spi_flash I:/Espressif/frameworks/esp-idf-v5.1.2/components/spiffs I:/Espressif/frameworks/esp-idf-v5.1.2/components/tcp_transport I:/Espressif/frameworks/esp-idf-v5.1.2/components/touch_element I:/Espressif/frameworks/esp-idf-v5.1.2/components/ulp I:/Espressif/frameworks/esp-idf-v5.1.2/components/unity I:/Espressif/frameworks/esp-idf-v5.1.2/components/usb I:/Espressif/frameworks/esp-idf-v5.1.2/components/vfs I:/Espressif/frameworks/esp-idf-v5.1.2/components/wear_levelling I:/Espressif/frameworks/esp-idf-v5.1.2/components/wifi_provisioning I:/Espressif/frameworks/esp-idf-v5.1.2/components/wpa_supplicant I:/Espressif/frameworks/esp-idf-v5.1.2/components/xtensa
+-- Configuring done
+-- Generating done
+-- Build files have been written to: J:/github/test-code/ESP32/basic_routines/08-1_sw_pwm/build

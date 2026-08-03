@@ -14,5 +14,6 @@
     "gtim.h": "c",
     "queue.h": "c",
     "esp_log.h": "c"
-}
+},
+"idf.currentSetup": "I:\\Espressif\\frameworks\\esp-idf-v5.1.2"
 }

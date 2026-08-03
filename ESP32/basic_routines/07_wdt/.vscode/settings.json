@@ -14,5 +14,6 @@
     "wdt.h": "c",
     "timer.h": "c",
     "esp_intr_alloc.h": "c"
-}
+},
+"idf.currentSetup": "I:\\Espressif\\frameworks\\esp-idf-v5.1.2"
 }

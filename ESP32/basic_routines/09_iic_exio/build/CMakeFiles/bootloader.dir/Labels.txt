@@ -1,0 +1,13 @@
+# Target labels
+ bootloader
+# Source files and their labels
+J:/github/test-code/ESP32/basic_routines/09_iic_exio/build/CMakeFiles/bootloader
+J:/github/test-code/ESP32/basic_routines/09_iic_exio/build/CMakeFiles/bootloader.rule
+J:/github/test-code/ESP32/basic_routines/09_iic_exio/build/CMakeFiles/bootloader-complete.rule
+J:/github/test-code/ESP32/basic_routines/09_iic_exio/build/bootloader-prefix/src/bootloader-stamp/bootloader-build.rule
+J:/github/test-code/ESP32/basic_routines/09_iic_exio/build/bootloader-prefix/src/bootloader-stamp/bootloader-configure.rule
+J:/github/test-code/ESP32/basic_routines/09_iic_exio/build/bootloader-prefix/src/bootloader-stamp/bootloader-download.rule
+J:/github/test-code/ESP32/basic_routines/09_iic_exio/build/bootloader-prefix/src/bootloader-stamp/bootloader-install.rule
+J:/github/test-code/ESP32/basic_routines/09_iic_exio/build/bootloader-prefix/src/bootloader-stamp/bootloader-mkdir.rule
+J:/github/test-code/ESP32/basic_routines/09_iic_exio/build/bootloader-prefix/src/bootloader-stamp/bootloader-patch.rule
+J:/github/test-code/ESP32/basic_routines/09_iic_exio/build/bootloader-prefix/src/bootloader-stamp/bootloader-update.rule

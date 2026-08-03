@@ -30,6 +30,10 @@
 
 i2c_obj_t i2c0_master;
 
+/* Hardware path: ESP32-S3 GPIO41/42 -> I2C0 -> XL9555 (0x20).
+ * XL9555 provides the four keys and buzzer output; GPIO1 drives the LED.
+ * The application polls the keys and uses xl9555_key_scan() for debouncing. */
+
 /**
  * @brief       显示实验信息
  * @param       无
@@ -74,6 +78,7 @@ void app_main(void)
 
     while(1)
     {
+        /* mode == 0 reports one event per press/release cycle. */
         key = xl9555_key_scan(0);
         
         switch (key)
@@ -81,6 +86,7 @@ void app_main(void)
             case KEY0_PRES:
             {
                 printf("KEY0 has been pressed \n");
+                /* The board buzzer is active-low: low level enables it. */
                 xl9555_pin_write(BEEP_IO, 0);
                 break;
             }
@@ -93,6 +99,7 @@ void app_main(void)
             case KEY2_PRES:
             {
                 printf("KEY2 has been pressed \n");
+                /* The board LED is active-low, so low level turns it on. */
                 LED(0);
                 break;
             }
@@ -108,6 +115,7 @@ void app_main(void)
             }
         }
 
+        /* INT is only monitored for debugging; no interrupt handler is used. */
         if (XL9555_INT == 0)
         {
             printf("123");
