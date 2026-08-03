@@ -1,7 +1,7 @@
 {
     "version":            "1",
     "project_name":       "03_exit",
-    "project_version":    "3fe2246-dirty",
+    "project_version":    "ef5d902-dirty",
     "project_path":       "J:/github/test-code/ESP32/basic_routines/03_exit",
     "idf_path":           "I:/Espressif/frameworks/esp-idf-v5.1.2",
     "build_dir":          "J:/github/test-code/ESP32/basic_routines/03_exit/build",

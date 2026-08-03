@@ -15,5 +15,6 @@
     "uart.h": "c",
     "gpio.h": "c",
     "uart_select.h": "c"
-}
+},
+"idf.currentSetup": "I:\\Espressif\\frameworks\\esp-idf-v5.1.2"
 }
