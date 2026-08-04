@@ -6,8 +6,9 @@
     "board/esp32s3-builtin.cfg"
 ],
 "idf.portWin": "COM27",
-"idf.flashType": "UART",
+"idf.flashType": "JTAG",
 "files.associations": {
     "nvs_flash.h": "c"
-}
+},
+"idf.currentSetup": "I:\\Espressif\\frameworks\\esp-idf-v5.1.2"
 }

@@ -13,5 +13,6 @@
     "freertos.h": "c",
     "adc1.h": "c",
     "24cxx.h": "c"
-}
+},
+"idf.currentSetup": "I:\\Espressif\\frameworks\\esp-idf-v5.1.2"
 }
