@@ -28,15 +28,22 @@
 #include "esp_log.h"
 
 
-/* 参数引用 */
+/*
+ * 定时器事件数据：
+ * 回调函数在中断环境中取得计数值后，将它封装成该结构体，
+ * 再通过FreeRTOS队列传递给普通任务。
+ */
 typedef struct {
     uint64_t event_count;
 } gptimer_event_t;
 
+/* GPTimer事件队列句柄，由gptim.c创建，由main.c接收事件。 */
 extern QueueHandle_t queue;
 
-/* 函数声明 */
+/* 初始化通用定时器，counts为初始计数值，resolution为计数频率。 */
 void gptim_int_init(uint16_t counts, uint32_t resolution);                                                          /* 初始化通用定时器 */
+
+/* GPTimer达到报警值时由ESP-IDF调用的中断回调函数。 */
 bool IRAM_ATTR gptimer_callback(gptimer_handle_t timer, const gptimer_alarm_event_data_t *edata, void *user_data);  /* 定时器回调函数 */
 
 #endif

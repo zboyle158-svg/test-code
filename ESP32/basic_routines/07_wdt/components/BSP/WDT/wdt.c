@@ -1,61 +1,44 @@
-/**
- ****************************************************************************************************
- * @file        wdt.c
- * @author      正点原子团队(ALIENTEK)
- * @version     V1.0
- * @date        2023-08-26
- * @brief       任务看门狗驱动代码
- * @license     Copyright (c) 2020-2032, 广州市星翼电子科技有限公司
- ****************************************************************************************************
- * @attention
- *
- * 实验平台:正点原子 ESP32-S3 开发板
- * 在线视频:www.yuanzige.com
- * 技术论坛:www.openedv.com
- * 公司网址:www.alientek.com
- * 购买地址:openedv.taobao.com
- * 
- ****************************************************************************************************
- */
-
 #include "wdt.h"
 
-esp_timer_handle_t esp_tim_handle;                          /* 定时器回调函数句柄 */
+/* 保存 ESP-IDF 定时器句柄，重启定时器时需要使用该句柄。 */
+esp_timer_handle_t esp_tim_handle;
 
-/**
- * @brief       初始化任务看门狗计时器
- * @param       arr: 自动重装载值
- *              tps: 定时器周期
+/*
+ * 创建并启动软件看门狗定时器。
+ * arr 当前没有使用；tps 是定时器周期，单位为微秒。
  */
 void wdt_init(uint16_t arr, uint64_t tps)
 {
-    /* 定义一个定时器结构体 */
+    /* 配置 ESP-IDF esp_timer 的回调函数和用户参数。 */
     esp_timer_create_args_t tim_periodic_arg = {
-    .callback =	&wdt_isr_handler,                           /* 设置回调函数 */
-    .arg = NULL,                                            /* 不携带参数 */
+        /* 定时器到期后，ESP-IDF 会调用这个回调函数。 */
+        .callback = &wdt_isr_handler,
+
+        /* 本实验不需要向回调函数传递额外参数。 */
+        .arg = NULL,
     };
 
-    /* 创建定时器事件 */
-    esp_timer_create(&tim_periodic_arg, &esp_tim_handle);   /* 创建一个事件 */
-    esp_timer_start_periodic(esp_tim_handle, tps);          /* 每周期内触发一次 */
+    /* 创建定时器，并把句柄保存到全局变量中。 */
+    esp_timer_create(&tim_periodic_arg, &esp_tim_handle);
+
+    /* 启动周期定时器；main.c 传入 1000000，即周期为 1 秒。 */
+    esp_timer_start_periodic(esp_tim_handle, tps);
 }
 
-/**
- * @brief       重新启动当前运行的计时器
- * @param       timeout: 定时器超时时间，该超时时间以微妙作为基本计算单位，故而设置超时时间为1s，则需要转换为微妙（μs），即timeout = 1s = 1000000μs
- * @retval      无
+/*
+ * 重新开始当前定时器，用于模拟“喂狗”。
+ * 只要程序能执行到这里，就会把下一次超时的时间向后推迟 timeout 微秒。
  */
 void restart_timer(uint64_t timeout)
 {
-    esp_timer_restart(esp_tim_handle, timeout);             /* 重新启动当前运行的计时器，用以模拟喂狗过程 */
+    esp_timer_restart(esp_tim_handle, timeout);
 }
 
-/**
- * @brief       看门狗回调函数
- * @param       arg: 无参数传入
- * @retval      无
+/*
+ * 看门狗超时回调。
+ * 如果主程序没有及时调用 restart_timer()，就执行 ESP-IDF 的系统重启 API。
  */
 void IRAM_ATTR wdt_isr_handler(void *arg)
 {
-    esp_restart();                                          /* 若没有及时进行喂狗，那么芯片将一直进行复位 */
+    esp_restart();
 }

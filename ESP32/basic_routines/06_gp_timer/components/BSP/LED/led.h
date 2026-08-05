@@ -24,26 +24,30 @@
 #include "driver/gpio.h"
 
 
-/* 引脚定义 */
+/* 开发板板载LED连接的GPIO引脚。 */
 #define LED_GPIO_PIN    GPIO_NUM_1  /* LED连接的GPIO端口 */
 
-/* 引脚的输出的电平状态 */
+/* 用更直观的名称表示GPIO输出电平。 */
 enum GPIO_OUTPUT_STATE
 {
     PIN_RESET,
     PIN_SET
 };
 
-/* LED端口定义 */
+/*
+ * 设置LED输出电平：
+ * x为非0时输出高电平，x为0时输出低电平。
+ * 该宏使用do...while(0)，可以安全地放在if语句等代码结构中。
+ */
 #define LED(x)          do { x ?                                      \
                              gpio_set_level(LED_GPIO_PIN, PIN_SET) :  \
                              gpio_set_level(LED_GPIO_PIN, PIN_RESET); \
                         } while(0)  /* LED翻转 */
 
-/* LED取反定义 */
+/* 读取当前GPIO电平并输出相反电平，实现LED翻转。 */
 #define LED_TOGGLE()    do { gpio_set_level(LED_GPIO_PIN, !gpio_get_level(LED_GPIO_PIN)); } while(0)  /* LED翻转 */
 
-/* 函数声明*/
+/* 初始化LED对应GPIO。 */
 void led_init(void);    /* 初始化LED */
 
 #endif

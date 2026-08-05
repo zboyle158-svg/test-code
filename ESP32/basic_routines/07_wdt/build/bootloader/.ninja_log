@@ -112,3 +112,5 @@
 8827	9185	8074266174910486	J:/github/test-code/ESP32/basic_routines/07_wdt/build/bootloader/.bin_timestamp	9fdaeda66fe058f5
 9185	9308	0	esp-idf/esptool_py/CMakeFiles/bootloader_check_size	bc6ef8bbdae8ea4d
 9185	9308	0	J:/github/test-code/ESP32/basic_routines/07_wdt/build/bootloader/esp-idf/esptool_py/CMakeFiles/bootloader_check_size	bc6ef8bbdae8ea4d
+13	206	0	esp-idf/esptool_py/CMakeFiles/bootloader_check_size	bc6ef8bbdae8ea4d
+13	206	0	J:/github/test-code/ESP32/basic_routines/07_wdt/build/bootloader/esp-idf/esptool_py/CMakeFiles/bootloader_check_size	bc6ef8bbdae8ea4d
