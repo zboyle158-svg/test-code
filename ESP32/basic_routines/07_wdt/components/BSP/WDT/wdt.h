@@ -17,6 +17,6 @@ void wdt_init(uint16_t arr, uint64_t tps);
 void restart_timer(uint64_t timeout);
 
 /* 定时器超时后的回调函数。 */
-void IRAM_ATTR wdt_isr_handler(void *arg);
+void wdt_isr_handler(void *arg);  /* IRAM_ATTR仅写在wdt.c的定义处，避免声明与定义的段属性冲突 */
 
 #endif

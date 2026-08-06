@@ -1,23 +1,28 @@
 {
-    "configurations": [
-        {
-            "name": "ESP-IDF",
-
-            // 由idf.py reconfigure或idf.py build生成。
-            "compileCommands": "${workspaceFolder}/build/compile_commands.json",
-
-            // compile_commands.json尚未生成时，
-            // 至少允许解析当前工程自己的头文件。
+  "configurations": [
+    {
+      "name": "ESP-IDF",
+      "compileCommands": "${workspaceFolder}/build/compile_commands.json",
             "includePath": [
-                "${workspaceFolder}/**"
+                "${workspaceFolder}/**",
+                "${workspaceFolder}/build/config",
+                "I:/Espressif/frameworks/esp-idf-v5.1.2/components/newlib/platform_include",
+                "I:/Espressif/frameworks/esp-idf-v5.1.2/components/freertos/FreeRTOS-Kernel/include",
+                "I:/Espressif/frameworks/esp-idf-v5.1.2/components/freertos/FreeRTOS-Kernel/portable/xtensa/include",
+                "I:/Espressif/frameworks/esp-idf-v5.1.2/components/freertos/esp_additions/include",
+                "I:/Espressif/frameworks/esp-idf-v5.1.2/components/freertos/esp_additions/include/freertos",
+                "I:/Espressif/frameworks/esp-idf-v5.1.2/components/driver/include",
+                "I:/Espressif/frameworks/esp-idf-v5.1.2/components/driver/gptimer/include",
+                "I:/Espressif/frameworks/esp-idf-v5.1.2/components/log/include",
+                "I:/Espressif/frameworks/esp-idf-v5.1.2/components/esp_common/include",
+                "I:/Espressif/frameworks/esp-idf-v5.1.2/components/esp_system/include",
+                "I:/Espressif/frameworks/esp-idf-v5.1.2/components/soc/include",
+                "I:/Espressif/frameworks/esp-idf-v5.1.2/components/hal/include"
             ],
-
-            // ESP-IDF使用GNU C17。
-            "cStandard": "gnu17",
-
-            // ESP-IDF中的C++组件通常使用GNU C++17。
-            "cppStandard": "gnu++17"
-        }
-    ],
-    "version": 4
+      "cStandard": "gnu17",
+      "cppStandard": "gnu++17",
+      "compilerPath": "I:\\Espressif\\tools\\xtensa-esp32s3-elf\\esp-12.2.0_20230208\\xtensa-esp32s3-elf\\bin\\xtensa-esp32s3-elf-gcc.exe"
+    }
+  ],
+  "version": 4
 }

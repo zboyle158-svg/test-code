@@ -1,7 +1,7 @@
 {
     "version":            "1",
     "project_name":       "06_gp_timer",
-    "project_version":    "bfe155ef-dirty",
+    "project_version":    "df878f2d-dirty",
     "project_path":       "J:/github/test-code/ESP32/basic_routines/06_gp_timer",
     "idf_path":           "I:/Espressif/frameworks/esp-idf-v5.1.2",
     "build_dir":          "J:/github/test-code/ESP32/basic_routines/06_gp_timer/build",

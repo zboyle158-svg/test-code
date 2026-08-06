@@ -1,6 +1,22 @@
 {
-"C_Cpp.intelliSenseEngine": "Tag Parser",
-"C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools",
+"C_Cpp.intelliSenseEngine": "default",
+"C_Cpp.default.compileCommands": "${workspaceFolder}/build/compile_commands.json",
+"C_Cpp.default.includePath": [
+  "${workspaceFolder}/**",
+  "${workspaceFolder}/build/config",
+  "I:/Espressif/frameworks/esp-idf-v5.1.2/components/newlib/platform_include",
+  "I:/Espressif/frameworks/esp-idf-v5.1.2/components/freertos/FreeRTOS-Kernel/include",
+  "I:/Espressif/frameworks/esp-idf-v5.1.2/components/freertos/FreeRTOS-Kernel/portable/xtensa/include",
+  "I:/Espressif/frameworks/esp-idf-v5.1.2/components/freertos/esp_additions/include",
+  "I:/Espressif/frameworks/esp-idf-v5.1.2/components/freertos/esp_additions/include/freertos",
+  "I:/Espressif/frameworks/esp-idf-v5.1.2/components/driver/include",
+  "I:/Espressif/frameworks/esp-idf-v5.1.2/components/driver/gptimer/include",
+  "I:/Espressif/frameworks/esp-idf-v5.1.2/components/log/include",
+  "I:/Espressif/frameworks/esp-idf-v5.1.2/components/esp_common/include",
+  "I:/Espressif/frameworks/esp-idf-v5.1.2/components/esp_system/include",
+  "I:/Espressif/frameworks/esp-idf-v5.1.2/components/soc/include",
+  "I:/Espressif/frameworks/esp-idf-v5.1.2/components/hal/include"
+],
 "idf.adapterTargetName": "esp32s3",
 "idf.openOcdConfigs": [
     "board/esp32s3-builtin.cfg"

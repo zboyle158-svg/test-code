@@ -44,6 +44,6 @@ extern QueueHandle_t queue;
 void gptim_int_init(uint16_t counts, uint32_t resolution);                                                          /* 初始化通用定时器 */
 
 /* GPTimer达到报警值时由ESP-IDF调用的中断回调函数。 */
-bool IRAM_ATTR gptimer_callback(gptimer_handle_t timer, const gptimer_alarm_event_data_t *edata, void *user_data);  /* 定时器回调函数 */
+bool gptimer_callback(gptimer_handle_t timer, const gptimer_alarm_event_data_t *edata, void *user_data);  /* 定时器回调函数：IRAM_ATTR仅写在gptim.c的定义处 */
 
 #endif

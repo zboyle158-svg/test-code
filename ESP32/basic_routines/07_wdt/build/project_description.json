@@ -1,7 +1,7 @@
 {
     "version":            "1",
     "project_name":       "07_wdt",
-    "project_version":    "bfe155ef-dirty",
+    "project_version":    "df878f2d-dirty",
     "project_path":       "J:/github/test-code/ESP32/basic_routines/07_wdt",
     "idf_path":           "I:/Espressif/frameworks/esp-idf-v5.1.2",
     "build_dir":          "J:/github/test-code/ESP32/basic_routines/07_wdt/build",

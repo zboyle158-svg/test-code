@@ -1,5 +1,6 @@
 {
-  "C_Cpp.intelliSenseEngine": "Tag Parser",
+"C_Cpp.default.compileCommands": "${workspaceFolder}/build/compile_commands.json",
+  "C_Cpp.intelliSenseEngine": "default",
   "idf.adapterTargetName": "esp32s3",
   "files.associations": {
     "gpio.h": "c",
