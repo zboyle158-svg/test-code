@@ -31,7 +31,10 @@
 /* 引脚定义 */
 #define BOOT_GPIO_PIN   GPIO_NUM_0
 
-/*IO操作*/
+/*
+ * BOOT 是宏，不是变量：每次使用都会展开为 gpio_get_level(GPIO0)，
+ * 从而读取按键此刻的实际电平。
+ */
 #define BOOT            gpio_get_level(BOOT_GPIO_PIN)
 
 /* 按键按下定义 */

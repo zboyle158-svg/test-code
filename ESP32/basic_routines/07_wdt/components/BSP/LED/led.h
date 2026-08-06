@@ -34,7 +34,10 @@ enum GPIO_OUTPUT_STATE
     PIN_SET
 };
 
-/* LED端口定义 */
+/*
+ * LED(x) 是函数式宏，不是普通函数。x 非 0 时 GPIO1 输出高电平，
+ * x 为 0 时输出低电平；结合本板硬件连接，低电平才会点亮 LED。
+ */
 #define LED(x)          do { x ?                                      \
                              gpio_set_level(LED_GPIO_PIN, PIN_SET) :  \
                              gpio_set_level(LED_GPIO_PIN, PIN_RESET); \

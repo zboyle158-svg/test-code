@@ -28,6 +28,12 @@
 #include "driver/ledc.h"
 #include "driver/gpio.h"
 
+/*
+ * 硬件映射：开发板 LED 接在 GPIO1，且为低电平点亮型。
+ * 因此 PWM 高电平占空比越大，GPIO1 的低电平时间越短，LED 会越暗。
+ * 下方两个函数是项目封装；内部调用 ESP-IDF 的 LEDC 驱动 API。
+ */
+
 
 /* 引脚以及重要参数定义 */
 #define LEDC_PWM_TIMER          LEDC_TIMER_1        /* 使用定时器0 */

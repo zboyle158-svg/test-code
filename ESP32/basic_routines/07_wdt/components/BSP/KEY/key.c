@@ -28,6 +28,7 @@
  */
 void key_init(void)
 {
+    /* gpio_config_t 是 ESP-IDF 的 GPIO 配置结构体；下面逐项填写 GPIO0 的工作方式。 */
     gpio_config_t gpio_init_struct;
 
     gpio_init_struct.intr_type = GPIO_INTR_DISABLE;         /* 失能引脚中断 */
@@ -35,6 +36,7 @@ void key_init(void)
     gpio_init_struct.pull_up_en = GPIO_PULLUP_ENABLE;       /* 使能上拉 */
     gpio_init_struct.pull_down_en = GPIO_PULLDOWN_DISABLE;  /* 失能下拉 */
     gpio_init_struct.pin_bit_mask = 1ull << BOOT_GPIO_PIN;  /* BOOT按键引脚 */
+    /* gpio_config() 是 ESP-IDF API：一次性把上述配置写入 GPIO 外设。 */
     gpio_config(&gpio_init_struct);                         /* 配置使能 */
 }
 
@@ -50,6 +52,7 @@ void key_init(void)
 uint8_t key_scan(uint8_t mode)
 {
     uint8_t keyval = 0;
+    /* static 变量只初始化一次，跨多次 key_scan() 调用保存“按键是否已处理”的状态。 */
     static uint8_t key_boot = 1;    /* 按键松开标志 */
 
     if(mode)
@@ -57,8 +60,10 @@ uint8_t key_scan(uint8_t mode)
         key_boot = 1;
     }
 
+    /* BOOT 是 key.h 定义的宏，展开后会读取 GPIO0；GPIO0 读到 0 表示按下。 */
     if (key_boot && (BOOT == 0))    /* 按键松开标志为1，且有任意一个按键按下了 */
     {
+        /* vTaskDelay() 是 FreeRTOS API；延时约 10 个系统节拍，用于按键消抖。 */
         vTaskDelay(10);             /* 去抖动 */
         key_boot = 0;
 

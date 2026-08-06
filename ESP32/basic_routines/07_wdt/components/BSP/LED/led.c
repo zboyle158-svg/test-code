@@ -28,6 +28,7 @@
  */
 void led_init(void)
 {
+    /* {0} 将结构体全部清零，避免未填写成员携带不确定值。 */
     gpio_config_t gpio_init_struct = {0};
 
     gpio_init_struct.intr_type = GPIO_INTR_DISABLE;         /* 失能引脚中断 */
@@ -35,7 +36,9 @@ void led_init(void)
     gpio_init_struct.pull_up_en = GPIO_PULLUP_ENABLE;       /* 使能上拉 */
     gpio_init_struct.pull_down_en = GPIO_PULLDOWN_DISABLE;  /* 失能下拉 */
     gpio_init_struct.pin_bit_mask = 1ull << LED_GPIO_PIN;   /* 设置的引脚的位掩码 */
+    /* gpio_config() 是 ESP-IDF API，按以上参数配置 GPIO1。 */
     gpio_config(&gpio_init_struct);                         /* 配置GPIO */
 
+    /* 板载 LED 为低电平点亮，因此先输出 1，让上电初始状态为熄灭。 */
     LED(1);                                                 /* 关闭LED */
 }

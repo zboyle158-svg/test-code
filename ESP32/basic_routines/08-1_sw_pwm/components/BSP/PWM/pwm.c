@@ -29,6 +29,10 @@
  */
 void pwm_init(uint8_t resolution, uint16_t freq)
 {
+    /*
+     * LEDC 是 ESP32-S3 的硬件 PWM 外设；“软件改变 PWM”是软件循环改 duty，
+     * 并不是用 GPIO 翻转模拟 PWM。resolution=10 时约有 2^10=1024 个等级。
+     */
     ledc_timer_config_t ledc_timer = {0};           /* LEDC定时器句柄 */
     ledc_channel_config_t ledc_channel = {0};       /* LEDC通道配置句柄 */
 
@@ -57,6 +61,7 @@ void pwm_init(uint8_t resolution, uint16_t freq)
  */
 void pwm_set_duty(uint16_t duty)
 {
+    /* ESP-IDF：先写入待更新的比较值，再由下一句把该值提交给 LEDC 硬件。 */
     ledc_set_duty(LEDC_LOW_SPEED_MODE, LEDC_PWM_CH0_CHANNEL, duty); /* 设置占空比 */
     ledc_update_duty(LEDC_LOW_SPEED_MODE, LEDC_PWM_CH0_CHANNEL);    /* 更新占空比 */
 }

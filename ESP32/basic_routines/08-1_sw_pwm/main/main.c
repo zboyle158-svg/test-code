@@ -29,6 +29,11 @@
  */
 void app_main(void)
 {
+    /*
+     * 本示例的可见效果：GPIO1 上的 LED 会持续由亮变暗、再由暗变亮。
+     * app_main() 是 ESP-IDF 创建主任务后调用的应用入口，不需要用户自己调用。
+     * dir 控制变化方向；ledpwmval 是 PWM 比较值，不是百分比。
+     */
     esp_err_t ret;
     uint8_t dir = 1;
     uint16_t ledpwmval = 0;
@@ -45,6 +50,7 @@ void app_main(void)
 
     while(1) 
     {
+        /* FreeRTOS API：任务让出 CPU 10 个节拍；每轮把比较值改变 5，形成三角波。 */
         vTaskDelay(10);
 
         if (dir == 1)
@@ -58,6 +64,7 @@ void app_main(void)
 
         if (ledpwmval > 1005)
         {
+            /* 10 位 PWM 的完整量级约为 0~1023；到上边界后转为递减。 */
             dir = 0;        /* ledpwmval到达1005后，方向为递减 */
         }
 
