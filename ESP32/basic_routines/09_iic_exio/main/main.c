@@ -58,6 +58,7 @@ void show_mesg(void)
  * @param       无
  * @retval      无
  */
+/* 运行顺序：NVS初始化→板载LED→I2C0→XL9555→按键轮询。app_main 是 ESP-IDF 应用入口。 */
 void app_main(void)
 {
     uint8_t key;
@@ -76,6 +77,7 @@ void app_main(void)
     xl9555_init(i2c0_master);           /* 初始化XL9555 */
     show_mesg();                        /* 显示实验信息 */
 
+    /* 主循环不依赖 GPIO 中断；每轮读取 XL9555 按键输入并根据事件码更新输出。 */
     while(1)
     {
         /* mode == 0 reports one event per press/release cycle. */

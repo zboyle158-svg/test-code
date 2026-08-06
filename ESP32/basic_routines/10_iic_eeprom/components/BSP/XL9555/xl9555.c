@@ -35,6 +35,7 @@ esp_err_t xl9555_read_byte(uint8_t *data, size_t len)
     uint8_t memaddr_buf[1];
     memaddr_buf[0]  = XL9555_INPUT_PORT0_REG;
 
+    /* 先写输入寄存器地址0，再用重复起始读取len字节，i2c_transfer依据flags组装此时序。 */
     i2c_buf_t bufs[2] = {
         {.len = 1, .buf = memaddr_buf},
         {.len = len, .buf = data},
@@ -191,6 +192,7 @@ void xl9555_init(i2c_obj_t self)
     /* 上电先读取一次清除中断标志 */
     xl9555_read_byte(r_data, 2);
     
+    /* 0xF003的位为1代表输入：P00、P01、P14~P17用于外部输入/按键，其余配置为输出。 */
     xl9555_ioconfig(0xF003);
     xl9555_pin_write(BEEP_IO, 1);
     xl9555_pin_write(SPK_EN_IO, 1);
@@ -208,6 +210,7 @@ void xl9555_init(i2c_obj_t self)
 uint8_t xl9555_key_scan(uint8_t mode)
 {
     uint8_t keyval = 0;
+    /* static使变量跨函数调用保留，用于“按下一次仅上报一次，松开后才重新允许”的状态机。 */
     static uint8_t key_up = 1;                                          /* 按键按松开标志 */
 
     if (mode)

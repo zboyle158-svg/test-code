@@ -21,6 +21,7 @@
 #include "24cxx.h"
 
 
+/* AT24CXX驱动保存的I2C控制块副本；port成员决定EEPROM命令发往哪个控制器。 */
 i2c_obj_t at24cxx_master;
 
 /**
@@ -47,6 +48,7 @@ uint8_t at24cxx_read_one_byte(uint16_t addr)
 {
     uint8_t data = 0;
 
+    /* 以下手动组成“伪写地址+重复起始+读数据”的随机读时序。 */
     i2c_cmd_handle_t cmd = i2c_cmd_link_create();
     i2c_master_start(cmd);
     /* 根据不同的24CXX型号, 发送高位地址
@@ -70,12 +72,14 @@ uint8_t at24cxx_read_one_byte(uint16_t addr)
         i2c_master_write_byte(cmd, 0XA0 + ((addr / 256) << 1), ACK_CHECK_EN);           /* 发送器件地址0XA0,写数据 */
     }
     i2c_master_write_byte(cmd, addr % 256, ACK_CHECK_EN);                               /* 发送低地址 */
+    /* 重复起始不会释放总线，通知AT24C02从已设置的内部地址输出数据。 */
     i2c_master_start(cmd);
     i2c_master_write_byte(cmd, (AT_ADDR << 1) | I2C_MASTER_READ, ACK_CHECK_EN);
     i2c_master_read_byte(cmd, &data, ACK_CHECK_EN);
     i2c_master_stop(cmd);
     i2c_master_cmd_begin(at24cxx_master.port, cmd, 1000);
     i2c_cmd_link_delete(cmd);
+    /* 保留原有读写间隔；EEPROM写入非易失存储阵列也需要完成时间。 */
     vTaskDelay(10);
 
     return data;
@@ -122,6 +126,7 @@ void at24cxx_write_one_byte(uint16_t addr, uint8_t data)
 uint8_t at24cxx_check(void)
 {
     uint8_t temp;
+    /* 选择末地址255作为检测标记，尽量不占用本示例从地址0写入的文本区域。 */
     uint16_t addr = EE_TYPE;
 
     temp = at24cxx_read_one_byte(addr);     /* 避免每次开机都写AT24CXX */
@@ -153,6 +158,7 @@ uint8_t at24cxx_check(void)
  */
 void at24cxx_read(uint16_t addr, uint8_t *pbuf, uint16_t datalen)
 {
+    /* 逐字节执行随机读；每轮读取后，内部地址与目标缓冲区指针都递增。 */
     while (datalen--)
     {
         *pbuf++ = at24cxx_read_one_byte(addr++);

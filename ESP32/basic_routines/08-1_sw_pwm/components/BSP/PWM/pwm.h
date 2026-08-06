@@ -44,4 +44,4 @@
 void pwm_init(uint8_t resolution, uint16_t freq);   /* 初始化PWM */
 void pwm_set_duty(uint16_t duty);                   /* PWM占空比设置 */
 
-#endif
+#endif 

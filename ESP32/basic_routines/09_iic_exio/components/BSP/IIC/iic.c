@@ -28,6 +28,7 @@ i2c_obj_t iic_master[I2C_NUM_MAX];  /* 为IIC0和IIC1分别定义IIC控制块结
  * @param       iic_port：I2C编号(I2C_NUM_0 / I2C_NUM_1)
  * @retval      IIC控制块0 / IIC控制块1
  */
+/* 项目函数：把 ESP-IDF 的 I2C 外设编号映射为本项目保存引脚和初始化结果的 i2c_obj_t。 */
 i2c_obj_t iic_init(uint8_t iic_port)
 {
     uint8_t i;
@@ -92,6 +93,7 @@ i2c_obj_t iic_init(uint8_t iic_port)
  * @param       flags：读写标志位
  * @retval      无
  */
+/* 项目函数：将多个数据段组织为一次 I2C 事务；真正产生时序的是 i2c_master_cmd_begin()。 */
 esp_err_t i2c_transfer(i2c_obj_t *self, uint16_t addr, size_t n, i2c_buf_t *bufs, unsigned int flags)
 {
     int data_len = 0;

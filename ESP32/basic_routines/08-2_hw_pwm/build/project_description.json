@@ -1,7 +1,7 @@
 {
     "version":            "1",
     "project_name":       "08-2_hw_pwm",
-    "project_version":    "c1425be-dirty",
+    "project_version":    "3094c992-dirty",
     "project_path":       "J:/github/test-code/ESP32/basic_routines/08-2_hw_pwm",
     "idf_path":           "I:/Espressif/frameworks/esp-idf-v5.1.2",
     "build_dir":          "J:/github/test-code/ESP32/basic_routines/08-2_hw_pwm/build",

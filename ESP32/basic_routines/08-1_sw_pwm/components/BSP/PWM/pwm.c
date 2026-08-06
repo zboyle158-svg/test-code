@@ -51,7 +51,7 @@ void pwm_init(uint8_t resolution, uint16_t freq)
     ledc_channel.intr_type = LEDC_INTR_DISABLE;     /* LEDC失能中断 */
     ledc_channel.timer_sel = LEDC_PWM_TIMER;        /* 定时器序号 */
     ledc_channel.duty = 0;                          /* 占空比值 */
-    ledc_channel_config(&ledc_channel);             /* 配置LEDC通道 */
+    ledc_channel_config(&ledc_channel);             /* 配置LEDC通道*/
 }
 
 /**

@@ -27,7 +27,7 @@
 #include "iic.h"
 
 
-/* 24c02设备地址 */
+/* AT24C02的7位I2C从机地址。传入ESP-IDF API时再左移一位并附加最低位R/W。 */
 #define AT_ADDR     (0x50)
 
 #define AT24C01     127
@@ -40,7 +40,7 @@
 #define AT24C128    16383
 #define AT24C256    32767
 
-/* 开发板使用的是24c02，所以定义EE_TYPE为AT24C02 */
+/* 开发板使用AT24C02，共256字节，合法地址为0~255；该宏同时决定寻址格式。 */
 #define EE_TYPE     AT24C02
 
 /* 函数声明 */

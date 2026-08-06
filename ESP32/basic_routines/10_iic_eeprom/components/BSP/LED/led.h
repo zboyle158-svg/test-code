@@ -25,6 +25,7 @@
 
 
 /* 引脚定义 */
+/* 板载LED接到GPIO1；本板硬件为低电平点亮，因此LED(1)实际使LED熄灭。 */
 #define LED_GPIO_PIN    GPIO_NUM_1  /* LED连接的GPIO端口 */
 
 /* 引脚的输出的电平状态 */
@@ -35,6 +36,7 @@ enum GPIO_OUTPUT_STATE
 };
 
 /* LED端口定义 */
+/* do...while(0)让多行宏在if语句中仍表现为一条普通语句。 */
 #define LED(x)          do { x ?                                      \
                              gpio_set_level(LED_GPIO_PIN, PIN_SET) :  \
                              gpio_set_level(LED_GPIO_PIN, PIN_RESET); \

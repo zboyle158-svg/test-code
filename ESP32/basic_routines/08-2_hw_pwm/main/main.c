@@ -1,21 +1,8 @@
 /**
- ****************************************************************************************************
  * @file        main.c
- * @author      正点原子团队(ALIENTEK)
- * @version     V1.0
- * @date        2023-08-26
- * @brief       硬件改变PWM占空比实验
- * @license     Copyright (c) 2020-2032, 广州市星翼电子科技有限公司
- ****************************************************************************************************
- * @attention
+ * @brief       硬件PWM占空比渐变示例的应用入口
  *
- * 实验平台:正点原子 ESP32-S3 开发板
- * 在线视频:www.yuanzige.com
- * 技术论坛:www.openedv.com
- * 公司网址:www.alientek.com
- * 购买地址:openedv.taobao.com
- *
- ****************************************************************************************************
+ * 本文件负责初始化NVS和项目PWM驱动，然后让LEDC硬件重复执行渐变请求。
  */
 
 #include "nvs_flash.h"
@@ -23,27 +10,30 @@
 
 
 /**
- * @brief       程序入口
- * @param       无
- * @retval      无
+ * @brief       ESP-IDF应用入口，由系统创建的主任务调用
  */
 void app_main(void)
 {
-    esp_err_t ret;
+    esp_err_t ret;  /* ESP-IDF错误码类型，用于保存NVS初始化结果。 */
 
-    ret = nvs_flash_init();             /* 初始化NVS */
+    /* NVS是非易失性键值存储；许多ESP-IDF组件会依赖其可用状态。 */
+    ret = nvs_flash_init();
 
     if (ret == ESP_ERR_NVS_NO_FREE_PAGES || ret == ESP_ERR_NVS_NEW_VERSION_FOUND)
     {
+        /* 分区已无空页或格式版本不兼容时，擦除后重新初始化。 */
         ESP_ERROR_CHECK(nvs_flash_erase());
         ret = nvs_flash_init();
     }
 
-    pwm_init(13, 5000);                 /* 初始化PWM */
+    /* 项目函数：13位分辨率、5kHzPWM；它会将LEDC通道0输出到GPIO1。 */
+    pwm_init(13, 5000);
 
     while(1) 
     {
+        /* FreeRTOSAPI：延时10个系统节拍，让出CPU；不是固定的10ms。 */
         vTaskDelay(10);
-        pwm_set_duty(LEDC_PWM_DUTY);    /* 设置占空比 */
+        /* 项目函数：请求硬件先渐变到目标占空比，再渐变回0。 */
+        pwm_set_duty(LEDC_PWM_DUTY);
     }
 }

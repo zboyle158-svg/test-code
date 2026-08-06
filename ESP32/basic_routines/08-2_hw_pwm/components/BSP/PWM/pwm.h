@@ -1,21 +1,6 @@
 /**
- ****************************************************************************************************
  * @file        pwm.h
- * @author      正点原子团队(ALIENTEK)
- * @version     V1.0
- * @date        2023-08-26
- * @brief       PWM驱动代码
- * @license     Copyright (c) 2020-2032, 广州市星翼电子科技有限公司
- ****************************************************************************************************
- * @attention
- *
- * 实验平台:正点原子 ESP32-S3 开发板
- * 在线视频:www.yuanzige.com
- * 技术论坛:www.openedv.com
- * 公司网址:www.alientek.com
- * 购买地址:openedv.taobao.com
- * 
- ****************************************************************************************************
+ * @brief       PWM驱动接口与硬件参数
  */
 
 #ifndef __PWM_H_
@@ -28,16 +13,16 @@
 #include "driver/gpio.h"
 
 
-/* 引脚以及重要参数定义 */
-#define LEDC_PWM_TIMER          LEDC_TIMER_0        /* 使用定时器0 */
-#define LEDC_PWM_MODE           LEDC_LOW_SPEED_MODE /* 模式设定必须使用LEDC低速模式 */
-#define LEDC_PWM_CH0_GPIO       GPIO_NUM_1          /* LED控制器通道对应GPIO */
-#define LEDC_PWM_CH0_CHANNEL    LEDC_CHANNEL_0      /* LED控制器通道号 */
-#define LEDC_PWM_DUTY           8000                /* 渐变的变大最终目标占空比 */
-#define LEDC_PWM_FADE_TIME      3000                /* 变化时长 */
+/* 本项目将LEDC定时器0、通道0和开发板LED所在GPIO1组合为一条PWM输出链路。 */
+#define LEDC_PWM_TIMER          LEDC_TIMER_0        /* 使用LEDC定时器0产生PWM计数周期。 */
+#define LEDC_PWM_MODE           LEDC_LOW_SPEED_MODE /* ESP32-S3使用该LEDC速度模式。 */
+#define LEDC_PWM_CH0_GPIO       GPIO_NUM_1          /* 通道0的PWM波形输出到GPIO1，连接板载LED。 */
+#define LEDC_PWM_CH0_CHANNEL    LEDC_CHANNEL_0      /* 选择LEDC的通道0。 */
+#define LEDC_PWM_DUTY           8000                /* 13位分辨率下的目标计数值，接近满量程8191。 */
+#define LEDC_PWM_FADE_TIME      3000                /* 每一段渐变允许使用的最长时间，单位ms。 */
 
-/* 函数声明 */
-void pwm_init(uint8_t resolution, uint16_t freq);   /* 初始化PWM */
-void pwm_set_duty(uint16_t duty);                   /* PWM占空比设置 */
+/* 项目函数声明，不是ESP-IDF内置API。 */
+void pwm_init(uint8_t resolution, uint16_t freq);   /* 配置PWM硬件资源。 */
+void pwm_set_duty(uint16_t duty);                   /* 发起两段硬件渐变。 */
 
 #endif

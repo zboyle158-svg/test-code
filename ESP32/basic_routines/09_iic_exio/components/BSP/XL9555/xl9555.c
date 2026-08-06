@@ -30,6 +30,7 @@ static uint16_t xl9555_failed = 0;
  * @param       len：读取数据的大小
  * @retval      ESP_OK：读取成功；其他：读取失败
  */
+/* 项目函数：先选择输入寄存器 0x00，随后通过重复起始条件读取 XL9555 的端口电平。 */
 esp_err_t xl9555_read_byte(uint8_t *data, size_t len)
 {
     uint8_t memaddr_buf[1];
@@ -66,6 +67,7 @@ esp_err_t xl9555_write_byte(uint8_t reg, uint8_t *data, size_t len)
  * @param       val     : 电平
  * @retval      返回所有IO状态
  */
+/* pin 是 16 位位掩码。例如 BEEP_IO=0x0008 对应 XL9555 的 P0.3，而不是引脚序号 3。 */
 uint16_t xl9555_pin_write(uint16_t pin, int val)
 {
     uint8_t w_data[2];
@@ -169,6 +171,7 @@ uint16_t xl9555_ioconfig(uint16_t config_value)
  * @param       无
  * @retval      无
  */
+/* 配置 ESP32-S3 GPIO40 为 INT 输入，并将 XL9555 的输入/输出方向写入配置寄存器。 */
 void xl9555_init(i2c_obj_t self)
 {
     uint8_t r_data[2];
@@ -205,6 +208,7 @@ void xl9555_init(i2c_obj_t self)
  *              KEY2_PRES, 3, KEY2按下
  *              KEY3_PRES, 4, KEY3按下
  */
+/* static key_up 跨多轮轮询保留状态：mode=0 时，一次按下到松开的周期只上报一个事件。 */
 uint8_t xl9555_key_scan(uint8_t mode)
 {
     uint8_t keyval = 0;

@@ -112,3 +112,5 @@
 11722	12113	8074389332141738	J:/github/test-code/ESP32/basic_routines/09_iic_exio/build/bootloader/.bin_timestamp	35d46ac124a10066
 12113	12255	0	esp-idf/esptool_py/CMakeFiles/bootloader_check_size	63be531a75f2e732
 12113	12255	0	J:/github/test-code/ESP32/basic_routines/09_iic_exio/build/bootloader/esp-idf/esptool_py/CMakeFiles/bootloader_check_size	63be531a75f2e732
+12	235	0	esp-idf/esptool_py/CMakeFiles/bootloader_check_size	63be531a75f2e732
+12	235	0	J:/github/test-code/ESP32/basic_routines/09_iic_exio/build/bootloader/esp-idf/esptool_py/CMakeFiles/bootloader_check_size	63be531a75f2e732

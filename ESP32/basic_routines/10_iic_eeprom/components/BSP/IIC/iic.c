@@ -31,8 +31,10 @@ i2c_obj_t iic_master[I2C_NUM_MAX];  /* 为IIC0和IIC1分别定义IIC控制块结
 i2c_obj_t iic_init(uint8_t iic_port)
 {
     uint8_t i;
+    /* ESP-IDF的I2C配置结构体；= {0}先把未显式赋值的成员清零。 */
     i2c_config_t iic_config_struct = {0};
 
+    /* 将ESP-IDF端口枚举映射为本项目数组下标；本例实际使用I2C_NUM_0。 */
     if (iic_port == I2C_NUM_0)
     {
         i = 0;
@@ -97,6 +99,7 @@ esp_err_t i2c_transfer(i2c_obj_t *self, uint16_t addr, size_t n, i2c_buf_t *bufs
     int data_len = 0;
     esp_err_t ret = ESP_FAIL;
 
+    /* ESP-IDF命令链：先装配START、地址、数据、STOP，最后一次性提交给硬件。 */
     i2c_cmd_handle_t cmd = i2c_cmd_link_create();                                                       /* 创建一个命令链接,将一系列待发送给从机的数据填充命令链接 */
 
     /* 根据器件通信时序去决定flags参数,进而选择如下代码不同的执行情况 */
@@ -134,6 +137,7 @@ esp_err_t i2c_transfer(i2c_obj_t *self, uint16_t addr, size_t n, i2c_buf_t *bufs
         i2c_master_stop(cmd);                                                                           /* 停止位 */
     }
 
+    /* 此调用才真正执行命令链；超时时间按数据量折算为FreeRTOS tick。 */
     ret = i2c_master_cmd_begin(self->port, cmd, 100 * (1 + data_len) / portTICK_PERIOD_MS);             /* 触发I2C控制器执行命令链接,即命令发送 */
     i2c_cmd_link_delete(cmd);                                                                           /* 释放命令链接使用的资源 */
 

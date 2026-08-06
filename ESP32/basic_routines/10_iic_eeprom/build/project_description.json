@@ -1,7 +1,7 @@
 {
     "version":            "1",
     "project_name":       "10_iic_eeprom",
-    "project_version":    "e22670a2-dirty",
+    "project_version":    "3094c992-dirty",
     "project_path":       "J:/github/test-code/ESP32/basic_routines/10_iic_eeprom",
     "idf_path":           "I:/Espressif/frameworks/esp-idf-v5.1.2",
     "build_dir":          "J:/github/test-code/ESP32/basic_routines/10_iic_eeprom/build",

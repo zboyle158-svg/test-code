@@ -26,6 +26,7 @@
  * @param       无
  * @retval      无
  */
+/* ESP-IDF GPIO 配置：板载 LED 接 GPIO1，且本板为低电平点亮，所以初始化末尾输出高电平关闭它。 */
 void led_init(void)
 {
     gpio_config_t gpio_init_struct = {0};

@@ -43,6 +43,7 @@
 #define XL9555_CONFIG_PORT0_REG     6                               /* 方向配置寄存器0地址 */
 #define XL9555_CONFIG_PORT1_REG     7                               /* 方向配置寄存器1地址 */
 
+/* XL9555的7位I2C地址；EEPROM的0x50与它不同，因此二者可共用I2C0总线。 */
 #define XL9555_ADDR                 0X20                            /* XL9555地址(左移了一位)-->请看手册（9.1. Device Address） */
 
 /* XL9555各个IO的功能 */
@@ -63,6 +64,7 @@
 #define KEY1_IO                     0x4000
 #define KEY0_IO                     0x8000
 
+/* 这些是项目宏，不是变量；每次求值都会经I2C读取XL9555对应输入位。按键为低电平有效。 */
 #define KEY0                        xl9555_pin_read(KEY0_IO)        /* 读取KEY0引脚 */
 #define KEY1                        xl9555_pin_read(KEY1_IO)        /* 读取KEY1引脚 */
 #define KEY2                        xl9555_pin_read(KEY2_IO)        /* 读取KEY2引脚 */

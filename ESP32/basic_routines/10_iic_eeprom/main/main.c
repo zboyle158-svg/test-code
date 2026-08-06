@@ -28,10 +28,12 @@
 #include "24cxx.h"
 
 
+/* 项目自己的I2C0描述对象：初始化后把端口、SCL/SDA引脚和结果传给两个I2C外设驱动。 */
 i2c_obj_t i2c0_master;
 
+/* const表示该字符串运行中不改写；数组自动保留结尾的'\0'，因此可按%s输出。 */
 const uint8_t g_text_buf[] = {"ESP32-S3 EEPROM"};   /* 要写入到24c02的字符串数组 */
-#define TEXT_SIZE   sizeof(g_text_buf)              /* TEXT字符串长度 */
+#define TEXT_SIZE   sizeof(g_text_buf)              /* 写入长度包含结束符，读回后才能安全作为字符串显示。 */
 
 /**
  * @brief       显示实验信息
@@ -64,6 +66,7 @@ void app_main(void)
     uint8_t datatemp[TEXT_SIZE];
     esp_err_t ret;
     
+    /* ESP-IDF的NVS初始化；本例不直接读写NVS，但系统组件仍可能需要它。 */
     ret = nvs_flash_init();             /* 初始化NVS */
 
     if (ret == ESP_ERR_NVS_NO_FREE_PAGES || ret == ESP_ERR_NVS_NEW_VERSION_FOUND)
@@ -72,10 +75,10 @@ void app_main(void)
         ret = nvs_flash_init();
     }
 
-    led_init();                         /* 初始化LED */
-    i2c0_master = iic_init(I2C_NUM_0);  /* 初始化IIC0 */
-    xl9555_init(i2c0_master);           /* IO扩展芯片初始化 */
-    at24cxx_init(i2c0_master);          /* 初始化24CXX */
+    led_init();                         /* 初始化GPIO1上的低电平点亮LED */
+    i2c0_master = iic_init(I2C_NUM_0);  /* 配置I2C0：SDA=GPIO41，SCL=GPIO42，速率400kHz */
+    xl9555_init(i2c0_master);           /* 初始化XL9555：按键经该I2C IO扩展器读取 */
+    at24cxx_init(i2c0_master);          /* 初始化AT24C02：与XL9555共享同一条I2C0总线 */
     show_mesg();                        /* 显示实验信息 */
 
     err = at24cxx_check();              /* 检测AT24C02 */
@@ -95,18 +98,21 @@ void app_main(void)
 
     while(1)
     {
+        /* 轮询XL9555上的按键。传入0表示一次按下只产生一次键值，须松开后才可再次触发。 */
         key = xl9555_key_scan(0);
         
         switch (key)
         {
             case KEY0_PRES:
             {
+                /* 从EEPROM字节地址0开始逐字节写入字符串。强制转换仅适配驱动接口，不会修改const数据。 */
                 at24cxx_write(0, (uint8_t *)g_text_buf, TEXT_SIZE);
                 printf("The data written is:%s\n", g_text_buf);
                 break;
             }
             case KEY1_PRES:
             {
+                /* 从同一地址读回到RAM数组；写入时已保存\0，因此printf可按C字符串输出。 */
                 at24cxx_read(0, datatemp, TEXT_SIZE);
                 printf("The data read is:%s\n", datatemp);
                 break;
@@ -117,6 +123,7 @@ void app_main(void)
             }
         }
 
+        /* 主循环每轮延时10ms；计满20轮约为200ms，作为运行指示灯的翻转周期。 */
         i++;
 
         if (i == 20)
