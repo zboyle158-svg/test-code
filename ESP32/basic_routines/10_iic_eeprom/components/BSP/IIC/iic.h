@@ -36,7 +36,7 @@ typedef struct _i2c_obj_t {
 
 /* 项目定义的缓冲区描述：len表示字节数，buf指向要发送的数据或接收数据的RAM。 */
 typedef struct _i2c_buf_t {
-    size_t len;
+    size_t len; 
     uint8_t *buf;
 } i2c_buf_t;
 

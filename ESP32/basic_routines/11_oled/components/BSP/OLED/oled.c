@@ -26,6 +26,12 @@
 
 i2c_obj_t oled_master;
 
+/*
+ * OLED_GRAM 是 MCU 侧的 128×64 单色显存：
+ * 第一维是列 x=0..127，第二维是页 page=0..7；每页包含垂直方向 8 个像素。
+ * 应用层先改这块 RAM，oled_refresh_gram() 再逐页、逐列发送到 OLED。
+ */
+
 /*OLED的显存
     存放格式如下.
     [0]0 1 2 3 ... 127
@@ -52,6 +58,7 @@ esp_err_t oled_write(uint8_t* data_wr, size_t size)
         .buf = data_wr,
     };
 
+    /* OLED_ADDR 是 7 位地址 0x3C；第一个字节通常是控制字节 OLED_CMD/OLED_DATA。 */
     i2c_transfer(&oled_master, OLED_ADDR, 1, &bufs, I2C_FLAG_STOP);
     return ESP_OK;
 }
@@ -64,6 +71,7 @@ esp_err_t oled_write(uint8_t* data_wr, size_t size)
  */
 void oled_write_Byte(unsigned char tx_data, unsigned char command)
 {
+    /* command=0x00 表示后面的字节是命令，command=0x40 表示是显示数据。 */
     unsigned char data[2] = {command, tx_data};
     oled_write(data, sizeof(data));
 }
@@ -77,6 +85,7 @@ void oled_refresh_gram(void)
 {
     uint8_t i, n;
     
+    /* SSD1306 兼容控制器把 64 行分成 8 个 page，每页高度为 8 行。 */
     for (i = 0; i < 8; i++)
     {  
         oled_write_Byte(0xb0 + i, OLED_CMD);     /* 设置页地址（0~7） */
@@ -130,7 +139,7 @@ void oled_init(i2c_obj_t self)
     OLED_RST(1);
     vTaskDelay(100);
 
-    /* 初始化代码 */
+    /* 以下是一组 SSD1306/兼容控制器的上电配置命令，顺序由控制器协议决定。 */
     oled_write_Byte(0xAE, OLED_CMD);    /* 关闭显示 */
     oled_write_Byte(0xD5, OLED_CMD);    /* 设置时钟分频因子,震荡频率 */
     oled_write_Byte(80, OLED_CMD);      /* [3:0],分频因子;[7:4],震荡频率 */
@@ -225,7 +234,8 @@ void oled_draw_point(uint8_t x, uint8_t y, uint8_t dot)
         return;                     /* 超出范围了 */
     }
 
-    pos = 7 - y / 8;                /* 计算GRAM里面的y坐标所在的字节, 每个字节可以存储8个行坐标 */
+    /* y/8 定位页；本驱动的页序是倒序，因此使用 7-y/8。 */
+    pos = 7 - y / 8;                /* 每个字节存放垂直方向 8 个像素 */
     bx = y % 8;                     /* 取余数,方便计算y在对应字节里面的位置,及行(y)位置 */
     temp = 1 << (7 - bx);           /* 高位表示高行号, 得到y对应的bit位置,将该bit先置1 */
 
@@ -274,7 +284,8 @@ void oled_show_char(uint8_t x, uint8_t y, uint8_t chr, uint8_t size, uint8_t mod
 {
     uint8_t temp, t, t1;
     uint8_t y0 = y;
-    uint8_t csize = (size / 8 + ((size % 8) ? 1 : 0)) * (size / 2); /* 得到字体一个字符对应点阵集所占的字节数 */
+    /* 字符宽度约为 size/2；每列按 8 个像素打包，因此得到字模总字节数。 */
+    uint8_t csize = (size / 8 + ((size % 8) ? 1 : 0)) * (size / 2); /* 字模占用字节数 */
     chr = chr - ' ';                                                /* 得到偏移后的值 */
     
     for (t = 0; t < csize; t ++)
@@ -296,6 +307,7 @@ void oled_show_char(uint8_t x, uint8_t y, uint8_t chr, uint8_t size, uint8_t mod
             return;                                                 /* 没有的字库 */
         }
 
+        /* 字模每一位代表一个像素，最高位先发送。 */
         for (t1 = 0; t1 < 8; t1++)
         {
             if (temp & 0x80)

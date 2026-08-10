@@ -27,12 +27,15 @@
 #include "driver/gpio.h"
 
 
-/* 引脚定义 */
+/*
+ * SPI2总线引脚：MOSI发送数据，MISO接收数据，SCLK提供时钟。
+ * 本项目的LCD主要接收数据，因此MISO虽然配置了，但显示路径主要使用MOSI。
+ */
 #define SPI_MOSI_GPIO_PIN   GPIO_NUM_11         /* SPI2_MOSI */
 #define SPI_CLK_GPIO_PIN    GPIO_NUM_12         /* SPI2_CLK */
 #define SPI_MISO_GPIO_PIN   GPIO_NUM_13         /* SPI2_MISO */
 
-/* 函数声明 */
+/* SPI底层接口：LCD驱动只关心“发命令、发数据、收发一个字节”。 */
 void spi2_init(void);                                                               /* 初始化SPI2 */
 void spi2_write_cmd(spi_device_handle_t handle, uint8_t cmd);                       /* SPI发送命令 */
 void spi2_write_data(spi_device_handle_t handle, const uint8_t *data, int len);     /* SPI发送数据 */

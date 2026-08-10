@@ -82,4 +82,4 @@ uint16_t xl9555_pin_write(uint16_t pin, int val);                   /* 控制某
 esp_err_t xl9555_read_byte(uint8_t* data, size_t len);              /* 读取XL9555的16位IO值 */
 uint8_t xl9555_key_scan(uint8_t mode);                              /* 扫描按键值 */
 
-#endif
+#endif 

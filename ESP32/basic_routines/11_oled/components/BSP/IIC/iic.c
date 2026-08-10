@@ -23,6 +23,12 @@
 
 i2c_obj_t iic_master[I2C_NUM_MAX];  /* 为IIC0和IIC1分别定义IIC控制块结构体 */
 
+/*
+ * 这里使用 ESP-IDF 传统 command-link I2C API：
+ * 创建命令链 -> 加入 START/地址/数据/STOP -> 提交执行 -> 删除命令链。
+ * 本文件是项目自己的总线封装，底层真正执行工作的函数来自 driver/i2c.h。
+ */
+
 /**
  * @brief       初始化IIC
  * @param       iic_port：I2C编号(I2C_NUM_0 / I2C_NUM_1)
@@ -31,6 +37,7 @@ i2c_obj_t iic_master[I2C_NUM_MAX];  /* 为IIC0和IIC1分别定义IIC控制块结
 i2c_obj_t iic_init(uint8_t iic_port)
 {
     uint8_t i;
+    /* 清零结构体，避免未使用字段携带随机值。 */
     i2c_config_t iic_config_struct = {0};
 
     if (iic_port == I2C_NUM_0)
@@ -56,6 +63,7 @@ i2c_obj_t iic_init(uint8_t iic_port)
         iic_master[i].sda = IIC1_SDA_GPIO_PIN;
     }
 
+    /* ESP32 作为主机主动产生 SCL，并按照设备协议发起读写。 */
     iic_config_struct.mode = I2C_MODE_MASTER;                               /* 设置IIC模式-主机模式 */
     iic_config_struct.sda_io_num = iic_master[i].sda;                       /* 设置IIC_SDA引脚 */
     iic_config_struct.scl_io_num = iic_master[i].scl;                       /* 设置IIC_SCL引脚 */
@@ -71,6 +79,7 @@ i2c_obj_t iic_init(uint8_t iic_port)
                                                  I2C_MASTER_TX_BUF_DISABLE, /* 从机模式下发送缓存大小(主机模式不使用) */     
                                                  0);                        /* 用于分配中断的标志(通常从机模式使用) */            
 
+    /* 初始化失败时保留原工程的停机重试打印行为。 */
     if (iic_master[i].init_flag != ESP_OK)
     {
         while(1)
@@ -97,9 +106,11 @@ esp_err_t i2c_transfer(i2c_obj_t *self, uint16_t addr, size_t n, i2c_buf_t *bufs
     int data_len = 0;
     esp_err_t ret = ESP_FAIL;
 
-    i2c_cmd_handle_t cmd = i2c_cmd_link_create();                                                       /* 创建一个命令链接,将一系列待发送给从机的数据填充命令链接 */
+    /* addr 使用 7 位设备地址；写入命令时左移一位，再由 flags 的 READ 位补上 R/W 位。 */
+    i2c_cmd_handle_t cmd = i2c_cmd_link_create();                                                       /* 创建命令链 */
 
     /* 根据器件通信时序去决定flags参数,进而选择如下代码不同的执行情况 */
+    /* WRITE + READ 的组合会形成“先写寄存器地址，再重复 START 读数据”的事务。 */
     if (flags & I2C_FLAG_WRITE)
     {
         i2c_master_start(cmd);                                                                          /* 启动位 */
@@ -134,7 +145,8 @@ esp_err_t i2c_transfer(i2c_obj_t *self, uint16_t addr, size_t n, i2c_buf_t *bufs
         i2c_master_stop(cmd);                                                                           /* 停止位 */
     }
 
-    ret = i2c_master_cmd_begin(self->port, cmd, 100 * (1 + data_len) / portTICK_PERIOD_MS);             /* 触发I2C控制器执行命令链接,即命令发送 */
+    /* 超时时间表达式最终换算成 FreeRTOS tick；该调用才会真正执行命令链。 */
+    ret = i2c_master_cmd_begin(self->port, cmd, 100 * (1 + data_len) / portTICK_PERIOD_MS);             /* 提交并执行命令链 */
     i2c_cmd_link_delete(cmd);                                                                           /* 释放命令链接使用的资源 */
 
     return ret;

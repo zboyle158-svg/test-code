@@ -28,6 +28,17 @@
 
 i2c_obj_t i2c0_master;
 
+/*
+ * 本工程的硬件初始化顺序很重要：
+ * 1. NVS 是 ESP-IDF 常用的系统存储区域，先处理它的初始化异常；
+ * 2. 初始化板载 LED，便于通过闪烁观察程序是否仍在运行；
+ * 3. 初始化 I2C0，XL9555 依赖它控制 LCD 的电源和复位；
+ * 4. 初始化 SPI2，LCD 的像素数据和控制命令通过它发送；
+ * 5. 初始化 XL9555 和 LCD，最后才进入显示循环。
+ * 这里的 i2c0_master 是“设备控制块”的副本，传给 XL9555 后，
+ * XL9555 驱动就知道应该使用哪个 I2C 控制器以及对应的 SDA/SCL 引脚。
+ */
+
 /**
  * @brief       程序入口
  * @param       无
@@ -35,14 +46,15 @@ i2c_obj_t i2c0_master;
  */
 void app_main(void)
 {
-    uint8_t x = 0;
+    uint8_t x = 0;                     /* 当前要显示的背景颜色编号，0~11循环 */
     esp_err_t ret;
     
     
-    ret = nvs_flash_init();             /* 初始化NVS */
+    ret = nvs_flash_init();             /* ESP-IDF系统初始化：挂载NVS分区 */
 
     if (ret == ESP_ERR_NVS_NO_FREE_PAGES || ret == ESP_ERR_NVS_NEW_VERSION_FOUND)
     {
+        /* 分区空间不足或版本变化时，擦除旧NVS后重新初始化。 */
         ESP_ERROR_CHECK(nvs_flash_erase());
         ret = nvs_flash_init();
     }
@@ -53,6 +65,7 @@ void app_main(void)
     xl9555_init(i2c0_master);           /* IO扩展芯片初始化 */
     lcd_init();                         /* 初始化LCD */
 
+    /* 主循环每次更换一种背景色，再重新绘制四行文字。 */
     while (1)
     {
         switch (x)
@@ -119,6 +132,7 @@ void app_main(void)
             }
         }
 
+        /* x、y是左上角坐标；width/height是可绘制区域；size是字体高度。 */
         lcd_show_string(10, 40, 240, 32, 32, "ESP32", RED);
         lcd_show_string(10, 80, 240, 24, 24, "SPILCD TEST", RED);
         lcd_show_string(10, 110, 240, 16, 16, "ATOM@ALIENTEK", RED);
@@ -130,7 +144,7 @@ void app_main(void)
             x = 0;
         }
 
-        LED_TOGGLE();
-        vTaskDelay(500);
+        LED_TOGGLE();                    /* 使用LED翻转表示一次显示刷新完成 */
+        vTaskDelay(500);                  /* 参数是FreeRTOS tick，当前代码保持原值 */
     }
 }

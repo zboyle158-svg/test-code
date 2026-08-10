@@ -24,6 +24,8 @@
 i2c_obj_t xl9555_i2c_master;
 static uint16_t xl9555_failed = 0;
 
+/* XL9555把16个扩展IO映射成两个8位端口，低字节是Port0，高字节是Port1。 */
+
 /**
  * @brief       读取XL9555的16位IO值
  * @param       data：读取数据的存储区
@@ -71,6 +73,7 @@ uint16_t xl9555_pin_write(uint16_t pin, int val)
     uint8_t w_data[2];
     uint16_t temp = 0x0000;
 
+    /* 先读再改，避免只修改目标位时覆盖其他扩展IO当前状态。 */
     xl9555_read_byte(w_data, 2);
 
     if (pin <= GBC_KEY_IO)
@@ -188,9 +191,10 @@ void xl9555_init(i2c_obj_t self)
     gpio_init_struct.pull_up_en = GPIO_PULLUP_ENABLE;
     gpio_config(&gpio_init_struct);     /* 配置XL_INT引脚 */
 
-    /* 上电先读取一次清除中断标志 */
+    /* 上电先读取一次输入寄存器，清除/同步可能残留的中断状态。 */
     xl9555_read_byte(r_data, 2);
     
+    /* 配置扩展IO方向：配置寄存器中1为输入、0为输出。 */
     xl9555_ioconfig(0xF003);
     xl9555_pin_write(BEEP_IO, 1);
     xl9555_pin_write(SPK_EN_IO, 1);

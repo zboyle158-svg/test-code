@@ -23,6 +23,8 @@
 
 i2c_obj_t iic_master[I2C_NUM_MAX];  /* 为IIC0和IIC1分别定义IIC控制块结构体 */
 
+/* I2C这里使用ESP-IDF旧版命令链API：先组装START/地址/数据/STOP，再一次提交执行。 */
+
 /**
  * @brief       初始化IIC
  * @param       iic_port：I2C编号(I2C_NUM_0 / I2C_NUM_1)
@@ -99,10 +101,11 @@ esp_err_t i2c_transfer(i2c_obj_t *self, uint16_t addr, size_t n, i2c_buf_t *bufs
 
     i2c_cmd_handle_t cmd = i2c_cmd_link_create();                                                       /* 创建一个命令链接,将一系列待发送给从机的数据填充命令链接 */
 
-    /* 根据器件通信时序去决定flags参数,进而选择如下代码不同的执行情况 */
+    /* flags描述本次事务：可组合写、读和STOP，驱动据此生成实际I2C时序。 */
     if (flags & I2C_FLAG_WRITE)
     {
         i2c_master_start(cmd);                                                                          /* 启动位 */
+        /* addr是7位地址；左移一位后，最低位0表示写。 */
         i2c_master_write_byte(cmd, addr << 1, ACK_CHECK_EN);                                            /* 从机地址 + 写操作位 */
         i2c_master_write(cmd, bufs->buf, bufs->len, ACK_CHECK_EN);                                      /* len个数据 */
         data_len += bufs->len; 
@@ -111,6 +114,7 @@ esp_err_t i2c_transfer(i2c_obj_t *self, uint16_t addr, size_t n, i2c_buf_t *bufs
     }
 
     i2c_master_start(cmd);                                                                              /* 启动位 */
+    /* 重复START后再次发送地址；最低位由READ标志决定读或写。 */
     i2c_master_write_byte(cmd, addr << 1 | (flags & I2C_FLAG_READ), ACK_CHECK_EN);                      /* 从机地址 + 读/写操作位 */
 
     for (; n--; ++bufs)

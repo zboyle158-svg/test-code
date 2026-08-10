@@ -32,6 +32,11 @@ spi_device_handle_t MY_LCD_Handle;
 uint8_t lcd_buf[LCD_TOTAL_BUF_SIZE];
 lcd_obj_t lcd_self;
 
+/*
+ * lcd_self保存当前屏幕的逻辑状态：分辨率、方向以及“设置窗口/开始写GRAM”命令。
+ * lcd_buf只保存待发送的像素字节，不是LCD显存；真正的显存位于LCD控制器内部。
+ */
+
 
 /* LCD需要初始化一组命令/参数值。它们存储在此结构中  */
 typedef struct
@@ -48,6 +53,7 @@ typedef struct
  */
 void lcd_write_cmd(const uint8_t cmd)
 {
+    /* D/C=0后发送单字节命令，例如0x2A设置列地址、0x2C开始写显存。 */
     LCD_WR(0);
     spi2_write_cmd(MY_LCD_Handle, cmd);
 }
@@ -59,6 +65,7 @@ void lcd_write_cmd(const uint8_t cmd)
  */
 void lcd_write_data(const uint8_t *data, int len)
 {
+    /* D/C=1后发送命令参数或像素数据；具体含义由前一个命令决定。 */
     LCD_WR(1);
     spi2_write_data(MY_LCD_Handle, data, len);
 }
@@ -71,6 +78,7 @@ void lcd_write_data(const uint8_t *data, int len)
 void lcd_write_data16(uint16_t data)
 {
     uint8_t dataBuf[2] = {0,0};
+    /* LCD使用RGB565，按大端顺序先发高8位，再发低8位。 */
     dataBuf[0] = data >> 8;
     dataBuf[1] = data & 0xFF;
     LCD_WR(1);
@@ -86,7 +94,8 @@ void lcd_write_data16(uint16_t data)
  * @retval      无
  */
 void lcd_set_window(uint16_t xstar, uint16_t ystar,uint16_t xend,uint16_t yend)
-{	
+{
+	/* 先写列地址范围，再写行地址范围，最后通知控制器接收GRAM像素。 */
     uint8_t databuf[4] = {0,0,0,0};
     databuf[0] = xstar >> 8;
     databuf[1] = 0xFF & xstar;
@@ -118,6 +127,7 @@ void lcd_clear(uint16_t color)
     data[0] = color >> 8;
     data[1] = color;
     
+    /* 设置整屏窗口后，连续发送width*height个RGB565像素。 */
     lcd_set_window(0, 0, lcd_self.width - 1, lcd_self.height - 1);
 
     for(j = 0; j < LCD_BUF_SIZE / 2; j++)
@@ -188,7 +198,7 @@ void lcd_scan_dir(uint8_t dir)
         dir = 5;
     }
 
-    /* 根据扫描方式 设置 0X36/0X3600 寄存器 bit 5,6,7 位的值 */
+    /* MADCTL(0x36)的bit5~bit7决定行列扫描方向，写入后同步更新逻辑宽高。 */
     switch (dir)
     {
         case L2R_U2D:                           /* 从左到右,从上到下 */
@@ -289,7 +299,7 @@ void lcd_display_dir(uint8_t dir)
  */
 void lcd_hard_reset(void)
 {
-    /* 复位显示屏 */
+    /* 通过XL9555拉低/拉高复位脚，两个延时给LCD控制器留出复位时间。 */
     LCD_RST(0);
     vTaskDelay(100);
     LCD_RST(1);
@@ -730,7 +740,10 @@ void lcd_init(void)
     
     gpio_config_t gpio_init_struct;
 
-    /* SPI驱动接口配置 */
+    /*
+     * 这里是在已初始化的SPI2总线上挂接一个LCD“设备”。
+     * SPI总线配置了时钟和DMA资源；设备配置补充SPI模式、片选脚和事务队列。
+     */
     spi_device_interface_config_t devcfg = {
         .clock_speed_hz = 60 * 1000 * 1000,                         /* SPI时钟 */
         .mode = 0,                                                  /* SPI模式0 */
@@ -751,7 +764,7 @@ void lcd_init(void)
 
     lcd_hard_reset();                                               /* LCD硬件复位 */
 
-    /* 初始化代码 */
+    /* 初始化代码：每一项都是“命令+参数”；databytes的bit7表示发送后需要延时。 */
 #if SPI_LCD_TYPE                                                    /* 对2.4寸LCD寄存器进行设置 */
     lcd_init_cmd_t ili_init_cmds[] =
     {
@@ -786,7 +799,7 @@ void lcd_init(void)
     };
 #endif
 
-    /* 循环发送设置所有寄存器 */
+    /* 按LCD控制器要求逐条发送初始化命令，直到databytes=0xff结束标记。 */
     while (ili_init_cmds[cmd].databytes != 0xff)
     {
         lcd_write_cmd(ili_init_cmds[cmd].cmd);
@@ -794,13 +807,14 @@ void lcd_init(void)
         
         if (ili_init_cmds[cmd].databytes & 0x80)
         {
+            /* 例如Sleep Out/Display On后需要等待LCD内部电源和时钟稳定。 */
             vTaskDelay(120);
         }
         
         cmd++;
     }
 
-    lcd_display_dir(1);                                             /* 设置屏幕方向 */
-    LCD_PWR(1);
-    lcd_clear(WHITE);                                               /* 清屏 */
+    lcd_display_dir(1);                                             /* 设置为横屏，逻辑分辨率变为320x240 */
+    LCD_PWR(1);                                                     /* 通过XL9555打开LCD电源/背光相关控制 */
+    lcd_clear(WHITE);                                               /* 用整屏像素验证LCD已经能正常接收数据 */
 }

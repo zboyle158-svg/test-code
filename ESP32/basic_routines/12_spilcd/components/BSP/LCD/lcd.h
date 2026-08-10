@@ -33,7 +33,11 @@
 #include "spi.h"
 
 
-/* 引脚定义 */
+/*
+ * LCD_NUM_WR是D/C（命令/数据选择）线：0表示后续字节是命令，1表示数据。
+ * LCD_NUM_CS是片选线：有效期间SPI数据才属于LCD。
+ * LCD_PWR和LCD_RST连接在XL9555扩展IO上，不是ESP32-S3的直接GPIO。
+ */
 #define LCD_NUM_WR      GPIO_NUM_40
 #define LCD_NUM_CS      GPIO_NUM_21
 
@@ -111,7 +115,10 @@ typedef struct _lcd_obj_t
     uint16_t        cs;             /* 片选IO */
 } lcd_obj_t;
 
-/* LCD缓存大小设置，修改此值时请注意！！！！修改这两个值时可能会影响以下函数 lcd_clear/lcd_fill/lcd_draw_line */
+/*
+ * LCD_TOTAL_BUF_SIZE是整屏RGB565缓存大小：320*240*2字节。
+ * LCD_BUF_SIZE是分块发送大小，lcd_clear会重复发送这些分块，避免一次事务过大。
+ */
 #define LCD_TOTAL_BUF_SIZE      (320 * 240 * 2)
 #define LCD_BUF_SIZE            15360
 

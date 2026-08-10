@@ -24,5 +24,6 @@
     "board/esp32s3-builtin.cfg"
 ],
 "idf.flashType": "UART",
-"idf.portWin": "COM3"
+"idf.portWin": "COM3",
+"idf.currentSetup": "I:\\Espressif\\frameworks\\esp-idf-v5.1.2"
 }
