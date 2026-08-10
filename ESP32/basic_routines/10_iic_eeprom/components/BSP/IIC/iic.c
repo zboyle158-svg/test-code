@@ -105,6 +105,7 @@ esp_err_t i2c_transfer(i2c_obj_t *self, uint16_t addr, size_t n, i2c_buf_t *bufs
     /* 根据器件通信时序去决定flags参数,进而选择如下代码不同的执行情况 */
     if (flags & I2C_FLAG_WRITE)
     {
+        /* 当WRITE与READ同时出现时，这一段只写“寄存器/内部地址”，随后再START即重复起始。 */
         i2c_master_start(cmd);                                                                          /* 启动位 */
         i2c_master_write_byte(cmd, addr << 1, ACK_CHECK_EN);                                            /* 从机地址 + 写操作位 */
         i2c_master_write(cmd, bufs->buf, bufs->len, ACK_CHECK_EN);                                      /* len个数据 */
@@ -114,12 +115,14 @@ esp_err_t i2c_transfer(i2c_obj_t *self, uint16_t addr, size_t n, i2c_buf_t *bufs
     }
 
     i2c_master_start(cmd);                                                                              /* 启动位 */
+    /* flags的最低位直接成为I2C地址字节最低位：0为写，1为读。 */
     i2c_master_write_byte(cmd, addr << 1 | (flags & I2C_FLAG_READ), ACK_CHECK_EN);                      /* 从机地址 + 读/写操作位 */
 
     for (; n--; ++bufs)
     {
         if (flags & I2C_FLAG_READ)
         {
+            /* 最后一段读完回复NACK，按I2C规范告知从机本次读取结束。 */
             i2c_master_read(cmd, bufs->buf, bufs->len, n == 0 ? I2C_MASTER_LAST_NACK : I2C_MASTER_ACK); /* 读取数据 */
         }
         else

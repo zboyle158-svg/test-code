@@ -14,5 +14,6 @@
     "adc1.h": "c",
     "24cxx.h": "c",
     "xl9555.h": "c"
-}
+},
+"idf.currentSetup": "I:\\Espressif\\frameworks\\esp-idf-v5.1.2"
 }

@@ -115,3 +115,7 @@
 3	21755	8077270651478391	build.ninja	63f2890608390d91
 8	199	0	esp-idf/esptool_py/CMakeFiles/bootloader_check_size	d9ffd4f635957b0a
 8	199	0	J:/github/test-code/ESP32/basic_routines/10_iic_eeprom/build/bootloader/esp-idf/esptool_py/CMakeFiles/bootloader_check_size	d9ffd4f635957b0a
+16	728	0	esp-idf/esptool_py/CMakeFiles/bootloader_check_size	d9ffd4f635957b0a
+16	728	0	J:/github/test-code/ESP32/basic_routines/10_iic_eeprom/build/bootloader/esp-idf/esptool_py/CMakeFiles/bootloader_check_size	d9ffd4f635957b0a
+10	169	0	esp-idf/esptool_py/CMakeFiles/bootloader_check_size	d9ffd4f635957b0a
+10	169	0	J:/github/test-code/ESP32/basic_routines/10_iic_eeprom/build/bootloader/esp-idf/esptool_py/CMakeFiles/bootloader_check_size	d9ffd4f635957b0a

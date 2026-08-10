@@ -61,4 +61,4 @@ extern i2c_obj_t iic_master[I2C_NUM_MAX];
 i2c_obj_t iic_init(uint8_t iic_port);                                                                   /* 初始化IIC */
 esp_err_t i2c_transfer(i2c_obj_t *self, uint16_t addr, size_t n, i2c_buf_t *bufs, unsigned int flags);  /* IIC读写数据 */
 
-#endif
+#endif 

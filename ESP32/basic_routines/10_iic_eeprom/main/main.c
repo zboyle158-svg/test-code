@@ -60,11 +60,11 @@ void show_mesg(void)
  */
 void app_main(void)
 {
-    uint16_t i = 0;
-    uint8_t err = 0;
-    uint8_t key;
-    uint8_t datatemp[TEXT_SIZE];
-    esp_err_t ret;
+    uint16_t i = 0;         /* 主循环每轮延时10ms；计满20轮约为200ms，作为运行指示灯的翻转周期。 */
+    uint8_t err = 0;        /* 检测AT24C02 */
+    uint8_t key;            /* 轮询XL9555上的按键。传入0表示一次按下只产生一次键值，须松开后才可再次触发。 */
+    uint8_t datatemp[TEXT_SIZE];         /* 从同一地址读回到RAM数组；写入时已保存\0，因此printf可按C字符串输出。 */
+    esp_err_t ret;          /* ESP-IDF的NVS初始化；本例不直接读写NVS，但系统组件仍可能需要它。 */
     
     /* ESP-IDF的NVS初始化；本例不直接读写NVS，但系统组件仍可能需要它。 */
     ret = nvs_flash_init();             /* 初始化NVS */

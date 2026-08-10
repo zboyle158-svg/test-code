@@ -31,10 +31,12 @@ i2c_obj_t at24cxx_master;
  */
 void at24cxx_init(i2c_obj_t self)
 {
+    /* 复制主程序已初始化的总线描述；后续所有读写均通过该port发送。 */
     at24cxx_master = self;
 
     if (self.init_flag == ESP_FAIL)
     {
+        /* 防御性分支：正常启动路径已先调用iic_init()，这里不应再次进入。 */
         iic_init(I2C_NUM_0);        /* 初始化IIC */
     }
 }
@@ -93,6 +95,7 @@ uint8_t at24cxx_read_one_byte(uint16_t addr)
  */
 void at24cxx_write_one_byte(uint16_t addr, uint8_t data)
 {
+    /* 单字节写时序：START -> 器件写地址 -> 内部地址 -> 数据 -> STOP。 */
     i2c_cmd_handle_t cmd = i2c_cmd_link_create();
     i2c_master_start(cmd);
         
@@ -107,10 +110,12 @@ void at24cxx_write_one_byte(uint16_t addr, uint8_t data)
     }
 
     i2c_master_write_byte(cmd, addr % 256, ACK_CHECK_EN);                               /* 发送低地址 */
+    /* data是本次要保存到addr单元的一个字节，不是I2C地址的一部分。 */
     i2c_master_write_byte(cmd, data, ACK_CHECK_EN);
     i2c_master_stop(cmd);
     i2c_master_cmd_begin(at24cxx_master.port, cmd, 1000);
     i2c_cmd_link_delete(cmd);
+    /* 保持原来的等待，给AT24C02完成内部非易失写周期。 */
     vTaskDelay(10);
 }
 
@@ -174,6 +179,7 @@ void at24cxx_read(uint16_t addr, uint8_t *pbuf, uint16_t datalen)
  */
 void at24cxx_write(uint16_t addr, uint8_t *pbuf, uint16_t datalen)
 {
+    /* 本例没有使用AT24C02的页写优化，而是逐字节调用底层写函数。 */
     while (datalen--)
     {
         at24cxx_write_one_byte(addr, *pbuf);

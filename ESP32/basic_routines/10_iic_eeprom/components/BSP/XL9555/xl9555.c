@@ -174,12 +174,14 @@ void xl9555_init(i2c_obj_t self)
 {
     uint8_t r_data[2];
 
+    /* 正常情况下self来自main.c的iic_init(I2C_NUM_0)，其init_flag应为ESP_OK。 */
     if (self.init_flag == ESP_FAIL)
     {
         iic_init(I2C_NUM_0);        /* 初始化IIC */
     }
 
     xl9555_i2c_master = self;
+    /* GPIO40连接XL9555的INT输出；本例轮询按键，未把它注册为ESP32中断。 */
     gpio_config_t gpio_init_struct = {0};
     
     gpio_init_struct.intr_type = GPIO_INTR_DISABLE;
@@ -220,6 +222,7 @@ uint8_t xl9555_key_scan(uint8_t mode)
     
     if (key_up && (KEY0 == 0 || KEY1 == 0 || KEY2 == 0  || KEY3 == 0 )) /* 按键松开标志为1, 且有任意一个按键按下了 */
     {
+        /* 按键经XL9555读取，为低电平有效；延时后再读取以过滤机械抖动。 */
         vTaskDelay(10);                                                 /* 去抖动 */
         key_up = 0;
 
