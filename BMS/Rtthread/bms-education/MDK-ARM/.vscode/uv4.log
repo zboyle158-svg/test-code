@@ -1,4 +1,4 @@
 *** Using Compiler 'V5.06 update 6 (build 750)', folder: 'I:\keil11\ARM\ARMCC\Bin'
 Build target 'BMS'
 Note: source file '../Middlewares/Third_Party/RealThread_RTOS/bsp/_template/cubemx_config/board.c' - object file renamed from 'BMS\board.o' to 'BMS\board_1.o'."BMS\BMS.axf" - 0 Error(s), 0 Warning(s).
-Build Time Elapsed:  00:00:01
+Build Time Elapsed:  00:00:04
