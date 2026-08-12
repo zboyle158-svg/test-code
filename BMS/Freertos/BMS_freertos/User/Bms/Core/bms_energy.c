@@ -1,3 +1,9 @@
+/**
+ * @file bms_energy.c
+ * @brief å……æ”¾ç”µå¼€å…³å’Œç”µèŠ¯è¢«åŠ¨å‡è¡¡ç®¡ç†ã€‚
+ * æ ¹æ®ç³»ç»Ÿæ¨¡å¼ã€SOC å’Œä¿æŠ¤æŠ¥è­¦çŠ¶æ€æ§åˆ¶ CHG/DSGï¼›å‡è¡¡ç»“æŸç”±ä¸€æ¬¡æ€§
+ * RTOS å®šæ—¶å™¨å¤„ç†ï¼Œå¹¶ä¿ç•™ç”µå‹å›å‡æ—¶é—´ï¼Œé¿å…ä½¿ç”¨å°šæœªç¨³å®šçš„ç”µå‹åˆ¤æ–­ã€‚
+ */
 #define BMS_DBG_TAG "Energy"
 
 #include <stdio.h>
@@ -41,7 +47,7 @@ BMS_EnergyDataTypedef BMS_EnergyData =
 };
 
 
-// Ê¹ÓÃĞÅºÅÁ¿×öÒ»ÏÂ¾ùºâÊÍ·Å
+// ä½¿ç”¨ä¿¡å·é‡åšä¸€ä¸‹å‡è¡¡é‡Šæ”¾
 osSemaphoreId_t BalanceSem = RT_NULL;
 
 
@@ -102,7 +108,7 @@ void BMS_EnergyInit(void)
 }
 
 
-// µç³ØÄÜÁ¿¹ÜÀíÈÎÎñÏß³ÌÈë¿Ú
+// ç”µæ± èƒ½é‡ç®¡ç†ä»»åŠ¡çº¿ç¨‹å…¥å£
 static void BMS_EnergyTaskEntry(void *paramter)
 {
 	BMS_CHGStateBackup = BMS_GlobalParam.Charge;
@@ -124,7 +130,7 @@ static void BMS_EnergyTaskEntry(void *paramter)
 }
 
 
-// ÓÃÓÚ¾ùºâ¼ÆÊıµÄ¶¨Ê±Æ÷»Øµ÷Èë¿Ú
+// ç”¨äºå‡è¡¡è®¡æ•°çš„å®šæ—¶å™¨å›è°ƒå…¥å£
 static void BMS_BalanceTimerEntry(void *paramter)
 {
 	(void)paramter;
@@ -135,13 +141,13 @@ static void BMS_BalanceTimerEntry(void *paramter)
 	
 	BalanceFlag = false;
 
-	// ÓÃÓÚ¾ùºâµçÑ¹»ØÉı¼ÆÊ±
+	// ç”¨äºå‡è¡¡ç”µå‹å›å‡è®¡æ—¶
 	BalanceVoltRiseTime = BALANCE_VOLT_RISE_DELAY + osKernelGetTickCount();
 	
 	BMS_INFO("Balance Timer End");
 }
 
-// Æô¶¯¾ùºâ¶¨Ê±Æ÷¼ÆÊıÈÎÎñ
+// å¯åŠ¨å‡è¡¡å®šæ—¶å™¨è®¡æ•°ä»»åŠ¡
 static void BMS_BalanceStartTimer(uint32_t sec)
 {
 	uint32_t tick;
@@ -158,13 +164,13 @@ static void BMS_BalanceStartTimer(uint32_t sec)
 
 
 
-// ³ä·Åµç¹ÜÀí
+// å……æ”¾ç”µç®¡ç†
 static void BMS_EnergyChgDsgManage(void)
 {
-	// ÎŞ±¨¾¯µÄÇé¿öÏÂ
+	// æ— æŠ¥è­¦çš„æƒ…å†µä¸‹
 	if (BMS_ProtectAlert == FlAG_ALERT_NO)
 	{
-		// ¸ù¾İSOCÖµ¿ØÖÆ³ä·Åµç
+		// æ ¹æ®SOCå€¼æ§åˆ¶å……æ”¾ç”µ
 		switch(BMS_GlobalParam.SysMode)
 		{
 			case BMS_MODE_CHARGE:
@@ -189,13 +195,13 @@ static void BMS_EnergyChgDsgManage(void)
 
 			case BMS_MODE_STANDBY:
 			{
-				// ÓÃ»§ÊÇ·ñ¿ªÆôÁË³äµç¿ª¹Ø
+				// ç”¨æˆ·æ˜¯å¦å¼€å¯äº†å……ç”µå¼€å…³
 				if (BMS_GlobalParam.Charge == BMS_STATE_ENABLE)	
 				{
-					// ¸ù¾İSOCÖµ¿ªÆô³äµç
+					// æ ¹æ®SOCå€¼å¼€å¯å……ç”µ
 					if (BMS_AnalysisData.SOC < BMS_EnergyData.SocStartChg)
 					{
-						// ¼ì²éÊÇ·ñ´¦ÓÚ¾ùºâ×´Ì¬
+						// æ£€æŸ¥æ˜¯å¦å¤„äºå‡è¡¡çŠ¶æ€
 						if (osSemaphoreAcquire(BalanceSem, 0) == RT_EOK)
 						{
 							BMS_HalCtrlCharge(BMS_STATE_ENABLE);
@@ -209,10 +215,10 @@ static void BMS_EnergyChgDsgManage(void)
 
 
 
-				// ÓÃ»§ÊÇ·ñ¿ªÆôÁË·Åµç¿ª¹Ø
+				// ç”¨æˆ·æ˜¯å¦å¼€å¯äº†æ”¾ç”µå¼€å…³
 				if (BMS_GlobalParam.Discharge == BMS_STATE_ENABLE) 
 				{
-					// ¸ù¾İSOCÖµ¿ªÆô·Åµç
+					// æ ¹æ®SOCå€¼å¼€å¯æ”¾ç”µ
 					if (BMS_AnalysisData.SOC > BMS_EnergyData.SocStartDsg)
 					{
 						BMS_HalCtrlDischarge(BMS_STATE_ENABLE);
@@ -229,14 +235,14 @@ static void BMS_EnergyChgDsgManage(void)
 
 
 
-		// ¿ÉÍ¨¹ıÃüÁî¿ìËÙ¹Ø±Õ³ä·Åµç
+		// å¯é€šè¿‡å‘½ä»¤å¿«é€Ÿå…³é—­å……æ”¾ç”µ
 		if (BMS_CHGStateBackup != BMS_GlobalParam.Charge)
 		{
 			if (BMS_GlobalParam.Charge == BMS_STATE_DISABLE)
 			{
 				BMS_HalCtrlCharge(BMS_STATE_DISABLE);
 			}
-			else if (BMS_GlobalParam.SysMode == BMS_MODE_SLEEP)  // Ë¯ÃßÄ£Ê½ÏÂ¿É¿ªÆô³äµç
+			else if (BMS_GlobalParam.SysMode == BMS_MODE_SLEEP)  // ç¡çœ æ¨¡å¼ä¸‹å¯å¼€å¯å……ç”µ
 			{
 				BMS_HalCtrlCharge(BMS_STATE_ENABLE);
 			}
@@ -248,7 +254,7 @@ static void BMS_EnergyChgDsgManage(void)
 			{
 				BMS_HalCtrlDischarge(BMS_STATE_DISABLE);
 			}
-			else if (BMS_GlobalParam.SysMode == BMS_MODE_SLEEP)  // Ë¯ÃßÄ£Ê½ÏÂ¿É¿ªÆô·Åµç
+			else if (BMS_GlobalParam.SysMode == BMS_MODE_SLEEP)  // ç¡çœ æ¨¡å¼ä¸‹å¯å¼€å¯æ”¾ç”µ
 			{
 				BMS_HalCtrlDischarge(BMS_STATE_ENABLE);
 			}
@@ -259,25 +265,25 @@ static void BMS_EnergyChgDsgManage(void)
 
 
 
-// ¾ùºâ¹ÜÀí
+// å‡è¡¡ç®¡ç†
 static void BMS_EnergyBalanceManage(void)
 {
 	uint8_t index;
 	float MinVoltage;
 
-	// ´¦ÓÚ·Ç¾ùºâ×´Ì¬ÏÂÇÒÊ¹ÄÜÁË¾ùºâ
+	// å¤„äºéå‡è¡¡çŠ¶æ€ä¸‹ä¸”ä½¿èƒ½äº†å‡è¡¡
 	if (BalanceFlag == false && BMS_GlobalParam.Balance == BMS_STATE_ENABLE)
 	{
-		// ¾²Ö¹µÈ´ıµçÑ¹»ØÉıÒÔ·À²Å³ä·ÅµçÍê»òÕßÉÏÒ»ÂÖ¾ùºâ½áÊø
-		// ÂÖÑ¯Ê½ÑÓÊ±,ÈÃ³ä·ÅµçÃüÁî¿ØÖÆµÃµ½¿ìËÙÏìÓ¦
+		// é™æ­¢ç­‰å¾…ç”µå‹å›å‡ä»¥é˜²æ‰å……æ”¾ç”µå®Œæˆ–è€…ä¸Šä¸€è½®å‡è¡¡ç»“æŸ
+		// è½®è¯¢å¼å»¶æ—¶,è®©å……æ”¾ç”µå‘½ä»¤æ§åˆ¶å¾—åˆ°å¿«é€Ÿå“åº”
 		if (BalanceVoltRiseTime <= osKernelGetTickCount())
 		{
-			// ´¦ÓÚ´ı»úÄ£Ê½ÏÂ»òÕß³äµçÄ£Ê½ÏÂ
+			// å¤„äºå¾…æœºæ¨¡å¼ä¸‹æˆ–è€…å……ç”µæ¨¡å¼ä¸‹
 			if ((BMS_GlobalParam.SysMode == BMS_MODE_STANDBY) || BMS_GlobalParam.SysMode == BMS_MODE_CHARGE)		
 			{
 				MinVoltage = BMS_MonitorData.CellData[0].CellVoltage;
 
-				// µ¥½Ú×î´óµçÑ¹ÊÇ·ñ´óÓÚ¾ùºâÆğÊ¼µçÑ¹
+				// å•èŠ‚æœ€å¤§ç”µå‹æ˜¯å¦å¤§äºå‡è¡¡èµ·å§‹ç”µå‹
 				if (BMS_MonitorData.CellData[BMS_GlobalParam.Cell_Real_Number-1].CellVoltage > BMS_EnergyData.BalanceStartVoltage)
 				{
 					float CmpVoltage;
@@ -287,12 +293,12 @@ static void BMS_EnergyBalanceManage(void)
 
 					
 					/*
-					// ÏàÁÚµ¥ÔªÄÜÍ¬Ê±¾ùºâµÄÇé¿ö,BQ²»ÄÜÏàÁÚÍ¬Ê±¾ùºâ,Î´²âÊÔ¹ı
+					// ç›¸é‚»å•å…ƒèƒ½åŒæ—¶å‡è¡¡çš„æƒ…å†µ,BQä¸èƒ½ç›¸é‚»åŒæ—¶å‡è¡¡,æœªæµ‹è¯•è¿‡
 					for(index = 1; index < BMS_GlobalParam.Cell_Real_Number + 1; index++)
 					{
 						CmpVoltage = BMS_MonitorData.CellData[BMS_GlobalParam.Cell_Real_Number-index].CellVoltage;
 
-						// ÊÇ·ñ´ïµ½¾ùºâÑ¹²îÌõ¼ş
+						// æ˜¯å¦è¾¾åˆ°å‡è¡¡å‹å·®æ¡ä»¶
 						if (CmpVoltage - MinVoltage > BMS_EnergyData.BalanceDiffeVoltage)
 						{
 							BMS_EnergyData.BalanceRecord |= 1 << BMS_MonitorData.CellData[BMS_GlobalParam.Cell_Real_Number-index].CellNumber;
@@ -309,7 +315,7 @@ static void BMS_EnergyBalanceManage(void)
 
 
 					
-					/* ÊÊÓÃÓÚÏàÁÚµ¥Ôª²»ÄÜÍ¬Ê±¾ùºâÇÒ¾ùºâË³Ğò²»°´ÕÕ´Ó´óµ½Ğ¡½øĞĞ
+					/* é€‚ç”¨äºç›¸é‚»å•å…ƒä¸èƒ½åŒæ—¶å‡è¡¡ä¸”å‡è¡¡é¡ºåºä¸æŒ‰ç…§ä»å¤§åˆ°å°è¿›è¡Œ
 					for(index = 0; index < BMS_GlobalParam.Cell_Real_Number; index++)
 					{
 						if (BMS_MonitorData.CellVoltage[index] - MinVoltage > BMS_EnergyData.BalanceDiffeVoltage)
@@ -324,7 +330,7 @@ static void BMS_EnergyBalanceManage(void)
 
 
 
-					/* ÊÊÓÃÓÚÏàÁÚµ¥Ôª²»ÄÜÍ¬Ê±¾ùºâÇÒ¾ùºâË³Ğò°´ÕÕ´Ó´óµ½Ğ¡½øĞĞ */	
+					/* é€‚ç”¨äºç›¸é‚»å•å…ƒä¸èƒ½åŒæ—¶å‡è¡¡ä¸”å‡è¡¡é¡ºåºæŒ‰ç…§ä»å¤§åˆ°å°è¿›è¡Œ */
 					for(index = 1; index < BMS_GlobalParam.Cell_Real_Number + 1; index++)
 					{
 						CmpVoltage = BMS_MonitorData.CellData[BMS_GlobalParam.Cell_Real_Number-index].CellVoltage;
@@ -336,7 +342,7 @@ static void BMS_EnergyBalanceManage(void)
 
 							if (CellNumber == 0)  
 							{
-								// µÚÒ»½ÚµçĞ¾Âú×ã¾ùºâÑ¹²îÇé¿ö,ÅĞ¶ÏµÚ¶ş½ÚÊÇ·ñÌí¼ÓÁË¾ùºâ±êÖ¾
+								// ç¬¬ä¸€èŠ‚ç”µèŠ¯æ»¡è¶³å‡è¡¡å‹å·®æƒ…å†µ,åˆ¤æ–­ç¬¬äºŒèŠ‚æ˜¯å¦æ·»åŠ äº†å‡è¡¡æ ‡å¿—
 								if ((BMS_EnergyData.BalanceRecord & 0x02) == 0)
 								{								
 									result = true;
@@ -344,7 +350,7 @@ static void BMS_EnergyBalanceManage(void)
 							}
 							else if (CellNumber + 1 == BMS_GlobalParam.Cell_Real_Number)
 							{
-								// ×îºóÒ»½ÚµçĞ¾Âú×ã¾ùºâÑ¹²îÇé¿ö,ÅĞ¶ÏÇ°Ò»½ÚÊÇ·ñÌí¼ÓÁË¾ùºâ±êÖ¾
+								// æœ€åä¸€èŠ‚ç”µèŠ¯æ»¡è¶³å‡è¡¡å‹å·®æƒ…å†µ,åˆ¤æ–­å‰ä¸€èŠ‚æ˜¯å¦æ·»åŠ äº†å‡è¡¡æ ‡å¿—
 								if ((BMS_EnergyData.BalanceRecord & (1 << (CellNumber - 1))) == 0)
 								{
 									result = true;
@@ -352,7 +358,7 @@ static void BMS_EnergyBalanceManage(void)
 							}
 							else
 							{
-								// ÆäËûµçĞ¾Âú×ã¾ùºâÑ¹²îÇé¿ö
+								// å…¶ä»–ç”µèŠ¯æ»¡è¶³å‡è¡¡å‹å·®æƒ…å†µ
 								if (((BMS_EnergyData.BalanceRecord & (1 << (CellNumber - 1))) == 0) &&
 								   ((BMS_EnergyData.BalanceRecord & (1 << (CellNumber + 1))) == 0))
 								{
@@ -381,7 +387,7 @@ static void BMS_EnergyBalanceManage(void)
 
 					if (BMS_EnergyData.BalanceRecord != BMS_CELL_NULL)
 					{
-						// ²Ù×÷Êµ¼ÊÓ²¼ş
+						// æ“ä½œå®é™…ç¡¬ä»¶
 						BMS_HalCtrlCellsBalance(BMS_EnergyData.BalanceRecord, BMS_STATE_ENABLE);
 						BMS_BalanceStartTimer(BMS_EnergyData.BalanceCycleTime);
 
@@ -394,7 +400,7 @@ static void BMS_EnergyBalanceManage(void)
 				}
 
 				
-				// ÊÍ·Å×ÊÔ´,±íÃ÷Î´´ïµ½¾ùºâÆğÊ¼µçÑ¹»òÕßÎ´´ïµ½¾ùºâÑ¹²î
+				// é‡Šæ”¾èµ„æº,è¡¨æ˜æœªè¾¾åˆ°å‡è¡¡èµ·å§‹ç”µå‹æˆ–è€…æœªè¾¾åˆ°å‡è¡¡å‹å·®
 				BMS_EnergyData.BalanceRecord = BMS_CELL_NULL;
 				osSemaphoreRelease(BalanceSem);
 			}

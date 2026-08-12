@@ -25,6 +25,7 @@
 
 typedef enum
 {
+	/* 业务模块允许或禁止某项功能的通用状态。 */
 	BMS_STATE_ENABLE,
 	BMS_STATE_DISABLE
 }BMS_StateTypedef;
@@ -32,6 +33,7 @@ typedef enum
 
 typedef enum
 {
+	/* 每一位对应一个电芯通道，可直接用于均衡选择等位掩码操作。 */
 	BMS_CELL_NULL		= 0x0000,
 	BMS_CELL_INDEX1 	= 0x0001,
 	BMS_CELL_INDEX2 	= 0x0002,
@@ -48,6 +50,7 @@ typedef enum
 	BMS_CELL_INDEX13 	= 0x1000,
 	BMS_CELL_INDEX14 	= 0x2000,
 	BMS_CELL_INDEX15	= 0x4000,
+	/* 15个电芯通道全部选中：bit0对应1号电芯，bit14对应15号电芯。 */
 	BMS_CELL_ALL		= 0x7FFF,
 }BMS_CellIndexTypedef;
 
@@ -70,11 +73,13 @@ typedef enum
 
 typedef struct
 {
+	/* 当前系统状态，以及充电、放电、均衡三个独立许可状态。 */
 	BMS_SysModeTypedef SysMode;	// 当前系统处于什么模式
 	BMS_StateTypedef Charge;	// 充电状态
 	BMS_StateTypedef Discharge;	// 放电状态
 	BMS_StateTypedef Balance;	// 均衡状态
 	
+	/* 实际接入的电芯和温度采样通道数量，供循环边界和显示使用。 */
 	uint8_t Cell_Real_Number;	// 电芯实时数量
 	uint8_t Temp_Real_Number;	// 温度实时数量
 }BMS_GlobalParamTypedef;

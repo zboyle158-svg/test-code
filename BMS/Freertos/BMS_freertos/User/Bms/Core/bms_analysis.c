@@ -1,3 +1,9 @@
+/**
+ * @file bms_analysis.c
+ * @brief ç”µå‹ç»Ÿè®¡ã€åŠŸç‡ã€å®¹é‡ä¿®æ­£å’Œ SOC ä¼°ç®—ã€‚
+ * SOC è¿è¡ŒæœŸé—´é‡‡ç”¨å®‰æ—¶ç§¯åˆ†ï¼š$\Delta Q=I\Delta t/3600$ï¼›ä¸Šç”µæˆ–é™ç½®æ—¶
+ * ä½¿ç”¨ OCV æŸ¥è¡¨æ ¡å‡†ï¼Œå¹¶å¯¹ç»“æœè¿›è¡Œå®¹é‡è¾¹ç•Œçº¦æŸã€‚
+ */
 #define BMS_DBG_TAG "Analysis"
 
 #include <stdio.h>
@@ -43,8 +49,8 @@ BMS_AnalysisDataTypedef BMS_AnalysisData =
 
 
 
-// ÈıÔªï®µç³Ø SOC¿ªÂ·µçÑ¹·¨¼ÆËãÊı¾İ±í
-// Ö§³ÖÁ×ËáÌúï®¡¢îÑËáï®Ò²µÃ×öÒ»ÕÅÕâ¸ö±í
+// ä¸‰å…ƒé”‚ç”µæ±  SOCå¼€è·¯ç”µå‹æ³•è®¡ç®—æ•°æ®è¡¨
+// æ”¯æŒç£·é…¸é“é”‚ã€é’›é…¸é”‚ä¹Ÿå¾—åšä¸€å¼ è¿™ä¸ªè¡¨
 uint16_t SocOcvTab[101]=
 {
 	3282, // 0%~1%	
@@ -80,7 +86,7 @@ static void BMS_AnalysisCapAndSocInit(void);
 
 
 
-// µç³Ø×´Ì¬·ÖÎöÄ£¿é³õÊ¼»¯
+// ç”µæ± çŠ¶æ€åˆ†ææ¨¡å—åˆå§‹åŒ–
 void BMS_AnalysisInit(void)
 {
 	osThreadId_t thread;
@@ -94,7 +100,7 @@ void BMS_AnalysisInit(void)
 }
 
 
-// µç³Ø×´Ì¬·ÖÎöÈÎÎñÏß³ÌÈë¿Ú
+// ç”µæ± çŠ¶æ€åˆ†æä»»åŠ¡çº¿ç¨‹å…¥å£
 static void BMS_AnalysisTaskEntry(void *paramter)
 {
 	BMS_AnalysisCapAndSocInit();
@@ -108,16 +114,16 @@ static void BMS_AnalysisTaskEntry(void *paramter)
 }
 
 
-// ¼òµ¥·ÖÎö,Í¨¹ıÊı¾İÖ±½Ó½øĞĞ¼ÆËã¾ÍÄÜµÃµ½µÄ
+// ç®€å•åˆ†æ,é€šè¿‡æ•°æ®ç›´æ¥è¿›è¡Œè®¡ç®—å°±èƒ½å¾—åˆ°çš„
 static void BMS_AnalysisEasy(void)
 {
 	uint8_t index;
 
-	// ×î´óµçÑ¹²î
+	// æœ€å¤§ç”µå‹å·®
 	BMS_AnalysisData.MaxVoltageDifference = BMS_MonitorData.CellData[BMS_GlobalParam.Cell_Real_Number - 1].CellVoltage - BMS_MonitorData.CellData[0].CellVoltage;
 	
 	
-	// Æ½¾ùµçÑ¹
+	// å¹³å‡ç”µå‹
 	for (index = 0, BMS_AnalysisData.AverageVoltage = 0; index < BMS_GlobalParam.Cell_Real_Number; index++)
 	{
 		BMS_AnalysisData.AverageVoltage += BMS_MonitorData.CellVoltage[index];
@@ -125,11 +131,11 @@ static void BMS_AnalysisEasy(void)
 	BMS_AnalysisData.AverageVoltage /= BMS_GlobalParam.Cell_Real_Number;
 	
 	
-	// ÊµÊ±¹¦ÂÊ
+	// å®æ—¶åŠŸç‡
 	BMS_AnalysisData.PowerReal = BMS_MonitorData.BatteryVoltage * BMS_MonitorData.BatteryCurrent;	
 
 
-	// ×î´óºÍ×îĞ¡µçÑ¹
+	// æœ€å¤§å’Œæœ€å°ç”µå‹
 	BMS_AnalysisData.CellVoltMax = BMS_MonitorData.CellData[BMS_GlobalParam.Cell_Real_Number - 1].CellVoltage;
 	BMS_AnalysisData.CellVoltMin = BMS_MonitorData.CellData[0].CellVoltage;
 }
@@ -138,12 +144,12 @@ static void BMS_AnalysisEasy(void)
 
 
 
-// ÎÂ¶ÈĞ£×¼,ï®µç³Ø»áÒòÎªÎÂ¶ÈµÄ±ä»¯¶øÓ°Ïìµç³ØÈİÁ¿
+// æ¸©åº¦æ ¡å‡†,é”‚ç”µæ± ä¼šå› ä¸ºæ¸©åº¦çš„å˜åŒ–è€Œå½±å“ç”µæ± å®¹é‡
 static void BMS_AnalysisTempCal(void)
 {
 	static int16_t LastTemp = 0;
 
-	uint8_t  Ratio; 	// Ğ£×¼±ÈÂÊ
+	uint8_t  Ratio; 	// æ ¡å‡†æ¯”ç‡
 	uint16_t RateTemp;	
 	int16_t MinTemp = BMS_MonitorData.CellTemp[0] * 10;
 
@@ -154,7 +160,7 @@ static void BMS_AnalysisTempCal(void)
 	}
 
 
-	// ÅĞ¶ÏÎÂ¶È±ä»¯ÊÇ·ñ³¬¹ı1¶È
+	// åˆ¤æ–­æ¸©åº¦å˜åŒ–æ˜¯å¦è¶…è¿‡1åº¦
 	if( MinTemp > LastTemp)  
 	{
 		if (MinTemp - LastTemp >= 10)
@@ -179,7 +185,7 @@ static void BMS_AnalysisTempCal(void)
 	}
 
 	
-	// È·¶¨Ğ£×¼±ÈÂÊ
+	// ç¡®å®šæ ¡å‡†æ¯”ç‡
 	if (MinTemp >= 250)                             
 	{
 		Ratio = 1;
@@ -216,23 +222,23 @@ static void BMS_AnalysisTempCal(void)
 		RateTemp = TEMP_CAP_RATE_LIMITL_LOW;
 	}
 
-	// ÊµÊ±ÈİÁ¿
+	// å®æ—¶å®¹é‡
 	BMS_AnalysisData.CapacityReal = BMS_AnalysisData.CapacityRated * RateTemp / 1000;
 
-	// Ê£ÓàÈİÁ¿
+	// å‰©ä½™å®¹é‡
 	BMS_AnalysisData.CapacityRemain = BMS_AnalysisData.CapacityReal * BMS_AnalysisData.SOC;
 }
 
 
 
-// ÊµÊ±Ğ£×¼ÈİÁ¿Éæ¼°ÒòËØ:ÎÂ¶È¡¢ÍêÕû³ä·Åµç¡¢ÀÏ»¯µÈµÈ
+// å®æ—¶æ ¡å‡†å®¹é‡æ¶‰åŠå› ç´ :æ¸©åº¦ã€å®Œæ•´å……æ”¾ç”µã€è€åŒ–ç­‰ç­‰
 static void BMS_AnalysisCalCap(void)
 {	
 	BMS_AnalysisTempCal();
 }
 
 
-// ¸ù¾İµ¥ÌåµçĞ¾×îµÍµçÑ¹¼ÆËã³ösocÖµ,ÓÃÓÚÉÏµçºÍ³¤Ê±¼ä¾²Ö¹×´Ì¬ÏÂµÄĞ£×¼
+// æ ¹æ®å•ä½“ç”µèŠ¯æœ€ä½ç”µå‹è®¡ç®—å‡ºsocå€¼,ç”¨äºä¸Šç”µå’Œé•¿æ—¶é—´é™æ­¢çŠ¶æ€ä¸‹çš„æ ¡å‡†
 static uint16_t BMS_AnalysisOcvToSoc(uint16_t voltage)
 {
 	uint16_t soc = 0;
@@ -251,12 +257,12 @@ static uint16_t BMS_AnalysisOcvToSoc(uint16_t voltage)
 
 		if (voltage == SocOcvTab[index])
 		{
-			// ÕûÊıSOCÖµ
+			// æ•´æ•°SOCå€¼
 			soc = index * 10;
 		}
 		else
 		{
-			// ¼ÆËã°Ù·Ö±ÈºóµÄĞ¡Êıµã
+			// è®¡ç®—ç™¾åˆ†æ¯”åçš„å°æ•°ç‚¹
 			soc = index * 10 + (( SocOcvTab[index] - voltage) * 10) / (SocOcvTab[index] - SocOcvTab[index + 1]);		
 		}
 	}
@@ -264,33 +270,33 @@ static uint16_t BMS_AnalysisOcvToSoc(uint16_t voltage)
 	return soc;
 }
 
-// ¿ªÂ·µçÑ¹·¨soc¼ÆËã
+// å¼€è·¯ç”µå‹æ³•socè®¡ç®—
 static void BMS_AnalysisOcvSocCalculate(void)
 {
-	// ½øÈëË¯ÃßµÄÌõ¼ş:´ı»úÒ»¶ÎÊ±¼äÒÔÉÏÇÒÃ»ÓĞµç³ØÔÚ¾ùºâ
+	// è¿›å…¥ç¡çœ çš„æ¡ä»¶:å¾…æœºä¸€æ®µæ—¶é—´ä»¥ä¸Šä¸”æ²¡æœ‰ç”µæ± åœ¨å‡è¡¡
 	if (BMS_GlobalParam.SysMode == BMS_MODE_SLEEP)
 	{
-		// µÈ´ıÒ»¶ÎÊ±¼äµçÑ¹Æ½ÎÈ,·ÀÖ¹¾ùºâ²Å¸Õ½áÊø
+		// ç­‰å¾…ä¸€æ®µæ—¶é—´ç”µå‹å¹³ç¨³,é˜²æ­¢å‡è¡¡æ‰åˆšç»“æŸ
 		osDelay(BALANCE_VOLT_RISE_DELAY);
 
-		// ¿ªÂ·µçÑ¹Ğ£×¼
+		// å¼€è·¯ç”µå‹æ ¡å‡†
 		BMS_AnalysisData.SOC = BMS_AnalysisOcvToSoc(BMS_MonitorData.CellData[0].CellVoltage  * 1000) / 1000.0;
 
-		// Ê£ÓàÈİÁ¿ = Êµ¼ÊÈİÁ¿ * soc
+		// å‰©ä½™å®¹é‡ = å®é™…å®¹é‡ * soc
 		BMS_AnalysisData.CapacityRemain = BMS_AnalysisData.CapacityReal * BMS_AnalysisData.SOC;		
 	}
 }
 
 
-// °²Ê±»ı·Ö·¨soc¼ÆËã
-// ´ı»úÄ£Ê½ÏÂÅĞ¶Ï×îµÍµçÑ¹ÖµÊÇ·ñ´óÓÚµÈÓÚ¹ıÑ¹±£»¤Öµ,³ÉÁ¢Ôòsoc = 100%
-// ´ı»úÄ£Ê½ÏÂÅĞ¶Ï×îµÍµçÑ¹ÖµÊÇ·ñĞ¡ÓÚµÈÓÚÇ·Ñ¹±£»¤Öµ,³ÉÁ¢Ôòsoc = 0%
-// ³äµçÊ±¶Ô½øĞĞ²âÁ¿³öÀ´µÄµçÁ÷Öµ+»ı·Ö
-// ·ÅµçÊ±¶Ô½øĞĞ²âÁ¿³öÀ´µÄµçÁ÷Öµ-»ı·Ö
-// soc = ÊµÊ±»ı·ÖµÄÈİÁ¿ / µç³Ø°üÊµ¼ÊÈİÁ¿
+// å®‰æ—¶ç§¯åˆ†æ³•socè®¡ç®—
+// å¾…æœºæ¨¡å¼ä¸‹åˆ¤æ–­æœ€ä½ç”µå‹å€¼æ˜¯å¦å¤§äºç­‰äºè¿‡å‹ä¿æŠ¤å€¼,æˆç«‹åˆ™soc = 100%
+// å¾…æœºæ¨¡å¼ä¸‹åˆ¤æ–­æœ€ä½ç”µå‹å€¼æ˜¯å¦å°äºç­‰äºæ¬ å‹ä¿æŠ¤å€¼,æˆç«‹åˆ™soc = 0%
+// å……ç”µæ—¶å¯¹è¿›è¡Œæµ‹é‡å‡ºæ¥çš„ç”µæµå€¼+ç§¯åˆ†
+// æ”¾ç”µæ—¶å¯¹è¿›è¡Œæµ‹é‡å‡ºæ¥çš„ç”µæµå€¼-ç§¯åˆ†
+// soc = å®æ—¶ç§¯åˆ†çš„å®¹é‡ / ç”µæ± åŒ…å®é™…å®¹é‡
 static void BMS_AnalysisAHSocCalculate(void)
 {
-	// absÈ¡¾ø¶ÔÖµ£¬³ı3600°Ñ A/S µ¥Î»»»Ëã³É  A/H
+	// abså–ç»å¯¹å€¼ï¼Œé™¤3600æŠŠ A/S å•ä½æ¢ç®—æˆ  A/H
 	float CurrentValue = abs((int32_t)(BMS_MonitorData.BatteryCurrent * 1000)) / 1000.0 / 3600;
 
 	
@@ -330,7 +336,7 @@ static void BMS_AnalysisAHSocCalculate(void)
 	}
 
 	/*
-	else  // ÊÇ·ñ¿¼ÂÇ¾²Ì¬Ê±µÄÂ©µçµçÁ÷10MA
+	else  // æ˜¯å¦è€ƒè™‘é™æ€æ—¶çš„æ¼ç”µç”µæµ10MA
 	{
 		if(BMS_AnalysisData.CapacityRemain >= 0.01)   
 		{
@@ -350,7 +356,7 @@ static void BMS_AnalysisAHSocCalculate(void)
 	}
 }
 
-// soc¼ì²é
+// socæ£€æŸ¥
 static void BMS_AnalysisSocCheck(void)
 {
 	BMS_AnalysisOcvSocCalculate();
@@ -358,18 +364,17 @@ static void BMS_AnalysisSocCheck(void)
 }
 
 
-// ÈİÁ¿ºÍSOCÉÏµç³õÊ¼»¯
+// å®¹é‡å’ŒSOCä¸Šç”µåˆå§‹åŒ–
 static void BMS_AnalysisCapAndSocInit(void)
 {
 	uint16_t temp = BMS_MonitorData.CellData[0].CellVoltage * 1000;
 	
-	// soc¼ÆËã
+	// socè®¡ç®—
 	BMS_AnalysisData.SOC = BMS_AnalysisOcvToSoc(BMS_MonitorData.CellData[0].CellVoltage  * 1000) / 1000.0;
 
-	// Êµ¼ÊÈİÁ¿ºóÃæÔÙÍêÉÆ,Éæ¼°µ½ÍêÕû³ä·ÅµçÁ÷¼ÆËã¡¢ÀÏ»¯ËğºÄ¡¢ÎÂ¶ÈÌØĞÔÇúÏß¡¢ĞÅÏ¢´æ´¢Ä£¿é
+	// å®é™…å®¹é‡åé¢å†å®Œå–„,æ¶‰åŠåˆ°å®Œæ•´å……æ”¾ç”µæµè®¡ç®—ã€è€åŒ–æŸè€—ã€æ¸©åº¦ç‰¹æ€§æ›²çº¿ã€ä¿¡æ¯å­˜å‚¨æ¨¡å—
 	BMS_AnalysisData.CapacityReal = BMS_AnalysisData.CapacityRated;
 
-	// Ê£ÓàÈİÁ¿ = Êµ¼ÊÈİÁ¿ * soc
+	// å‰©ä½™å®¹é‡ = å®é™…å®¹é‡ * soc
 	BMS_AnalysisData.CapacityRemain = BMS_AnalysisData.CapacityReal * BMS_AnalysisData.SOC; 
 }
-

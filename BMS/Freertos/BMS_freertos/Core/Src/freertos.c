@@ -1,3 +1,10 @@
+/*
+ * @file freertos.c
+ * @brief RTOS 对象创建和默认任务入口。
+ *
+ * defaultTask 是系统启动任务：调用 BMS_SysInitialize() 创建业务线程，
+ * 随后每 500 ms 翻转 LED，作为系统仍在运行的可视化指示。
+ */
 /* USER CODE BEGIN Header */
 /**
   ******************************************************************************
@@ -90,7 +97,7 @@ void MX_FREERTOS_Init(void) {
   /* add queues, ... */
   /* USER CODE END RTOS_QUEUES */
 
-  /* Create the thread(s) */
+  /* 创建启动任务；其内部再创建 BMS 监测、保护、分析和能量任务。 */
   /* creation of defaultTask */
   defaultTaskHandle = osThreadNew(StartDefaultTask, NULL, &defaultTask_attributes);
 
@@ -115,6 +122,7 @@ void StartDefaultTask(void *argument)
 {
   /* USER CODE BEGIN StartDefaultTask */
   /* Infinite loop */
+	(void)argument; /* 当前任务没有使用调用方传入的参数。 */
 	BMS_SysInitialize();
 	
   for(;;)
