@@ -3,34 +3,35 @@
 #include "list.h"
 
 
-/* Á´±í¸ù½Úµã³õÊ¼»¯ */
+/* é“¾è¡¨æ ¹èŠ‚ç‚¹åˆå§‹åŒ– */
 void vListInitialise( List_t * const pxList )
 {
-	/* ½«Á´±íË÷ÒýÖ¸ÕëÖ¸Ïò×îºóÒ»¸ö½Úµã */
+	/* ç©ºé“¾è¡¨ä»Žå°¾éƒ¨å“¨å…µå¼€å§‹éåŽ†ï¼Œä¸‹ä¸€æ­¥å³å¯åˆ°è¾¾ç¬¬ä¸€ä¸ªæ™®é€šèŠ‚ç‚¹ã€‚ */
 	pxList->pxIndex = ( ListItem_t * ) &( pxList->xListEnd );
 
-	/* ½«Á´±í×îºóÒ»¸ö½ÚµãµÄ¸¨ÖúÅÅÐòµÄÖµÉèÖÃÎª×î´ó£¬È·±£¸Ã½Úµã¾ÍÊÇÁ´±íµÄ×îºó½Úµã */
+	/* å°¾éƒ¨å“¨å…µä½¿ç”¨æœ€å¤§å€¼ï¼Œä¿è¯å‡åºæ’å…¥æ—¶å§‹ç»ˆä½äºŽæ™®é€šèŠ‚ç‚¹ä¹‹åŽã€‚ */
 	pxList->xListEnd.xItemValue = portMAX_DELAY;
 
-    /* ½«×îºóÒ»¸ö½ÚµãµÄpxNextºÍpxPreviousÖ¸Õë¾ùÖ¸Ïò½Úµã×ÔÉí£¬±íÊ¾Á´±íÎª¿Õ */
+	/* ç©ºå¾ªçŽ¯åŒå‘é“¾è¡¨ï¼šå°¾éƒ¨å“¨å…µçš„å‰åŽæŒ‡é’ˆå‡æŒ‡å‘è‡ªèº«ã€‚ */
 	pxList->xListEnd.pxNext = ( ListItem_t * ) &( pxList->xListEnd );
 	pxList->xListEnd.pxPrevious = ( ListItem_t * ) &( pxList->xListEnd );
 
-	/* ³õÊ¼»¯Á´±í½Úµã¼ÆÊýÆ÷µÄÖµÎª0£¬±íÊ¾Á´±íÎª¿Õ */
+	/* è®¡æ•°å™¨åªç»Ÿè®¡æ™®é€šé“¾è¡¨é¡¹ï¼Œä¸ç»Ÿè®¡å°¾éƒ¨å“¨å…µã€‚ */
 	pxList->uxNumberOfItems = ( UBaseType_t ) 0U;
 }
 
-/* ½Úµã³õÊ¼»¯ */
+/* èŠ‚ç‚¹åˆå§‹åŒ– */
 void vListInitialiseItem( ListItem_t * const pxItem )
 {
-	/* ³õÊ¼»¯¸Ã½ÚµãËùÔÚµÄÁ´±íÎª¿Õ£¬±íÊ¾½Úµã»¹Ã»ÓÐ²åÈëÈÎºÎÁ´±í */
+	/* NULLè¡¨ç¤ºè¯¥é“¾è¡¨é¡¹å°šæœªæ’å…¥ä»»ä½•é“¾è¡¨ã€‚ */
 	pxItem->pvContainer = NULL;
 }
 
 
-/* ½«½Úµã²åÈëµ½Á´±íµÄÎ²²¿ */
+/* å°†èŠ‚ç‚¹æ’å…¥åˆ°é“¾è¡¨çš„å°¾éƒ¨ */
 void vListInsertEnd( List_t * const pxList, ListItem_t * const pxNewListItem )
 {
+	/* åœ¨ç´¢å¼•èŠ‚ç‚¹ä¹‹å‰æ’å…¥ï¼Œå¹¶ç»´æŠ¤åŒå‘é“¾è¡¨çš„å››æ¡è¿žæŽ¥å…³ç³»ã€‚ */
 	ListItem_t * const pxIndex = pxList->pxIndex;
 
 	pxNewListItem->pxNext = pxIndex;
@@ -38,23 +39,23 @@ void vListInsertEnd( List_t * const pxList, ListItem_t * const pxNewListItem )
 	pxIndex->pxPrevious->pxNext = pxNewListItem;
 	pxIndex->pxPrevious = pxNewListItem;
 
-	/* ¼Ç×¡¸Ã½ÚµãËùÔÚµÄÁ´±í */
+	/* è®°å½•å½’å±žå…³ç³»ï¼Œåˆ é™¤æ—¶å¯ç›´æŽ¥æ‰¾åˆ°æ‰€å±žé“¾è¡¨ã€‚ */
 	pxNewListItem->pvContainer = ( void * ) pxList;
 
-	/* Á´±í½Úµã¼ÆÊýÆ÷++ */
+	/* æ™®é€šèŠ‚ç‚¹æ•°é‡åŠ ä¸€ã€‚ */
 	( pxList->uxNumberOfItems )++;
 }
 
 
-/* ½«½Úµã°´ÕÕÉýÐòÅÅÁÐ²åÈëµ½Á´±í */
+/* å°†èŠ‚ç‚¹æŒ‰ç…§å‡åºæŽ’åˆ—æ’å…¥åˆ°é“¾è¡¨ */
 void vListInsert( List_t * const pxList, ListItem_t * const pxNewListItem )
 {
 	ListItem_t *pxIterator;
 	
-	/* »ñÈ¡½ÚµãµÄÅÅÐò¸¨ÖúÖµ */
+	/* ä¿å­˜æ–°èŠ‚ç‚¹çš„æŽ’åºå€¼ï¼Œç”¨äºŽå¯»æ‰¾æ’å…¥ä½ç½®ã€‚ */
 	const TickType_t xValueOfInsertion = pxNewListItem->xItemValue;
 
-	/* Ñ°ÕÒ½ÚµãÒª²åÈëµÄÎ»ÖÃ */
+	/* ä»Žå°¾éƒ¨å“¨å…µå¼€å§‹å‘åŽæŸ¥æ‰¾æœ€åŽä¸€ä¸ªä¸å¤§äºŽæ–°å€¼çš„èŠ‚ç‚¹ã€‚ */
 	if( xValueOfInsertion == portMAX_DELAY )
 	{
 		pxIterator = pxList->xListEnd.pxPrevious;
@@ -65,45 +66,45 @@ void vListInsert( List_t * const pxList, ListItem_t * const pxNewListItem )
 		     pxIterator->pxNext->xItemValue <= xValueOfInsertion; 
 			 pxIterator = pxIterator->pxNext )
 		{
-			/* Ã»ÓÐÊÂÇé¿É×ö£¬²»¶Ïµü´úÖ»ÎªÁËÕÒµ½½ÚµãÒª²åÈëµÄÎ»ÖÃ */			
+			/* å¾ªçŽ¯ä½“ä¸ºç©ºï¼Œè¿­ä»£è¡¨è¾¾å¼è´Ÿè´£è®©æŒ‡é’ˆå‘åŽç§»åŠ¨ã€‚ */
 		}
 	}
 
+	/* å°†æ–°èŠ‚ç‚¹æ’å…¥pxIteratorå’ŒåŽŸä¸‹ä¸€ä¸ªèŠ‚ç‚¹ä¹‹é—´ã€‚ */
 	pxNewListItem->pxNext = pxIterator->pxNext;
 	pxNewListItem->pxNext->pxPrevious = pxNewListItem;
 	pxNewListItem->pxPrevious = pxIterator;
 	pxIterator->pxNext = pxNewListItem;
 
-	/* ¼Ç×¡¸Ã½ÚµãËùÔÚµÄÁ´±í */
+	/* è®°å½•è¯¥èŠ‚ç‚¹çš„æ‰€å±žé“¾è¡¨ã€‚ */
 	pxNewListItem->pvContainer = ( void * ) pxList;
 
-	/* Á´±í½Úµã¼ÆÊýÆ÷++ */
+	/* æ’å…¥å®Œæˆï¼Œæ™®é€šèŠ‚ç‚¹æ•°é‡åŠ ä¸€ã€‚ */
 	( pxList->uxNumberOfItems )++;
 }
 
 
-/* ½«½Úµã´ÓÁ´±íÖÐÉ¾³ý */
+/* å°†èŠ‚ç‚¹ä»Žé“¾è¡¨ä¸­åˆ é™¤ */
 UBaseType_t uxListRemove( ListItem_t * const pxItemToRemove )
 {
-	/* »ñÈ¡½ÚµãËùÔÚµÄÁ´±í */
+	/* é€šè¿‡pvContainerç›´æŽ¥å–å¾—èŠ‚ç‚¹æ‰€å±žé“¾è¡¨ï¼Œä¸å¿…ä»Žå¤´æœç´¢ã€‚ */
 	List_t * const pxList = ( List_t * ) pxItemToRemove->pvContainer;
 
 	pxItemToRemove->pxNext->pxPrevious = pxItemToRemove->pxPrevious;
 	pxItemToRemove->pxPrevious->pxNext = pxItemToRemove->pxNext;
 
-	/* Make sure the index is left pointing to a valid item. */
+	/* å¦‚æžœç´¢å¼•æ­£æŒ‡å‘å¾…åˆ é™¤èŠ‚ç‚¹ï¼Œå°†ç´¢å¼•é€€å›žå‰ä¸€ä¸ªæœ‰æ•ˆèŠ‚ç‚¹ã€‚ */
 	if( pxList->pxIndex == pxItemToRemove )
 	{
 		pxList->pxIndex = pxItemToRemove->pxPrevious;
 	}
 
-	/* ³õÊ¼»¯¸Ã½ÚµãËùÔÚµÄÁ´±íÎª¿Õ£¬±íÊ¾½Úµã»¹Ã»ÓÐ²åÈëÈÎºÎÁ´±í */
+	/* æ¸…é™¤å½’å±žå…³ç³»ï¼Œè¡¨ç¤ºè¯¥èŠ‚ç‚¹å·²ç»è„±ç¦»é“¾è¡¨ã€‚ */
 	pxItemToRemove->pvContainer = NULL;
 	
-	/* Á´±í½Úµã¼ÆÊýÆ÷-- */
+	/* æ™®é€šèŠ‚ç‚¹æ•°é‡å‡ä¸€ã€‚ */
 	( pxList->uxNumberOfItems )--;
 
-	/* ·µ»ØÁ´±íÖÐÊ£Óà½ÚµãµÄ¸öÊý */
+	/* è¿”å›žåˆ é™¤åŽçš„å‰©ä½™èŠ‚ç‚¹æ•°é‡ã€‚ */
 	return pxList->uxNumberOfItems;
 }
-

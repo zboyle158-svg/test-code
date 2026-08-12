@@ -2,7 +2,7 @@
 #define LIST_H
 /*
 ************************************************************************
-*                                Í·ÎÄ¼þ
+*                                å¤´æ–‡ä»¶
 ************************************************************************
 */
 #include "FreeRTOS.h"
@@ -11,89 +11,88 @@
 
 /*
 ************************************************************************
-*                                ½á¹¹Ìå¶¨Òå
+*                                ç»“æž„ä½“å®šä¹‰
 ************************************************************************
 */
-/* ½Úµã½á¹¹Ìå¶¨Òå */
+/* æ™®é€šé“¾è¡¨é¡¹ï¼šåŒå‘æŒ‡é’ˆè´Ÿè´£è¿žæŽ¥ï¼ŒxItemValueè´Ÿè´£æŽ’åºï¼Œä¸¤ä¸ªvoidæŒ‡é’ˆè®°å½•å½’å±žå…³ç³»ã€‚ */
 struct xLIST_ITEM
 {
-	TickType_t xItemValue;             /* ¸¨ÖúÖµ£¬ÓÃÓÚ°ïÖú½Úµã×öË³ÐòÅÅÁÐ */			
-	struct xLIST_ITEM *  pxNext;       /* Ö¸ÏòÁ´±íÏÂÒ»¸ö½Úµã */		
-	struct xLIST_ITEM *  pxPrevious;   /* Ö¸ÏòÁ´±íÇ°Ò»¸ö½Úµã */	
-	void * pvOwner;					   /* Ö¸ÏòÓµÓÐ¸Ã½ÚµãµÄÄÚºË¶ÔÏó£¬Í¨³£ÊÇTCB */
-	void *  pvContainer;		       /* Ö¸Ïò¸Ã½ÚµãËùÔÚµÄÁ´±í */
+	TickType_t xItemValue;             /* è¾…åŠ©å€¼ï¼Œç”¨äºŽå¸®åŠ©èŠ‚ç‚¹åšé¡ºåºæŽ’åˆ— */
+	struct xLIST_ITEM *  pxNext;       /* æŒ‡å‘é“¾è¡¨ä¸‹ä¸€ä¸ªèŠ‚ç‚¹ */
+	struct xLIST_ITEM *  pxPrevious;   /* æŒ‡å‘é“¾è¡¨å‰ä¸€ä¸ªèŠ‚ç‚¹ */
+	void * pvOwner;					   /* æŒ‡å‘æ‹¥æœ‰è¯¥èŠ‚ç‚¹çš„å†…æ ¸å¯¹è±¡ï¼Œé€šå¸¸æ˜¯TCB */
+	void *  pvContainer;		       /* æŒ‡å‘è¯¥èŠ‚ç‚¹æ‰€åœ¨çš„é“¾è¡¨ */
 };
-typedef struct xLIST_ITEM ListItem_t;  /* ½ÚµãÊý¾ÝÀàÐÍÖØ¶¨Òå */
+typedef struct xLIST_ITEM ListItem_t;  /* èŠ‚ç‚¹æ•°æ®ç±»åž‹é‡å®šä¹‰ */
 
 
 
-/* mini½Úµã½á¹¹Ìå¶¨Òå£¬×÷ÎªË«ÏòÁ´±íµÄ½áÎ²
-   ÒòÎªË«ÏòÁ´±íÊÇÊ×Î²ÏàÁ¬µÄ£¬Í·¼´ÊÇÎ²£¬Î²¼´ÊÇÍ· */
+/* å°¾éƒ¨å“¨å…µèŠ‚ç‚¹ï¼šä¸æ˜¯ä¸šåŠ¡èŠ‚ç‚¹ï¼Œåªç”¨äºŽè¡¨ç¤ºå¾ªçŽ¯åŒå‘é“¾è¡¨çš„è¾¹ç•Œã€‚ */
 struct xMINI_LIST_ITEM
 {
-	TickType_t xItemValue;                      /* ¸¨ÖúÖµ£¬ÓÃÓÚ°ïÖú½Úµã×öÉýÐòÅÅÁÐ */
-	struct xLIST_ITEM *  pxNext;                /* Ö¸ÏòÁ´±íÏÂÒ»¸ö½Úµã */
-	struct xLIST_ITEM *  pxPrevious;            /* Ö¸ÏòÁ´±íÇ°Ò»¸ö½Úµã */
+	TickType_t xItemValue;                      /* è¾…åŠ©å€¼ï¼Œç”¨äºŽå¸®åŠ©èŠ‚ç‚¹åšå‡åºæŽ’åˆ— */
+	struct xLIST_ITEM *  pxNext;                /* æŒ‡å‘é“¾è¡¨ä¸‹ä¸€ä¸ªèŠ‚ç‚¹ */
+	struct xLIST_ITEM *  pxPrevious;            /* æŒ‡å‘é“¾è¡¨å‰ä¸€ä¸ªèŠ‚ç‚¹ */
 };
-typedef struct xMINI_LIST_ITEM MiniListItem_t;  /* ×îÐ¡½ÚµãÊý¾ÝÀàÐÍÖØ¶¨Òå */
+typedef struct xMINI_LIST_ITEM MiniListItem_t;  /* æœ€å°èŠ‚ç‚¹æ•°æ®ç±»åž‹é‡å®šä¹‰ */
 
 
-/* Á´±í½á¹¹Ìå¶¨Òå */
+/* é“¾è¡¨å¯¹è±¡ï¼šèŠ‚ç‚¹æ•°é‡ã€éåŽ†ç´¢å¼•å’Œå°¾éƒ¨å“¨å…µèŠ‚ç‚¹ã€‚ */
 typedef struct xLIST
 {
-	UBaseType_t uxNumberOfItems;    /* Á´±í½Úµã¼ÆÊýÆ÷ */
-	ListItem_t *  pxIndex;			/* Á´±í½ÚµãË÷ÒýÖ¸Õë */
-	MiniListItem_t xListEnd;		/* Á´±í×îºóÒ»¸ö½Úµã */
+	UBaseType_t uxNumberOfItems;    /* é“¾è¡¨èŠ‚ç‚¹è®¡æ•°å™¨ */
+	ListItem_t *  pxIndex;			/* é“¾è¡¨èŠ‚ç‚¹ç´¢å¼•æŒ‡é’ˆ */
+	MiniListItem_t xListEnd;		/* é“¾è¡¨æœ€åŽä¸€ä¸ªèŠ‚ç‚¹ */
 } List_t;
 
 
 /*
 ************************************************************************
-*                                ºê¶¨Òå
+*                                å®å®šä¹‰
 ************************************************************************
 */
-/* ³õÊ¼»¯½ÚµãµÄÓµÓÐÕß */
+/* è®¾ç½®å’Œè¯»å–é“¾è¡¨é¡¹æ‰€æ‹¥æœ‰çš„å†…æ ¸å¯¹è±¡ï¼Œé€šå¸¸æ˜¯TCBã€‚ */
 #define listSET_LIST_ITEM_OWNER( pxListItem, pxOwner )		( ( pxListItem )->pvOwner = ( void * ) ( pxOwner ) )
-/* »ñÈ¡½ÚµãÓµÓÐÕß */
+/* èŽ·å–èŠ‚ç‚¹æ‹¥æœ‰è€… */
 #define listGET_LIST_ITEM_OWNER( pxListItem )	( ( pxListItem )->pvOwner )
 
-/* ³õÊ¼»¯½ÚµãÅÅÐò¸¨ÖúÖµ */
+/* è®¾ç½®å’Œè¯»å–é“¾è¡¨é¡¹çš„æŽ’åºè¾…åŠ©å€¼ã€‚ */
 #define listSET_LIST_ITEM_VALUE( pxListItem, xValue )	( ( pxListItem )->xItemValue = ( xValue ) )
 
-/* »ñÈ¡½ÚµãÅÅÐò¸¨ÖúÖµ */
+/* èŽ·å–èŠ‚ç‚¹æŽ’åºè¾…åŠ©å€¼ */
 #define listGET_LIST_ITEM_VALUE( pxListItem )	( ( pxListItem )->xItemValue )
 
-/* »ñÈ¡Á´±í¸ù½ÚµãµÄ½Úµã¼ÆÊýÆ÷µÄÖµ */
+/* èŽ·å–é“¾è¡¨ç¬¬ä¸€ä¸ªæ™®é€šèŠ‚ç‚¹çš„æŽ’åºå€¼ã€‚ */
 #define listGET_ITEM_VALUE_OF_HEAD_ENTRY( pxList )	( ( ( pxList )->xListEnd ).pxNext->xItemValue )
 
-/* »ñÈ¡Á´±íµÄÈë¿Ú½Úµã */
+/* èŽ·å–é“¾è¡¨çš„ç¬¬ä¸€ä¸ªæ™®é€šèŠ‚ç‚¹ï¼›ç©ºé“¾è¡¨æ—¶å¾—åˆ°å°¾éƒ¨å“¨å…µèŠ‚ç‚¹ã€‚ */
 #define listGET_HEAD_ENTRY( pxList )	( ( ( pxList )->xListEnd ).pxNext )
 
-/* »ñÈ¡Á´±íµÄµÚÒ»¸ö½Úµã */
+/* èŽ·å–æŒ‡å®šé“¾è¡¨é¡¹çš„ä¸‹ä¸€ä¸ªèŠ‚ç‚¹ã€‚ */
 #define listGET_NEXT( pxListItem )	( ( pxListItem )->pxNext )
 
-/* »ñÈ¡Á´±íµÄ×îºóÒ»¸ö½Úµã */
+/* èŽ·å–å°¾éƒ¨å“¨å…µèŠ‚ç‚¹åœ°å€ï¼Œç”¨äºŽåˆ¤æ–­éåŽ†æ˜¯å¦åˆ°è¾¾æœ«å°¾ã€‚ */
 #define listGET_END_MARKER( pxList )	( ( ListItem_t const * ) ( &( ( pxList )->xListEnd ) ) )
 
-/* ÅÐ¶ÏÁ´±íÊÇ·ñÎª¿Õ */
+/* åˆ¤æ–­é“¾è¡¨æ˜¯å¦ä¸ºç©ºï¼›å°¾éƒ¨å“¨å…µä¸è®¡å…¥èŠ‚ç‚¹æ•°é‡ã€‚ */
 #define listLIST_IS_EMPTY( pxList )	( ( BaseType_t ) ( ( pxList )->uxNumberOfItems == ( UBaseType_t ) 0 ) )
 
-/* »ñÈ¡Á´±íµÄ½ÚµãÊý */
+/* èŽ·å–é“¾è¡¨ä¸­æ™®é€šé“¾è¡¨é¡¹çš„æ•°é‡ã€‚ */
 #define listCURRENT_LIST_LENGTH( pxList )	( ( pxList )->uxNumberOfItems )
 
-/* »ñÈ¡Á´±í½ÚµãµÄOWNER£¬¼´TCB */
+/* å¾ªçŽ¯å–å¾—ä¸‹ä¸€ä¸ªæ™®é€šé“¾è¡¨é¡¹çš„æ‹¥æœ‰è€…ï¼ŒéåŽ†æ—¶è‡ªåŠ¨è·³è¿‡å°¾éƒ¨å“¨å…µã€‚ */
 #define listGET_OWNER_OF_NEXT_ENTRY( pxTCB, pxList )										\
 {																							\
 	List_t * const pxConstList = ( pxList );											    \
-	/* ½ÚµãË÷ÒýÖ¸ÏòÁ´±íµÚÒ»¸ö½Úµãµ÷Õû½ÚµãË÷ÒýÖ¸Õë£¬Ö¸ÏòÏÂÒ»¸ö½Úµã£¬
-    Èç¹ûµ±Ç°Á´±íÓÐN¸ö½Úµã£¬µ±µÚN´Îµ÷ÓÃ¸Ãº¯ÊýÊ±£¬pxInedexÔòÖ¸ÏòµÚN¸ö½Úµã */\
+	/* èŠ‚ç‚¹ç´¢å¼•æŒ‡å‘é“¾è¡¨ç¬¬ä¸€ä¸ªèŠ‚ç‚¹è°ƒæ•´èŠ‚ç‚¹ç´¢å¼•æŒ‡é’ˆï¼ŒæŒ‡å‘ä¸‹ä¸€ä¸ªèŠ‚ç‚¹ï¼Œ
+    å¦‚æžœå½“å‰é“¾è¡¨æœ‰Nä¸ªèŠ‚ç‚¹ï¼Œå½“ç¬¬Næ¬¡è°ƒç”¨è¯¥å‡½æ•°æ—¶ï¼ŒpxInedexåˆ™æŒ‡å‘ç¬¬Nä¸ªèŠ‚ç‚¹ */\
 	( pxConstList )->pxIndex = ( pxConstList )->pxIndex->pxNext;							\
-	/* µ±Ç°Á´±íÎª¿Õ */                                                                       \
+	/* å½“å‰é“¾è¡¨ä¸ºç©º */                                                                       \
 	if( ( void * ) ( pxConstList )->pxIndex == ( void * ) &( ( pxConstList )->xListEnd ) )	\
 	{																						\
 		( pxConstList )->pxIndex = ( pxConstList )->pxIndex->pxNext;						\
 	}																						\
-	/* »ñÈ¡½ÚµãµÄOWNER£¬¼´TCB */                                                             \
+	/* èŽ·å–èŠ‚ç‚¹çš„OWNERï¼Œå³TCB */                                                             \
 	( pxTCB ) = ( pxConstList )->pxIndex->pvOwner;											 \
 }
 
@@ -101,7 +100,7 @@ typedef struct xLIST
 
 /*
 ************************************************************************
-*                                º¯ÊýÉùÃ÷
+*                                å‡½æ•°å£°æ˜Ž
 ************************************************************************
 */
 void vListInitialise( List_t * const pxList );
@@ -110,5 +109,4 @@ void vListInsertEnd( List_t * const pxList, ListItem_t * const pxNewListItem );
 void vListInsert( List_t * const pxList, ListItem_t * const pxNewListItem );
 UBaseType_t uxListRemove( ListItem_t * const pxItemToRemove );
 
-#endif /* LIST_H */
-
+#endif  /* LIST_H */
