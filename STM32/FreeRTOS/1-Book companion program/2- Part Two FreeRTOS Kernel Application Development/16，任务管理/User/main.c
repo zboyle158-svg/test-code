@@ -77,7 +77,8 @@ static void BSP_Init(void);/* 用于初始化板载相关资源 */
             第三步：启动FreeRTOS，开始多任务调度
   ****************************************************************/
 int main(void)
-{	
+{
+  /* main负责硬件初始化、创建启动任务并开启FreeRTOS调度器；调度启动后由内核选择当前运行任务。 */
   BaseType_t xReturn = pdPASS;/* 定义一个创建信息返回值，默认为pdPASS */
   
   /* 开发板硬件初始化 */
@@ -87,6 +88,7 @@ int main(void)
   printf("按下KEY1挂起任务，按下KEY2恢复任务\n");
   
    /* 创建AppTaskCreate任务 */
+  /* xTaskCreate会创建TCB和任务栈，并将新任务加入就绪列表；AppTaskCreate随后负责创建其他应用任务。 */
   xReturn = xTaskCreate((TaskFunction_t )AppTaskCreate,  /* 任务入口函数 */
                         (const char*    )"AppTaskCreate",/* 任务名字 */
                         (uint16_t       )512,  /* 任务栈大小 */
@@ -94,6 +96,7 @@ int main(void)
                         (UBaseType_t    )1, /* 任务的优先级 */
                         (TaskHandle_t*  )&AppTaskCreate_Handle);/* 任务控制块指针 */ 
   /* 启动任务调度 */           
+  /* 仅在任务创建成功时启动调度器；成功后CPU控制权交给FreeRTOS。 */
   if(pdPASS == xReturn)
     vTaskStartScheduler();   /* 启动任务，开启调度 */
   else
@@ -113,6 +116,7 @@ static void AppTaskCreate(void)
 {
   BaseType_t xReturn = pdPASS;/* 定义一个创建信息返回值，默认为pdPASS */
   
+  /* 创建任务期间暂时禁止调度切换，避免创建过程被其他任务打断；具体实现由移植层决定。 */
   taskENTER_CRITICAL();           //进入临界区
   
   /* 创建LED_Task任务 */
@@ -134,6 +138,7 @@ static void AppTaskCreate(void)
   if(pdPASS == xReturn)
     printf("创建KEY_Task任务成功!\r\n");
   
+  /* 启动任务的创建职责已完成；删除只移除该任务，不影响已经创建的LED和KEY任务。 */
   vTaskDelete(AppTaskCreate_Handle); //删除AppTaskCreate任务
   
   taskEXIT_CRITICAL();            //退出临界区
@@ -148,7 +153,8 @@ static void AppTaskCreate(void)
   * @ 返回值  ： 无
   ********************************************************************/
 static void LED_Task(void* parameter)
-{	
+{
+  /* 任务函数通常用无限循环承载主体；vTaskDelay期间任务进入阻塞态，CPU可运行其他任务。 */
   while (1)
   {
     LED1_ON;
@@ -168,7 +174,8 @@ static void LED_Task(void* parameter)
   * @ 返回值  ： 无
   ********************************************************************/
 static void KEY_Task(void* parameter)
-{	
+{
+  /* KEY任务通过任务句柄改变LED任务状态：挂起保留TCB和栈，恢复后重新进入就绪态。 */
   while (1)
   {
     if( Key_Scan(KEY1_GPIO_PORT,KEY1_PIN) == KEY_ON )
@@ -183,6 +190,7 @@ static void KEY_Task(void* parameter)
       vTaskResume(LED_Task_Handle);/* 恢复LED任务！ */
       printf("恢复LED任务成功！\n");
     }
+    /* 20表示Tick数，不必然等于20 ms；实际时长由configTICK_RATE_HZ决定，同时避免轮询占满CPU。 */
     vTaskDelay(20);/* 延时20个tick */
   }
 }
