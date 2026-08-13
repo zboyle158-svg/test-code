@@ -1,0 +1,7 @@
+*** Using Compiler 'V5.06 update 6 (build 750)', folder: 'I:\keil11\ARM\ARMCC\Bin'
+Build target 'Target 1'
+compiling main.c...
+linking...
+Program Size: Code=928 RO-data=224 RW-data=24 ZI-data=1376  
+".\Objects\YH-RT-Thread.axf" - 0 Error(s), 0 Warning(s).
+Build Time Elapsed:  00:00:01

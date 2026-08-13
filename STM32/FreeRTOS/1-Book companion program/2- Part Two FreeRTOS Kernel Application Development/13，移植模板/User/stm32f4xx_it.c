@@ -124,8 +124,9 @@ void DebugMon_Handler(void)
   * @param  None
   * @retval None
   */
+/* FreeRTOS 移植层的系统节拍处理函数：累加 Tick、唤醒到期任务，必要时请求 PendSV 切换上下文。 */
 extern void xPortSysTickHandler(void);
-//systick中断服务函数
+// SysTick 中断服务函数：调度器启动前不处理 FreeRTOS Tick。
 void SysTick_Handler(void)
 {	
     #if (INCLUDE_xTaskGetSchedulerState  == 1 )

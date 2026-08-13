@@ -137,7 +137,7 @@
  */
 #define configCPU_CLOCK_HZ						  (SystemCoreClock)
 
-//RTOS系统节拍中断的频率。即一秒中断的次数，每次中断RTOS都会进行任务调度
+/* Tick 频率为 1000 Hz，即每 1 ms 产生一次 SysTick；API 延时参数通常以 Tick 表示。 */
 #define configTICK_RATE_HZ						  (( TickType_t )1000)
 
 //可使用的最大优先级
@@ -183,7 +183,7 @@
 #define configSUPPORT_DYNAMIC_ALLOCATION        1    
 //支持静态内存
 #define configSUPPORT_STATIC_ALLOCATION					0					
-//系统所有总的堆大小
+/* FreeRTOS 动态内存池大小；任务、队列等对象的 pvPortMalloc() 都可能消耗此区域。 */
 #define configTOTAL_HEAP_SIZE					((size_t)(36*1024))    
 
 
@@ -311,5 +311,5 @@
 #endif
 
 
-#endif /* FREERTOS_CONFIG_H */
+#endif  /* FREERTOS_CONFIG_H */
 

@@ -25,6 +25,13 @@
 */
 #include "FreeRTOS.h"
 #include "task.h"
+/*
+ * 本实验的运行链：main -> prvInitialiseTaskLists -> xTaskCreateStatic
+ * -> vListInsertEnd -> vTaskStartScheduler -> xPortStartScheduler -> SVC/PendSV。
+ * Task1Stack/Task2Stack是两个任务独立的栈；Task1TCB/Task2TCB保存任务入口、
+ * 任务名、栈起始地址和当前栈顶。两个Handle是句柄，本实验创建后没有继续使用；
+ * flag1/flag2用于在调试器中观察对应任务是否运行。
+ */
 
 /*
 *************************************************************************

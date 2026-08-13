@@ -1,6 +1,15 @@
 #include "FreeRTOS.h"
 #include "task.h"
 #include "ARMCM3.h"
+/*
+ * 移植层把通用任务管理连接到Cortex-M3硬件：
+ * pxPortInitialiseStack构造首次运行所需的异常栈帧；xPortStartScheduler配置系统异常
+ * 优先级并启动首任务；vPortSVCHandler恢复首个任务；xPortPendSVHandler保存旧任务、
+ * 调用vTaskSwitchContext选择新任务，再恢复新任务上下文。
+ * PendSV使用PSP运行任务，MSP专门供异常处理使用；因此任务之间不会共用同一栈。
+ */
+
+/* Cortex-M异常进入时硬件自动保存xPSR、PC、LR、R12、R3、R2、R1、R0；FreeRTOS再由软件保存R4~R11，二者合起来构成完整任务上下文。 */
 
 /*
 *************************************************************************
@@ -49,7 +58,7 @@ static void prvTaskExitError( void )
 
 StackType_t *pxPortInitialiseStack( StackType_t *pxTopOfStack, TaskFunction_t pxCode, void *pvParameters )
 {
-    /* 异常发生时，自动加载到CPU寄存器的内容 */
+    /* 按异常返回的出栈顺序，逆序构造初始栈帧；首次启动时硬件会自动恢复这些寄存器。 */
 	pxTopOfStack--;
 	*pxTopOfStack = portINITIAL_XPSR;	                                    /* xPSR的bit24必须置1 */
 	pxTopOfStack--;
@@ -75,7 +84,7 @@ StackType_t *pxPortInitialiseStack( StackType_t *pxTopOfStack, TaskFunction_t px
 
 BaseType_t xPortStartScheduler( void )
 {
-    /* 配置PendSV 和 SysTick 的中断优先级为最低 */
+    /* PendSV用于任务切换，设为最低优先级，避免打断普通中断；本节尚未用SysTick实现时间管理。 */
 	portNVIC_SYSPRI2_REG |= portNVIC_PENDSV_PRI;
 	portNVIC_SYSPRI2_REG |= portNVIC_SYSTICK_PRI;
 
@@ -148,14 +157,14 @@ __asm void xPortPendSVHandler( void )
     /* 当进入PendSVC Handler时，上一个任务运行的环境即：
        xPSR，PC（任务入口地址），R14，R12，R3，R2，R1，R0（任务的形参）
        这些CPU寄存器的值会自动保存到任务的栈中，剩下的r4~r11需要手动保存 */
-    /* 获取任务栈指针到r0 */
+    /* 获取当前任务的进程栈指针PSP；任务代码运行在线程模式并使用PSP。 */
 	mrs r0, psp
 	isb
 
 	ldr	r3, =pxCurrentTCB		/* 加载pxCurrentTCB的地址到r3 */
 	ldr	r2, [r3]                /* 加载pxCurrentTCB到r2 */
 
-	stmdb r0!, {r4-r11}			/* 将CPU寄存器r4~r11的值存储到r0指向的地址 */
+	stmdb r0!, {r4-r11}			/* 软件保存未被硬件自动保存的R4~R11，并回写当前任务的栈顶。 */
 	str r0, [r2]                /* 将任务栈的新的栈顶指针存储到当前任务TCB的第一个成员，即栈顶指针 */				
                                
 
@@ -166,7 +175,7 @@ __asm void xPortPendSVHandler( void )
 	msr basepri, r0
 	dsb
 	isb
-	bl vTaskSwitchContext       /* 调用函数vTaskSwitchContext，寻找新的任务运行,通过使变量pxCurrentTCB指向新的任务来实现任务切换 */ 
+	bl vTaskSwitchContext       /* 只更新pxCurrentTCB，具体寄存器恢复在下面完成。 */ 
 	mov r0, #0                  /* 退出临界段 */
 	msr basepri, r0
 	ldmia sp!, {r3, r14}        /* 恢复r3和r14 */

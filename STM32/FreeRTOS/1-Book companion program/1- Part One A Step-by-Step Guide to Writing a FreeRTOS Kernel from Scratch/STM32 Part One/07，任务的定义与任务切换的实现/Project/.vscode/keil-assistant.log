@@ -1,0 +1,54 @@
+[info] Log at : 2026/8/12|21:36:06|GMT+0800
+
+[info] Log at : 2026/8/12|21:36:13|GMT+0800
+
+[info] Log at : 2026/8/12|21:48:20|GMT+0800
+
+[info] Log at : 2026/8/12|21:48:27|GMT+0800
+
+[info] Log at : 2026/8/12|22:04:37|GMT+0800
+
+[info] Log at : 2026/8/12|22:04:55|GMT+0800
+
+[info] Log at : 2026/8/12|22:09:05|GMT+0800
+
+[info] Log at : 2026/8/12|22:09:11|GMT+0800
+
+[info] Log at : 2026/8/12|23:03:16|GMT+0800
+
+[info] Log at : 2026/8/12|23:03:21|GMT+0800
+
+[SyntaxError: Unexpected token '﻿', "﻿{
+    "c"... is not valid JSON
+	at JSON.parse (<anonymous>)
+	at F.updateCppProperties (c:\Users\neh793w\.vscode\extensions\cl.keil-assistant-1.7.0\dist\extension.js:1:10849)
+	at F.<anonymous> (c:\Users\neh793w\.vscode\extensions\cl.keil-assistant-1.7.0\dist\extension.js:1:12579)
+	at Generator.next (<anonymous>)
+	at c:\Users\neh793w\.vscode\extensions\cl.keil-assistant-1.7.0\dist\extension.js:1:4480
+	at new Promise (<anonymous>)
+	at r (c:\Users\neh793w\.vscode\extensions\cl.keil-assistant-1.7.0\dist\extension.js:1:4225)
+	at F.load (c:\Users\neh793w\.vscode\extensions\cl.keil-assistant-1.7.0\dist\extension.js:1:11310)
+	at w.<anonymous> (c:\Users\neh793w\.vscode\extensions\cl.keil-assistant-1.7.0\dist\extension.js:1:8737)
+	at Generator.next (<anonymous>)
+	at a (c:\Users\neh793w\.vscode\extensions\cl.keil-assistant-1.7.0\dist\extension.js:1:4282)
+	at process.processTicksAndRejections (node:internal/process/task_queues:104:5)]
+[info] Log at : 2026/8/12|23:08:11|GMT+0800
+
+[info] Log at : 2026/8/12|23:08:49|GMT+0800
+
+[SyntaxError: Unexpected token '﻿', "﻿{
+    "c"... is not valid JSON
+	at JSON.parse (<anonymous>)
+	at F.updateCppProperties (c:\Users\neh793w\.vscode\extensions\cl.keil-assistant-1.7.0\dist\extension.js:1:10849)
+	at F.<anonymous> (c:\Users\neh793w\.vscode\extensions\cl.keil-assistant-1.7.0\dist\extension.js:1:12579)
+	at Generator.next (<anonymous>)
+	at c:\Users\neh793w\.vscode\extensions\cl.keil-assistant-1.7.0\dist\extension.js:1:4480
+	at new Promise (<anonymous>)
+	at r (c:\Users\neh793w\.vscode\extensions\cl.keil-assistant-1.7.0\dist\extension.js:1:4225)
+	at F.load (c:\Users\neh793w\.vscode\extensions\cl.keil-assistant-1.7.0\dist\extension.js:1:11310)
+	at w.<anonymous> (c:\Users\neh793w\.vscode\extensions\cl.keil-assistant-1.7.0\dist\extension.js:1:8737)
+	at Generator.next (<anonymous>)
+	at a (c:\Users\neh793w\.vscode\extensions\cl.keil-assistant-1.7.0\dist\extension.js:1:4282)
+	at process.processTicksAndRejections (node:internal/process/task_queues:104:5)]
+[info] Log at : 2026/8/13|09:58:20|GMT+0800
+

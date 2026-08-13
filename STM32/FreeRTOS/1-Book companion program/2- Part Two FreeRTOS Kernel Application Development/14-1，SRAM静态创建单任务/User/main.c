@@ -56,11 +56,23 @@ static TaskHandle_t LED_Task_Handle;
  * 当我们在写应用程序的时候，可能需要用到一些全局变量。
  */
 /* AppTaskCreate任务任务堆栈 */
+/*
+ * 静态任务必须由应用程序提前提供任务栈空间。
+ * 数组元素类型是 StackType_t，而不是字节数组；因此 128 表示 128 个栈单元，
+ * 实际占用字节数由当前移植层对 StackType_t 的定义决定。
+ */
+/* 静态任务栈：数组元素是 StackType_t，128 表示 128 个栈单元，实际字节数由移植层决定。 */
 static StackType_t AppTaskCreate_Stack[128];
 /* LED任务堆栈 */
 static StackType_t LED_Task_Stack[128];
 
 /* AppTaskCreate 任务控制块 */
+/*
+ * StaticTask_t 是任务控制块的静态存储区。
+ * FreeRTOS 会把任务状态、优先级、栈指针、链表节点等运行时信息放入其中。
+ * 任务栈和任务控制块必须同时有效，不能只提供其中一项。
+ */
+/* 静态任务控制块：保存任务状态、优先级、栈指针及调度链表节点等信息。 */
 static StaticTask_t AppTaskCreate_TCB;
 /* AppTaskCreate 任务控制块 */
 static StaticTask_t LED_Task_TCB;
@@ -111,7 +123,18 @@ int main(void)
   /* 开发板硬件初始化 */
   BSP_Init();
   printf("这是一个[野火]-STM32全系列开发板-FreeRTOS-静态创建单任务!\r\n");
-   /* 创建 AppTaskCreate 任务 */
+   /*
+   * 第一个任务是“任务创建任务”。它只负责在调度器运行后创建 LED_Task，
+   * 创建完成即自删除，因此它不是长期运行的业务任务。
+   *
+   * xTaskCreateStatic() 不从 FreeRTOS heap 中申请 TCB 和栈，而是使用调用者
+   * 传入的 AppTaskCreate_Stack 与 AppTaskCreate_TCB；返回 NULL 表示创建失败。
+   */
+  /*
+   * 先创建一个临时的任务创建任务。它启动后创建 LED_Task，随后自删除。
+   * xTaskCreateStatic 使用调用者提供的任务栈和 TCB，不从 FreeRTOS heap 取空间。
+   */
+  /* 创建 AppTaskCreate 任务 */
 	AppTaskCreate_Handle = xTaskCreateStatic((TaskFunction_t	)AppTaskCreate,		//任务函数
 															(const char* 	)"AppTaskCreate",		//任务名称
 															(uint32_t 		)128,	//任务堆栈大小
@@ -135,6 +158,11 @@ int main(void)
   **********************************************************************/
 static void AppTaskCreate(void)
 {
+  /*
+   * 创建阶段暂时关闭可屏蔽中断/调度影响，避免 AppTaskCreate 尚未完成时
+   * 被其他执行路径打断。临界区必须尽量短，且必须与 taskEXIT_CRITICAL() 配对。
+   */
+  /* 创建阶段暂时进入临界区，防止任务创建流程被调度打断；结束后必须配对退出。 */
   taskENTER_CRITICAL();           //进入临界区
 
   /* 创建LED_Task任务 */
@@ -151,6 +179,12 @@ static void AppTaskCreate(void)
 	else
 		printf("LED_Task任务创建失败!\n");
 	
+  /*
+   * LED_Task 创建完成后，AppTaskCreate 已完成使命，删除自身释放其任务资源。
+   * 由于这里使用静态内存，删除不会归还 heap 中的栈块，但任务仍会从调度器
+   * 的任务列表中移除；对应的静态数组在本示例中保持存在。
+   */
+  /* 创建完成后临时任务已无工作，删除自身并从调度器任务列表中移除。 */
   vTaskDelete(AppTaskCreate_Handle); //删除AppTaskCreate任务
   
   taskEXIT_CRITICAL();            //退出临界区
@@ -169,6 +203,8 @@ static void LED_Task(void* parameter)
     while (1)
     {
         LED1_ON;
+        /* 参数单位是 Tick，不是固定毫秒；本工程 1000 Tick/s，因此约为 500 ms。
+         * 延时期间任务进入阻塞态，CPU 可运行其他就绪任务或空闲任务。 */
         vTaskDelay(500);   /* 延时500个tick */
         printf("LED_Task Running,LED1_ON\r\n");
         

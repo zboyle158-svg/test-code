@@ -1,0 +1,78 @@
+﻿{
+    "C_Cpp_Runner.cCompilerPath":  "gcc",
+    "C_Cpp_Runner.cppCompilerPath":  "g++",
+    "C_Cpp_Runner.debuggerPath":  "gdb",
+    "C_Cpp_Runner.cStandard":  "",
+    "C_Cpp_Runner.cppStandard":  "",
+    "C_Cpp_Runner.msvcBatchPath":  "C:/Program Files/Microsoft Visual Studio/VR_NR/Community/VC/Auxiliary/Build/vcvarsall.bat",
+    "C_Cpp_Runner.useMsvc":  false,
+    "C_Cpp_Runner.warnings":  [
+                                  "-Wall",
+                                  "-Wextra",
+                                  "-Wpedantic",
+                                  "-Wshadow",
+                                  "-Wformat=2",
+                                  "-Wcast-align",
+                                  "-Wconversion",
+                                  "-Wsign-conversion",
+                                  "-Wnull-dereference"
+                              ],
+    "C_Cpp_Runner.msvcWarnings":  [
+                                      "/W4",
+                                      "/permissive-",
+                                      "/w14242",
+                                      "/w14287",
+                                      "/w14296",
+                                      "/w14311",
+                                      "/w14826",
+                                      "/w44062",
+                                      "/w44242",
+                                      "/w14905",
+                                      "/w14906",
+                                      "/w14263",
+                                      "/w44265",
+                                      "/w14928"
+                                  ],
+    "C_Cpp_Runner.enableWarnings":  true,
+    "C_Cpp_Runner.warningsAsError":  false,
+    "C_Cpp_Runner.compilerArgs":  [
+
+                                  ],
+    "C_Cpp_Runner.linkerArgs":  [
+
+                                ],
+    "C_Cpp_Runner.includePaths":  [
+                                      "${workspaceFolder}/User",
+                                      "${workspaceFolder}/freertos",
+                                      "${workspaceFolder}/freertos/include",
+                                      "${workspaceFolder}/freertos/portable/RVDS/ARM_CM3",
+                                      "${workspaceFolder}/RTE/Device/ARMCM3",
+                                      "I:/keil11/ARM/PACK/ARM/CMSIS/5.9.0/Device/ARM/ARMCM3/Include",
+                                      "j:\\github\\test-code\\STM32\\FreeRTOS\\1-Book companion program\\1- Part One A Step-by-Step Guide to Writing a FreeRTOS Kernel from Scratch\\STM32 Part One\\07，任务的定义与任务切换的实现\\User",
+                                      "j:\\github\\test-code\\STM32\\FreeRTOS\\1-Book companion program\\1- Part One A Step-by-Step Guide to Writing a FreeRTOS Kernel from Scratch\\STM32 Part One\\07，任务的定义与任务切换的实现\\freertos\\include",
+                                      "j:\\github\\test-code\\STM32\\FreeRTOS\\1-Book companion program\\1- Part One A Step-by-Step Guide to Writing a FreeRTOS Kernel from Scratch\\STM32 Part One\\07，任务的定义与任务切换的实现\\freertos\\portable\\RVDS\\ARM_CM3",
+                                      "I:\\keil11\\ARM\\ARMCC\\include",
+                                      "I:\\keil11\\ARM\\ARMCC\\include\\rw",
+                                      "j:\\github\\test-code\\STM32\\FreeRTOS\\1-Book companion program\\1- Part One A Step-by-Step Guide to Writing a FreeRTOS Kernel from Scratch\\STM32 Part One\\07，任务的定义与任务切换的实现\\freertos",
+                                      "j:\\github\\test-code\\STM32\\FreeRTOS\\1-Book companion program\\1- Part One A Step-by-Step Guide to Writing a FreeRTOS Kernel from Scratch\\STM32 Part One\\07，任务的定义与任务切换的实现\\Doc",
+                                      "I:/keil11/ARM/PACK/ARM/CMSIS/5.9.0/CMSIS/Core/Include"
+                                  ],
+    "C_Cpp_Runner.includeSearch":  [
+                                       "*",
+                                       "**/*"
+                                   ],
+    "C_Cpp_Runner.excludeSearch":  [
+                                       "**/build",
+                                       "**/build/**",
+                                       "**/.*",
+                                       "**/.*/**",
+                                       "**/.vscode",
+                                       "**/.vscode/**"
+                                   ],
+    "C_Cpp_Runner.useAddressSanitizer":  false,
+    "C_Cpp_Runner.useUndefinedSanitizer":  false,
+    "C_Cpp_Runner.useLeakSanitizer":  false,
+    "C_Cpp_Runner.showCompilationTime":  false,
+    "C_Cpp_Runner.useLinkTimeOptimization":  false,
+    "C_Cpp_Runner.msvcSecureNoWarnings":  false
+}

@@ -23,13 +23,19 @@
 /* FreeRTOS头文件 */
 #include "FreeRTOS.h"
 #include "task.h"
-/* 开发板硬件bsp头文件 */
+/* 开发板硬件BSP头文件：封装 LED、串口等底层硬件操作。 */
 #include "bsp_led.h"
 #include "bsp_debug_usart.h"
 
 
 int main(void)
-{	
+{
+    /*
+     * 程序启动路径：启动文件完成复位后跳转到 main()；main() 应完成硬件初始化、
+     * 创建任务，最后调用 vTaskStartScheduler()。调度器启动后，CPU 由 FreeRTOS
+     * 接管，任务通过 SysTick 产生节拍，并在需要时由 PendSV 完成上下文切换。
+     * 本模板故意保留空的 main()，供后续章节逐步添加任务。
+     */
 
 }
 /********************************END OF FILE****************************/

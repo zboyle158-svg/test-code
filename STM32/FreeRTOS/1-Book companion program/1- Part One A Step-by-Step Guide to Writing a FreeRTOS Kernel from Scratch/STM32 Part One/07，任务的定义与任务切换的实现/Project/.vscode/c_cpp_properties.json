@@ -1,0 +1,34 @@
+{
+    "configurations": [
+        {
+            "name": "FreeRTOS-Keil",
+            "includePath": [
+                "${workspaceFolder}/User",
+                "${workspaceFolder}/freertos",
+                "${workspaceFolder}/freertos/include",
+                "${workspaceFolder}/freertos/portable/RVDS/ARM_CM3",
+                "${workspaceFolder}/RTE/Device/ARMCM3",
+                "I:/keil11/ARM/ARMCC/include",
+                "I:/keil11/ARM/ARMCC/include/rw",
+                "I:/keil11/ARM/PACK/ARM/CMSIS/5.9.0/Device/ARM/ARMCM3/Include",
+                "I:/keil11/ARM/PACK/ARM/CMSIS/5.9.0/CMSIS/Core/Include"
+            ],
+            "defines": [
+                "__CC_ARM",
+                "__arm__",
+                "__ARMCC_VERSION=5060750",
+                "__weak=",
+                "__packed=",
+                "__forceinline=inline",
+                "__asm(x)=",
+                "__dsb(x)=",
+                "__isb(x)="
+            ],
+            "intelliSenseMode": "windows-gcc-x64",
+            "cStandard": "c11",
+            "cppStandard": "c++14",
+            "compilerPath": ""
+        }
+    ],
+    "version": 4
+}

@@ -1,6 +1,14 @@
 #include "FreeRTOS.h"
 #include <stdlib.h>
 #include "list.h"
+/*
+ * 链表数据流：List_t是容器，xListEnd是永远存在的哨兵节点，真正的任务节点
+ * 通过xStateListItem挂入容器。pvOwner回指TCB，pvContainer回指所属List_t。
+ * pxIndex是遍历游标，不是数组下标；它用于轮转获取下一个节点。
+ * vListInitialise用于初始化容器，vListInitialiseItem用于初始化节点，
+ * vListInsertEnd用于按尾部插入，vListInsert用于按xItemValue升序插入，
+ * uxListRemove用于摘除节点并返回删除后剩余节点数量。
+ */
 
 
 /* 链表初始化 */

@@ -1,6 +1,8 @@
 #include "FreeRTOS.h"
 #include "task.h"
 
+/* 本文件实现本节所需的最小任务管理：静态创建任务、初始化任务栈、维护就绪链表，并在PendSV触发后选择下一个任务。CPU寄存器的保存和恢复位于portable/RVDS/ARM_CM3/port.c。 */
+
 
 /*
 *************************************************************************
@@ -59,6 +61,7 @@ TaskHandle_t xTaskCreateStatic(	TaskFunction_t pxTaskCode,           /* 任务入口
 	TaskHandle_t xReturn;
 
 	if( ( pxTaskBuffer != NULL ) && ( puxStackBuffer != NULL ) )
+        /* 静态创建不从堆申请内存，TCB和任务栈由调用者提前提供。 */
 	{		
 		pxNewTCB = ( TCB_t * ) pxTaskBuffer; 
 		pxNewTCB->pxStack = ( StackType_t * ) puxStackBuffer;
@@ -95,10 +98,10 @@ static void prvInitialiseNewTask( 	TaskFunction_t pxTaskCode,              /* 任
 	StackType_t *pxTopOfStack;
 	UBaseType_t x;	
 	
-	/* 获取栈顶地址 */
+	/* 获取栈顶地址：Cortex-M任务栈向低地址增长，因此从数组最高地址开始。 */
 	pxTopOfStack = pxNewTCB->pxStack + ( ulStackDepth - ( uint32_t ) 1 );
 	//pxTopOfStack = ( StackType_t * ) ( ( ( portPOINTER_SIZE_TYPE ) pxTopOfStack ) & ( ~( ( portPOINTER_SIZE_TYPE ) portBYTE_ALIGNMENT_MASK ) ) );
-	/* 向下做8字节对齐 */
+	/* 向下做8字节对齐，符合Cortex-M ABI对栈指针对齐的要求。 */
 	pxTopOfStack = ( StackType_t * ) ( ( ( uint32_t ) pxTopOfStack ) & ( ~( ( uint32_t ) 0x0007 ) ) );	
 
 	/* 将任务的名字存储在TCB中 */
@@ -120,7 +123,7 @@ static void prvInitialiseNewTask( 	TaskFunction_t pxTaskCode,              /* 任
 	listSET_LIST_ITEM_OWNER( &( pxNewTCB->xStateListItem ), pxNewTCB );
     
     
-    /* 初始化任务栈 */
+    /* 伪造首次异常返回所需的栈帧，启动任务时可像恢复被中断任务一样恢复寄存器。 */
 	pxNewTCB->pxTopOfStack = pxPortInitialiseStack( pxTopOfStack, pxTaskCode, pvParameters );   
 
 
@@ -131,7 +134,7 @@ static void prvInitialiseNewTask( 	TaskFunction_t pxTaskCode,              /* 任
 	}
 }
 
-/* 初始化任务相关的列表 */
+/* 初始化任务相关的列表：每个优先级对应一条就绪链表。 */
 void prvInitialiseTaskLists( void )
 {
     UBaseType_t uxPriority;
@@ -147,7 +150,7 @@ extern TCB_t Task1TCB;
 extern TCB_t Task2TCB;
 void vTaskStartScheduler( void )
 {
-    /* 手动指定第一个运行的任务 */
+    /* 本节尚未实现按最高优先级查找任务，因此手动指定Task1作为首个运行任务。 */
     pxCurrentTCB = &Task1TCB;
     
     /* 启动调度器 */
@@ -159,7 +162,7 @@ void vTaskStartScheduler( void )
 
 void vTaskSwitchContext( void )
 {    
-    /* 两个任务轮流切换 */
+    /* 本节的最小调度策略：两个任务轮流运行。PendSV先保存旧任务栈顶，再调用本函数更新pxCurrentTCB。 */
     if( pxCurrentTCB == &Task1TCB )
     {
         pxCurrentTCB = &Task2TCB;
