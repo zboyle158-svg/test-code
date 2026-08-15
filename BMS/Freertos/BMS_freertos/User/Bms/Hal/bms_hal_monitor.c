@@ -15,7 +15,7 @@
 
 
 // 冒泡排序的比较程序,对电压数据进行比较
-static int compaer_cell(void *e1, void *e2)
+/* 比较函数：返回 1 表示前一个电芯电压更高，需要交换。 */`r`nstatic int compaer_cell(void *e1, void *e2)
 {
 	float temp1, temp2;
 	
@@ -31,7 +31,7 @@ static int compaer_cell(void *e1, void *e2)
 }
 
 
-void Bms_HalMonitorCellVoltage(void)
+/* 数据路径：BQ769x0 寄存器 -> 驱动层 SampleData -> 业务层 MonitorData。 */`r`nvoid Bms_HalMonitorCellVoltage(void)
 {	
 	BQ769X0_UpdateCellVolt();
 	for (uint8_t index = 0; index < BMS_GlobalParam.Cell_Real_Number; index++)

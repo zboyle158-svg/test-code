@@ -60,8 +60,8 @@ const osThreadAttr_t monitorTask_attributes = {
 };
 
 static void BMS_MonitorTaskEntry(void *paramter);
-static void BMS_MonitorBattery(void);
-static void BMS_MonitorSysMode(void);
+/* 周期单位为 ms；不同采样项通过计数器降低 I2C 访问频率。 */`r`nstatic void BMS_MonitorBattery(void);
+/* 电流单位为 A：正值表示充电，负值表示放电，±0.02 A 是待机死区。 */`r`nstatic void BMS_MonitorSysMode(void);
 
 
 void BMS_MonitorInit(void)
@@ -88,7 +88,7 @@ static void BMS_MonitorTaskEntry(void *paramter)
 
 
 // 监控电池各项数据
-static void BMS_MonitorBattery(void)
+/* 周期单位为 ms；不同采样项通过计数器降低 I2C 访问频率。 */`r`nstatic void BMS_MonitorBattery(void)
 {
 	// 单体电芯电压
 	CountCellVoltage += MONITOR_TASK_PERIOD;
@@ -156,7 +156,7 @@ static void BMS_MonitorBattery(void)
 // BatteryCurrent < 20mA || BatteryCurrent > -20mA  处于待机模式或者睡眠模式
 // BatteryCurrent <= -20mA 处于放电模式
 // BatteryCurrent >=  20mA 处于充电模式
-static void BMS_MonitorSysMode(void)
+/* 电流单位为 A：正值表示充电，负值表示放电，±0.02 A 是待机死区。 */`r`nstatic void BMS_MonitorSysMode(void)
 {
 	static BMS_SysModeTypedef SysModeBackup = BMS_MODE_NULL;
 	static uint32_t StandbyCount = 0;
