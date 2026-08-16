@@ -1,9 +1,9 @@
 /*
  * @file freertos.c
- * @brief RTOS 对象创建和默认任务入口�?
+ * @brief FreeRTOS入口任务和BMS业务任务启动说明。
  *
- * defaultTask 是系统启动任务：调用 BMS_SysInitialize() 创建业务线程�?
- * 随后�?500 ms 翻转 LED，作为系统仍在运行的可视化指示�?
+ * defaultTask负责调用BMS_SysInitialize()，完成BMS模块初始化；
+ * 初始化后继续以500ms周期翻转LED，作为系统运行心跳。
  */
 /* USER CODE BEGIN Header */
 /**
@@ -76,7 +76,8 @@ void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
   * @param  None
   * @retval None
   */
-void MX_FREERTOS_Init(void) {`r`n  /* ����ֻ������������BMS ҵ�������� BMS_SysInitialize() ���������� */
+void MX_FREERTOS_Init(void) {
+  /* 这里只创建启动任务；BMS 业务任务由 BMS_SysInitialize() 继续创建。 */
   /* USER CODE BEGIN Init */
 
   /* USER CODE END Init */
@@ -97,7 +98,7 @@ void MX_FREERTOS_Init(void) {`r`n  /* ����ֻ������������BMS ҵ�������� BMS_Sys
   /* add queues, ... */
   /* USER CODE END RTOS_QUEUES */
 
-  /* 创建启动任务；其内部再创�?BMS 监测、保护、分析和能量任务�?*/
+  /* 创建启动任务；BMS业务任务将在BMS_SysInitialize()内部创建。 */
   /* creation of defaultTask */
   defaultTaskHandle = osThreadNew(StartDefaultTask, NULL, &defaultTask_attributes);
 
@@ -122,8 +123,9 @@ void StartDefaultTask(void *argument)
 {
   /* USER CODE BEGIN StartDefaultTask */
   /* Infinite loop */
-	(void)argument; /* 当前任务没有使用调用方传入的参数�?*/
-	/* ����������������� I2C��BQ769x0 �͸�ҵ��ģ���ʼ�����ٱ�����������Ϊ�������� */`r`n  BMS_SysInitialize();
+	(void)argument; /* 当前任务不使用调用方传入的参数。 */
+	/* 调度器启动后先完成 I2C、BQ769x0 和各业务模块初始化，再保留本任务作为心跳任务。 */
+  BMS_SysInitialize();
 	
   for(;;)
   {

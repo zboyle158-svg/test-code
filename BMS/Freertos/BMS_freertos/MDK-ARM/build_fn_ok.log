@@ -1,0 +1,9 @@
+*** Using Compiler 'V5.06 update 6 (build 750)', folder: 'I:\keil11\ARM\ARMCC\Bin'
+Build target 'BMS'
+compiling bms_monitor.c...
+..\User\Bms\Core\bms_monitor.c(319): error:  #169: expected a declaration
+  {
+..\User\Bms\Core\bms_monitor.c: 0 warnings, 1 error
+"BMS\BMS.axf" - 1 Error(s), 0 Warning(s).
+Target not created.
+Build Time Elapsed:  00:00:02

@@ -1,11 +1,4 @@
-/**
- * @file    bms_app.c
- * @brief   BMS 应用层总初始化入口。
- *
- * 启动关系：StartDefaultTask() -> BMS_SysInitialize() -> 硬件总线/BQ769x0
- * 初始化 -> 各个 BMS 功能模块创建 RTOS 任务。本文件只负责组装模块。
- */
-#include "bms_app.h"
+#include "bms_app.h" /* BMS应用层初始化接口。 */
 
 
 #include "bms_hal_control.h"
@@ -23,25 +16,29 @@
 
 
 
+/*
+ * 作用：完成BQ769x0、软件I2C和BMS业务任务的总初始化。
+ * 参数：无。返回值：无。
+ * 注意：应在FreeRTOS调度器启动后的任务上下文中调用。
+ */
 void BMS_SysInitialize(void)
 {
 	#if 1
-	/* AlertOps 是 BQ769x0 报警/库仑计事件到 BMS 保护与监测模块的回调表；
-	 * ConfigData 是需要写入 BQ769x0 保护寄存器的阈值和延时配置。 */
+	
+	/* 初始化参数：包含BQ769x0告警回调和保护阈值配置。 */
+
 	BQ769X0_InitDataTypedef InitData;
 
 	InitData.AlertOps.ocd 	 = BMS_ProtectHwOCD;
 	InitData.AlertOps.scd 	 = BMS_ProtectHwSCD;
 	InitData.AlertOps.ov	 = BMS_ProtectHwOV;
 	InitData.AlertOps.uv 	 = BMS_ProtectHwUV;	
-
-	// 使用硬件中断通知,如果烧写程序后必须重新上下电一次BQ芯片或者复位
+	
 	InitData.AlertOps.cc 	 = BMS_MonitorHwCurrent;
-	//InitData.AlertOps.cc 	 = NULL;
-
-	// 这两个中断会造成系统故障
-	// 第一个报警时设备故障,表示BQ芯片有问题了
-	// 第二个报警可能存在被外界电磁信号干扰造成误判,之前出现过,换了个跟官方一样阻值的电阻就没出现过了
+	
+	
+	
+	
 	InitData.AlertOps.device = BMS_ProtectHwDevice;
 	InitData.AlertOps.ovrd 	 = BMS_ProtectHwOvrd;
 
@@ -51,20 +48,16 @@ void BMS_SysInitialize(void)
 	InitData.ConfigData.OVDelay	 	 = (BQ769X0_UVDelayTypedef)INIT_OV_DELAY;
 	InitData.ConfigData.UVPThreshold = INIT_UV_PROTECT * 1000;
 	InitData.ConfigData.OVPThreshold = INIT_OV_PROTECT * 1000;
-
-
-	// 先建立软件 I2C GPIO 时序，再访问 BQ769x0 寄存器。
+	
+	/* 先建立软件I2C时序，再访问BQ769x0寄存器。 */
 	I2C_BusInitialize();
 	BQ769X0_Initialize(&InitData);
 #endif
+	
+	BMS_MonitorInit(); /* 创建电池监控任务。 */	
+	BMS_ProtectInit(); /* 创建保护任务和保护定时器。 */	
+	BMS_AnalysisInit(); /* 创建电池分析和SOC任务。 */	
+	BMS_EnergyInit(); /* 创建能量管理和均衡任务。 */	
+	BMS_InfoInit(); /* 创建信息输出任务。 */		
 
-	// 各模块初始化函数通常会创建独立 RTOS 任务；顺序体现模块依赖关系。
-	BMS_MonitorInit();	// 电池监控初始化
-	BMS_ProtectInit();	// 电池保护初始化
-	BMS_AnalysisInit();	// 电池分析初始化
-	BMS_EnergyInit();	// 能量管理初始化
-	BMS_InfoInit();		// 信息管理初始化
-//	BMS_CommInit();		// 通信管理初始化
 }
-
-

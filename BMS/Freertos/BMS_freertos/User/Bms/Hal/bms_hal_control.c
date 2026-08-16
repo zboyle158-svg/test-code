@@ -6,31 +6,31 @@
 
 
 
-// BMS»½ĞÑ
+// BMSå”¤é†’
 void BMS_HalCtrlWakeup(void)
 {
 	BQ769X0_Wakeup();
 }
 
-// ¿ØÖÆBMS½øÈëË¯ÃßÄ£Ê½
+// æ§åˆ¶BMSè¿›å…¥ç¡çœ æ¨¡å¼
 void BMS_HalCtrlSleep(void)
 {
 	BQ769X0_EntryShip();
 }
 
-// ¿ØÖÆ·Åµç×´Ì¬
+// æ§åˆ¶æ”¾ç”µçŠ¶æ€
 void BMS_HalCtrlDischarge(BMS_StateTypedef NewState)
 {
 	BQ769X0_ControlDSGOrCHG(DSG_CONTROL, (BQ769X0_StateTypedef)NewState);
 }
 
-// ¿ØÖÆ³äµç×´Ì¬
+// æ§åˆ¶å……ç”µçŠ¶æ€
 void BMS_HalCtrlCharge(BMS_StateTypedef NewState)
 {
 	BQ769X0_ControlDSGOrCHG(CHG_CONTROL, (BQ769X0_StateTypedef)NewState);
 }
 
-// ¿ØÖÆµ¥½Ú»ò¶à½ÚµçĞ¾¾ùºâ,×î¶à¿ÉÒÔÖ§³Ö32½Ú
+// æ§åˆ¶å•èŠ‚æˆ–å¤šèŠ‚ç”µèŠ¯å‡è¡¡,æœ€å¤šå¯ä»¥æ”¯æŒ32èŠ‚
 void BMS_HalCtrlCellsBalance(BMS_CellIndexTypedef CellIndex, BMS_StateTypedef NewState)
 {
 	BQ769X0_CellBalanceControl((BQ769X0_CellIndexTypedef)CellIndex, (BQ769X0_StateTypedef)NewState);

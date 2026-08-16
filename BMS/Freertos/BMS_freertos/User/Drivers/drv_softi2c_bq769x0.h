@@ -38,11 +38,11 @@
 
 /********************************* cell and temp **********************/
 
-// BQ76920	cell :3~5   �¶�:1
-// BQ76930	cell :6~10  �¶�:2
-// BQ76940	cell :9~15  �¶�:3
-#define BQ769X0_CELL_MAX 	BMS_CELL_MAX	// ���֧�ֶ��ٴ�
-#define BQ769X0_TMEP_MAX	BMS_TEMP_MAX	// ��༸·�¶�
+// BQ76920	cell :3~5   温度:1
+// BQ76930	cell :6~10  温度:2
+// BQ76940	cell :9~15  温度:3
+#define BQ769X0_CELL_MAX 	BMS_CELL_MAX	// 最大支持多少串
+#define BQ769X0_TMEP_MAX	BMS_TEMP_MAX	// 最多几路温度
 
 /****************************************************************************/
 
@@ -573,6 +573,7 @@ typedef struct _Register_Group
 
 
 
+/* 短路保护延时枚举：对应BQ769x0 PROTECT1寄存器编码。 */
 typedef enum
 {
 	BQ_SCD_DELAY_50us  = 0x00,
@@ -581,6 +582,7 @@ typedef enum
 	BQ_SCD_DELAY_400us = 0x03,	
 }BQ769X0_SCDDelayTypedef;
 
+/* 放电过流保护延时枚举：对应BQ769x0 PROTECT2寄存器编码。 */
 typedef enum
 {
 	BQ_OCD_DEALY_10ms	= 0x00,
@@ -594,6 +596,7 @@ typedef enum
 }BQ769X0_OCDDelayTypedef;
 
 
+/* 充电过压保护延时枚举：单位为秒。 */
 typedef enum
 {
 	BQ_OV_DELAY_1s	= 0x00,
@@ -602,6 +605,7 @@ typedef enum
 	BQ_OV_DELAY_8s	= 0x03,
 }BQ769X0_OVDelayTypedef;
 
+/* 放电欠压保护延时枚举：单位为秒。 */
 typedef enum
 {
 	BQ_UV_DELAY_1s	= 0x00,
@@ -612,6 +616,7 @@ typedef enum
 
 
 
+/* BQ769x0保护配置：保存延时和单体电压阈值。 */
 typedef struct
 {
 	BQ769X0_SCDDelayTypedef SCDDelay;
@@ -623,19 +628,21 @@ typedef struct
 }BQ769X0_ConfigDataTypedef;
 
 
-// BQӲ�������ص��ӿ�
+// BQ硬件报警回调接口
+/* BQ769x0告警回调表：把芯片告警映射到BMS业务处理函数。 */
 typedef struct
 {
-	void (*ocd)(void);		// BQ769X0 ������Ӳ������
-	void (*scd)(void);		// BQ769X0 �ŵ��·Ӳ������
-	void (*ov)(void);		// BQ769X0 ����ѹӲ������
-	void (*uv)(void);		// BQ769X0 �ŵ�ǷѹӲ������
-	void (*ovrd)(void);		// BQ769X0 �����������û���Χ��·ǿ�д���
-	void (*device)(void);	// BQ769X0 �豸���ϱ���
-	void (*cc)(void);		// BQ769X0 ���ؼƲ������
+	void (*ocd)(void);		// BQ769X0 充电过流硬件报警
+	void (*scd)(void);		// BQ769X0 放电电路硬件报警
+	void (*ov)(void);		// BQ769X0 充电过压硬件报警
+	void (*uv)(void);		// BQ769X0 放电欠压硬件报警
+	void (*ovrd)(void);		// BQ769X0 报警引脚由用户外围电路强行触发
+	void (*device)(void);	// BQ769X0 设备故障报警
+	void (*cc)(void);		// BQ769X0 库仑计采样完成
 }BQ769X0_AlertOpsTypedf;
 
-// ��ʼ�����ݽṹ��
+// 初始化数据结构体
+/* BQ769x0初始化参数：组合回调表和保护配置。 */
 typedef struct
 {
 	BQ769X0_AlertOpsTypedf AlertOps;
@@ -643,6 +650,7 @@ typedef struct
 }BQ769X0_InitDataTypedef;
 
 
+/* 充电/放电控制对象选择。 */
 typedef enum
 {
 	CHG_CONTROL = 0x01,
@@ -650,6 +658,7 @@ typedef enum
 }BQ769X0_ControlTypedef;
 
 
+/* BQ769x0控制状态：开启或关闭对应功能。 */
 typedef enum
 {
 	BQ_STATE_ENABLE,
@@ -657,6 +666,7 @@ typedef enum
 }BQ769X0_StateTypedef;
 
 
+/* 电芯均衡位图：一个bit对应一个电芯。 */
 typedef enum
 {
 	BQ_CELL_INDEX1  = 0x0001,
@@ -679,38 +689,56 @@ typedef enum
 
 
 
+/* BQ769x0采样数据快照：保存驱动层转换后的工程单位数据。 */
 typedef struct
 {
-	float CellVoltage[BQ769X0_CELL_MAX];	// ���ڵ�о��ѹ
-	float TsxTemperature[BQ769X0_TMEP_MAX];	// ���������¶�
-	float BatteryCurrent;	// ��ذ��ܵ���
-	float BatteryVoltage;	// ��ذ��ܵ�ѹ
-	float DieTemperature;	// ic�¶�,Ŀǰ��δ���Գɹ�
+	float CellVoltage[BQ769X0_CELL_MAX];	// 单节电芯电压
+	float TsxTemperature[BQ769X0_TMEP_MAX];	// 热敏电阻温度
+	float BatteryCurrent;	// 电池包总电流
+	float BatteryVoltage;	// 电池包总电压
+	float DieTemperature;	// ic温度,目前还未测试成功
 }BQ769X0_SampleDataTypedef;
 
 
 
-extern BQ769X0_SampleDataTypedef BQ769X0_SampleData;
+extern BQ769X0_SampleDataTypedef BQ769X0_SampleData; /* 驱动更新、BMS业务读取的全局采样数据。 */
 
 
+/* 初始化BQ769x0：应用告警回调、写入保护配置并启动芯片。参数为初始化配置指针，无返回值。 */
 void BQ769X0_Initialize(BQ769X0_InitDataTypedef *InitData);
+/* 唤醒BQ769x0。无参数、无返回值；会操作TS1唤醒时序。 */
 void BQ769X0_Wakeup(void);
+/* 让BQ769x0进入运输/休眠状态。无参数、无返回值。 */
 void BQ769X0_EntryShip(void);
+/* 检测负载状态。返回true表示检测到负载，false表示未检测到。 */
 bool BQ769X0_LoadDetect(void);
+/* 控制充电或放电通道。参数为控制对象和目标状态，无返回值。 */
 void BQ769X0_ControlDSGOrCHG(BQ769X0_ControlTypedef ControlType, BQ769X0_StateTypedef NewState);
+/* 控制指定电芯均衡。参数为电芯位图和目标状态，无返回值。 */
 void BQ769X0_CellBalanceControl(BQ769X0_CellIndexTypedef CellIndex, BQ769X0_StateTypedef NewState);
 
+/* 读取并换算单体电压，结果写入BQ769X0_SampleData。单位：V。 */
 void BQ769X0_UpdateCellVolt(void);
+/* 读取TS温度并换算为摄氏度，结果写入采样快照。 */
 void BQ769X0_UpdateTsTemp(void);
+/* 读取并换算芯片内部温度。 */
 void BQ769X0_UpdateDieTemp(void);
+/* 读取库仑计并换算电池电流，单位：A。 */
 void BQ769X0_UpdateCurrent(void);
+/* 读取并换算电池总电压，单位：V。函数名中的Upadte为原有拼写。 */
 void BQ769X0_UpadteBatVolt(void);
 
+/* 设置短路保护延时。参数为芯片编码值，无返回值。 */
 void BQ769X0_SCDDelaySet(BQ769X0_SCDDelayTypedef SCDDelay);
+/* 设置放电过流保护延时。参数为芯片编码值，无返回值。 */
 void BQ769X0_OCDDelaySet(BQ769X0_OCDDelayTypedef OCDDelay);
+/* 设置欠压保护延时。参数为芯片编码值，无返回值。 */
 void BQ769X0_UVDelaySet(BQ769X0_UVDelayTypedef UVDelay);
+/* 设置过压保护延时。参数为芯片编码值，无返回值。 */
 void BQ769X0_OVDelaySet(BQ769X0_OVDelayTypedef OVDelay);
+/* 设置欠压阈值。参数单位：mV；无返回值。 */
 void BQ769X0_UVPThresholdSet(uint16_t UVPThreshold);
+/* 设置过压阈值。参数单位：mV；无返回值。 */
 void BQ769X0_OVPThresholdSet(uint16_t OVPThreshold);
 
 

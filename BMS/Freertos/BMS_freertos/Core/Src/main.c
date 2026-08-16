@@ -18,18 +18,18 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-#include "cmsis_os.h"
-#include "can.h"
-#include "usart.h"
-#include "gpio.h"
+#include "cmsis_os.h"  /* CMSIS-RTOS鎺ュ彛锛岀敤浜庡垵濮嬪寲鍜屽惎鍔‵reeRTOS銆?*/
+#include "can.h"       /* CAN外设句柄和初始化函数声明?*/
+#include "usart.h"     /* UART外设句柄和初始化函数声明?*/
+#include "gpio.h"      /* GPIO初始化函数声明?*/
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include <rtthread.h>
+#include <rtthread.h>  /* 保留的RT-Thread兼容接口；当前主调度器为FreeRTOS?*/
 
-#include "board.h"
+#include "board.h"     /* 鏉跨骇鎺ュ彛澹版槑銆?*/
 
-#include "bms_app.h"
+#include "bms_app.h"   /* BMS鎬诲垵濮嬪寲鎺ュ彛澹版槑銆?*/
 
 /* USER CODE END Includes */
 
@@ -55,7 +55,7 @@
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
-void MX_FREERTOS_Init(void);
+void MX_FREERTOS_Init(void); /* 创建FreeRTOS对象和默认启动任务?*/
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -71,6 +71,10 @@ void MX_FREERTOS_Init(void);
   */
 int main(void)
 {
+  /*
+   * 系统启动总入口。执行到osKernelStart()后，CPU控制权交给FreeRTOS
+   * 调度器，BMS功能由各个RTOS任务并发运行?
+   */
   /* USER CODE BEGIN 1 */
 
   /* USER CODE END 1 */
@@ -78,24 +82,24 @@ int main(void)
   /* MCU Configuration--------------------------------------------------------*/
 
   /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
-  HAL_Init();
+  HAL_Init(); /* 初始化HAL、复位外设并准备系统Tick?*/
 
   /* USER CODE BEGIN Init */
 
   /* USER CODE END Init */
 
   /* Configure the system clock */
-  SystemClock_Config();
+  SystemClock_Config(); /* 配置HSE、PLL及HCLK/PCLK时钟树?*/
 
   /* USER CODE BEGIN SysInit */
 
   /* USER CODE END SysInit */
 
   /* Initialize all configured peripherals */
-  MX_GPIO_Init();
-  MX_USART1_UART_Init();
-  MX_USART2_UART_Init();
-  MX_CAN_Init();
+  MX_GPIO_Init();         /* 初始化LED、I2C、BQ769x0和控制引脚?*/
+  MX_USART1_UART_Init();  /* 初始化调试或通信串口1?*/
+  MX_USART2_UART_Init();  /* 初始化通信串口2?*/
+  MX_CAN_Init();          /* 初始化CAN外设?*/
   /* USER CODE BEGIN 2 */
 
   //Board_Initialize();
@@ -105,11 +109,11 @@ int main(void)
   /* USER CODE END 2 */
 
   /* Init scheduler */
-  osKernelInitialize();  /* Call init function for freertos objects (in freertos.c) */
-  MX_FREERTOS_Init();
+  osKernelInitialize();  /* 初始化RTOS内核，此时调度器尚未运行?*/
+  MX_FREERTOS_Init();     /* 创建默认任务及其他RTOS对象?*/
 
   /* Start scheduler */
-  osKernelStart();
+  osKernelStart();        /* 启动调度器，之后由FreeRTOS选择任务运行?*/
 
   /* We should never get here as control is now taken by the scheduler */
   /* Infinite loop */
@@ -133,7 +137,9 @@ int main(void)
   */
 void SystemClock_Config(void)
 {
+  /* RCC振荡器配置结构体：保存HSE、HSI和PLL参数?*/
   RCC_OscInitTypeDef RCC_OscInitStruct = {0};
+  /* RCC总线时钟配置结构体：保存SYSCLK、AHB和APB分频参数?*/
   RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
 
   /** Initializes the RCC Oscillators according to the specified parameters
@@ -145,7 +151,7 @@ void SystemClock_Config(void)
   RCC_OscInitStruct.HSIState = RCC_HSI_ON;
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
   RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
-  RCC_OscInitStruct.PLL.PLLMUL = RCC_PLL_MUL9;
+  RCC_OscInitStruct.PLL.PLLMUL = RCC_PLL_MUL9; /* HSE经PLL进行9倍频?*/
   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
   {
     Error_Handler();
@@ -155,7 +161,7 @@ void SystemClock_Config(void)
   */
   RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
                               |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
-  RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
+  RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK; /* 系统时钟使用PLL输出。 */
   RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
   RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV2;
   RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
@@ -180,11 +186,12 @@ void SystemClock_Config(void)
   */
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
+  /* htim指向产生周期更新中断的定时器句柄?*/
   /* USER CODE BEGIN Callback 0 */
 
   /* USER CODE END Callback 0 */
   if (htim->Instance == TIM4) {
-    HAL_IncTick();
+    HAL_IncTick(); /* TIM4作为HAL时间基准，递增uwTick。 */
   }
   /* USER CODE BEGIN Callback 1 */
 
@@ -197,6 +204,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
   */
 void Error_Handler(void)
 {
+  /* 初始化失败后关闭中断并停在此处，便于调试器定位故障?*/
   /* USER CODE BEGIN Error_Handler_Debug */
   /* User can add his own implementation to report the HAL error return state */
   __disable_irq();
@@ -216,6 +224,7 @@ void Error_Handler(void)
   */
 void assert_failed(uint8_t *file, uint32_t line)
 {
+  /* file和line分别记录断言失败的源文件和代码行号?*/
   /* USER CODE BEGIN 6 */
   /* User can add his own implementation to report the file name and line number,
      ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */

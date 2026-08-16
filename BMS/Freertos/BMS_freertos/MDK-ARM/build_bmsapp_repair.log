@@ -1,0 +1,79 @@
+*** Using Compiler 'V5.06 update 6 (build 750)', folder: 'I:\keil11\ARM\ARMCC\Bin'
+Build target 'BMS'
+compiling bms_app.c...
+..\User\Bms\bms_app.c(19): error:  #7: unrecognized token
+  /*`r`n * 作用：完成BQ769x0、软件I2C和BMS业务任务的总初始化。`r`n * 参数：无。返回值：无。`r`n * 注意：应在FreeRTOS调度器启动后的任务上下文中调用。`r`n */`r`nvoid BMS_SysInitialize(void)
+..\User\Bms\bms_app.c(19): error:  #169: expected a declaration
+  /*`r`n * 作用：完成BQ769x0、软件I2C和BMS业务任务的总初始化。`r`n * 参数：无。返回值：无。`r`n * 注意：应在FreeRTOS调度器启动后的任务上下文中调用。`r`n */`r`nvoid BMS_SysInitialize(void)
+..\User\Bms\bms_app.c(19): error:  #7: unrecognized token
+  /*`r`n * 作用：完成BQ769x0、软件I2C和BMS业务任务的总初始化。`r`n * 参数：无。返回值：无。`r`n * 注意：应在FreeRTOS调度器启动后的任务上下文中调用。`r`n */`r`nvoid BMS_SysInitialize(void)
+..\User\Bms\bms_app.c(23): error:  #7: unrecognized token
+  	/* 初始化参数：包含BQ769x0告警回调和保护阈值配置�? */`r`n`r`n\tBQ769X0_InitDataTypedef InitData;
+..\User\Bms\bms_app.c(23): error:  #7: unrecognized token
+  	/* 初始化参数：包含BQ769x0告警回调和保护阈值配置�? */`r`n`r`n\tBQ769X0_InitDataTypedef InitData;
+..\User\Bms\bms_app.c(23): error:  #7: unrecognized token
+  	/* 初始化参数：包含BQ769x0告警回调和保护阈值配置�? */`r`n`r`n\tBQ769X0_InitDataTypedef InitData;
+..\User\Bms\bms_app.c(23): error:  #7: unrecognized token
+  	/* 初始化参数：包含BQ769x0告警回调和保护阈值配置�? */`r`n`r`n\tBQ769X0_InitDataTypedef InitData;
+..\User\Bms\bms_app.c(23): error:  #7: unrecognized token
+  	/* 初始化参数：包含BQ769x0告警回调和保护阈值配置�? */`r`n`r`n\tBQ769X0_InitDataTypedef InitData;
+..\User\Bms\bms_app.c(41): warning:  #12-D: parsing restarts here after previous syntax error
+  	InitData.ConfigData.OVDelay	 	 = (BQ769X0_UVDelayTypedef)INIT_OV_DELAY;
+..\User\Bms\bms_app.c(42): error:  #77-D: this declaration has no storage class or type specifier
+  	InitData.ConfigData.UVPThreshold = INIT_UV_PROTECT * 1000;
+..\User\Bms\bms_app.c(42): error:  #65: expected a ";"
+  	InitData.ConfigData.UVPThreshold = INIT_UV_PROTECT * 1000;
+..\User\Bms\bms_app.c(43): error:  #77-D: this declaration has no storage class or type specifier
+  	InitData.ConfigData.OVPThreshold = INIT_OV_PROTECT * 1000;
+..\User\Bms\bms_app.c(43): error:  #65: expected a ";"
+  	InitData.ConfigData.OVPThreshold = INIT_OV_PROTECT * 1000;
+..\User\Bms\bms_app.c(45): error:  #7: unrecognized token
+  	/* 先建立软件I2C时序，再访问BQ769x0寄存器�? */`r`n\tI2C_BusInitialize();
+..\User\Bms\bms_app.c(45): error:  #169: expected a declaration
+  	/* 先建立软件I2C时序，再访问BQ769x0寄存器�? */`r`n\tI2C_BusInitialize();
+..\User\Bms\bms_app.c(45): error:  #7: unrecognized token
+  	/* 先建立软件I2C时序，再访问BQ769x0寄存器�? */`r`n\tI2C_BusInitialize();
+..\User\Bms\bms_app.c(45): error:  #7: unrecognized token
+  	/* 先建立软件I2C时序，再访问BQ769x0寄存器�? */`r`n\tI2C_BusInitialize();
+..\User\Bms\bms_app.c(46): error:  #79: expected a type specifier
+  	BQ769X0_Initialize(&InitData);
+..\User\Bms\bms_app.c(46): error:  #260-D: explicit type is missing ("int" assumed)
+  	BQ769X0_Initialize(&InitData);
+..\User\Bms\bms_app.c(46): error:  #147: declaration is incompatible with "void BQ769X0_Initialize(BQ769X0_InitDataTypedef *)"  (declared at line 708 of "../User/Drivers/drv_softi2c_bq769x0.h")
+  	BQ769X0_Initialize(&InitData);
+..\User\Bms\bms_app.c(49): warning:  #1295-D: Deprecated declaration BMS_MonitorInit - give arg types
+  	BMS_MonitorInit(); /* 创建电池监控任务�? */	
+..\User\Bms\bms_app.c(49): error:  #260-D: explicit type is missing ("int" assumed)
+  	BMS_MonitorInit(); /* 创建电池监控任务�? */	
+..\User\Bms\bms_app.c(49): error:  #147: declaration is incompatible with "void BMS_MonitorInit(void)"  (declared at line 33 of "../User/Bms/Core/bms_monitor.h")
+  	BMS_MonitorInit(); /* 创建电池监控任务�? */	
+..\User\Bms\bms_app.c(50): warning:  #1295-D: Deprecated declaration BMS_ProtectInit - give arg types
+  	BMS_ProtectInit(); /* 创建保护任务和保护定时器�? */	
+..\User\Bms\bms_app.c(50): error:  #260-D: explicit type is missing ("int" assumed)
+  	BMS_ProtectInit(); /* 创建保护任务和保护定时器�? */	
+..\User\Bms\bms_app.c(50): error:  #147: declaration is incompatible with "void BMS_ProtectInit(void)"  (declared at line 80 of "../User/Bms/Core/bms_protect.h")
+  	BMS_ProtectInit(); /* 创建保护任务和保护定时器�? */	
+..\User\Bms\bms_app.c(51): warning:  #1295-D: Deprecated declaration BMS_AnalysisInit - give arg types
+  	BMS_AnalysisInit(); /* 创建电池分析和SOC任务�? */	
+..\User\Bms\bms_app.c(51): error:  #260-D: explicit type is missing ("int" assumed)
+  	BMS_AnalysisInit(); /* 创建电池分析和SOC任务�? */	
+..\User\Bms\bms_app.c(51): error:  #147: declaration is incompatible with "void BMS_AnalysisInit(void)"  (declared at line 42 of "../User/Bms/Core/bms_analysis.h")
+  	BMS_AnalysisInit(); /* 创建电池分析和SOC任务�? */	
+..\User\Bms\bms_app.c(52): warning:  #1295-D: Deprecated declaration BMS_EnergyInit - give arg types
+  	BMS_EnergyInit(); /* 创建能量管理和均衡任务�? */	
+..\User\Bms\bms_app.c(52): error:  #260-D: explicit type is missing ("int" assumed)
+  	BMS_EnergyInit(); /* 创建能量管理和均衡任务�? */	
+..\User\Bms\bms_app.c(52): error:  #147: declaration is incompatible with "void BMS_EnergyInit(void)"  (declared at line 29 of "../User/Bms/Core/bms_energy.h")
+  	BMS_EnergyInit(); /* 创建能量管理和均衡任务�? */	
+..\User\Bms\bms_app.c(53): warning:  #1295-D: Deprecated declaration BMS_InfoInit - give arg types
+  	BMS_InfoInit(); /* 创建信息输出任务�? */		
+..\User\Bms\bms_app.c(53): error:  #260-D: explicit type is missing ("int" assumed)
+  	BMS_InfoInit(); /* 创建信息输出任务�? */		
+..\User\Bms\bms_app.c(53): error:  #147: declaration is incompatible with "void BMS_InfoInit(void)"  (declared at line 4 of "../User/Bms/Core/bms_info.h")
+  	BMS_InfoInit(); /* 创建信息输出任务�? */		
+..\User\Bms\bms_app.c(55): error:  #169: expected a declaration
+  }
+..\User\Bms\bms_app.c: 6 warnings, 30 errors
+"BMS\BMS.axf" - 30 Error(s), 6 Warning(s).
+Target not created.
+Build Time Elapsed:  00:00:02

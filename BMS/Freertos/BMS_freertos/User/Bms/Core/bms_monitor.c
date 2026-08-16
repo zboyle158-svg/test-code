@@ -59,10 +59,21 @@ const osThreadAttr_t monitorTask_attributes = {
   .priority = (osPriority_t) osPriorityNormal5,
 };
 
-static void BMS_MonitorTaskEntry(void *paramter);
-/* ���ڵ�λΪ ms����ͬ������ͨ������������ I2C ����Ƶ�ʡ� */`r`nstatic void BMS_MonitorBattery(void);
-/* ������λΪ A����ֵ��ʾ��磬��ֵ��ʾ�ŵ磬��0.02 A �Ǵ��������� */`r`nstatic void BMS_MonitorSysMode(void);
+/* 监控任务入口。参数：paramter为任务创建时传入的参数，本任务未使用。
+ * 返回：不返回；持续执行采样和模式判断。周期：250ms。 */;
+/* 周期单位为 ms；不同采样项通过计数器降低 I2C 访问频率。 */
+/* 按配置周期读取电压、温度和电流。参数和返回值：无。
+ * 副作用：更新BMS_MonitorData及内部采样计数器。 */;
+/* 电流单位为 A：正值表示充电，负值表示放电，±0.02 A 是待机死区。 */
+/* 根据电流判断充电、放电、待机或睡眠模式。参数和返回值：无。
+ * 注意：电流阈值使用A，±0.02A为待机死区。 */;
 
+
+/* 创建BMS监控任务。参数：无。返回：无。
+ * 注意：必须在FreeRTOS调度器启动后由BMS_SysInitialize调用。 */
+static void BMS_MonitorTaskEntry(void *paramter);
+static void BMS_MonitorBattery(void);
+static void BMS_MonitorSysMode(void);
 
 void BMS_MonitorInit(void)
 {
@@ -76,6 +87,8 @@ void BMS_MonitorInit(void)
    }
 }
 
+/* 监控任务入口。参数：paramter为任务创建时传入的参数，本任务未使用。
+ * 返回：不返回；持续执行采样和模式判断。周期：250ms。 */
 static void BMS_MonitorTaskEntry(void *paramter)
 {
 	while (1)
@@ -87,10 +100,13 @@ static void BMS_MonitorTaskEntry(void *paramter)
 }
 
 
-// ��ص�ظ�������
-/* ���ڵ�λΪ ms����ͬ������ͨ������������ I2C ����Ƶ�ʡ� */`r`nstatic void BMS_MonitorBattery(void)
+// 监控电池各项数据
+/* 周期单位为 ms；不同采样项通过计数器降低 I2C 访问频率。 */
+/* 按配置周期读取电压、温度和电流。参数和返回值：无。
+ * 副作用：更新BMS_MonitorData及内部采样计数器。 */
+static void BMS_MonitorBattery(void)
 {
-	// �����о��ѹ
+	// 单体电芯电压
 	CountCellVoltage += MONITOR_TASK_PERIOD;
 	if (FlagCellVoltage == true && CountCellVoltage >= UPDATE_CELL_VOLTAGE_CYCLE)
 	{
@@ -102,7 +118,7 @@ static void BMS_MonitorTaskEntry(void *paramter)
 		CountCellVoltage = 0;
 	}
 	
-	// ������ѹ
+	// 电池组电压
 	CountBatVoltage += MONITOR_TASK_PERIOD;
 	if (FlagBatVoltage == true && CountBatVoltage >= UPDAYE_BAT_VOLTAGE_CYCLE)
 	{
@@ -114,7 +130,7 @@ static void BMS_MonitorTaskEntry(void *paramter)
 		CountBatVoltage = 0;
 	}
 
-	// ����¶�
+	// 电池温度
 	CountCellTemp += MONITOR_TASK_PERIOD;
 	if (FlagCellTemp == true && CountCellTemp++ >= UPDATE_CELL_TEMP_CYCLE)
 	{
@@ -127,7 +143,7 @@ static void BMS_MonitorTaskEntry(void *paramter)
 	}
 
 
-	/* ������������������ 
+	/* 电流采样由软件触发 
 	CountBatCurrent += MONITOR_TASK_PERIOD;
 	if (FlagBatCurrent == true && CountBatCurrent >= UPDATE_BAT_CURRENT_CYCLE)
 	{
@@ -141,7 +157,7 @@ static void BMS_MonitorTaskEntry(void *paramter)
 	*/
 
 
-	/* ����������Ӳ���жϴ���,̫�鷳��,ÿ����д�������¸�BQ�������ϵ� */
+	/* 电流采样由硬件中断触发,太麻烦了,每次烧写都得重新给BQ重新下上电 */
 	if (FlagSampleIntCur == true && FlagBatCurrent == true)
 	{
 		Bms_HalMonitorBatteryCurrent();
@@ -151,12 +167,15 @@ static void BMS_MonitorTaskEntry(void *paramter)
 
 
 
-// ϵͳģʽ���
-// BatteryCurrent > 20mA || BatteryCurrent < -20mA  ���ڷ�˯��ģʽ
-// BatteryCurrent < 20mA || BatteryCurrent > -20mA  ���ڴ���ģʽ����˯��ģʽ
-// BatteryCurrent <= -20mA ���ڷŵ�ģʽ
-// BatteryCurrent >=  20mA ���ڳ��ģʽ
-/* ������λΪ A����ֵ��ʾ��磬��ֵ��ʾ�ŵ磬��0.02 A �Ǵ��������� */`r`nstatic void BMS_MonitorSysMode(void)
+// 系统模式监控
+// BatteryCurrent > 20mA || BatteryCurrent < -20mA  处于非睡眠模式
+// BatteryCurrent < 20mA || BatteryCurrent > -20mA  处于待机模式或者睡眠模式
+// BatteryCurrent <= -20mA 处于放电模式
+// BatteryCurrent >=  20mA 处于充电模式
+/* 电流单位为 A：正值表示充电，负值表示放电，±0.02 A 是待机死区。 */
+/* 根据电流判断充电、放电、待机或睡眠模式。参数和返回值：无。
+ * 注意：电流阈值使用A，±0.02A为待机死区。 */
+static void BMS_MonitorSysMode(void)
 {
 	static BMS_SysModeTypedef SysModeBackup = BMS_MODE_NULL;
 	static uint32_t StandbyCount = 0;
@@ -165,7 +184,7 @@ static void BMS_MonitorTaskEntry(void *paramter)
 	{
 		if ((BMS_MonitorData.BatteryCurrent >= 0.02) || (BMS_MonitorData.BatteryCurrent <= -0.02))
 		{
-			// ���Լӻ��Ѵ����߼�
+			// 可以加唤醒处理逻辑
 			
 			BMS_GlobalParam.SysMode = BMS_MODE_STANDBY;
 			BMS_INFO("Wake Up");
@@ -180,10 +199,10 @@ static void BMS_MonitorTaskEntry(void *paramter)
 		
 		if (StandbyCount >= BMS_ENTRY_SLEEP_TIME * 60000)
 		{
-			// û�е�о���ھ��������²Ž���˯��
+			// 没有电芯正在均衡的情况下才进入睡眠
 			if (osSemaphoreAcquire(BalanceSem, 0) == RT_EOK)
 			{
-				// ���Լ�˯�ߵ͹��Ĵ����߼�
+				// 可以加睡眠低功耗处理逻辑
 				
 				StandbyCount = 0;
 				
@@ -200,7 +219,7 @@ static void BMS_MonitorTaskEntry(void *paramter)
 		}
 
 
-		// ������
+		// 调试用
 		if (SysModeBackup != BMS_MODE_STANDBY)
 		{
 			SysModeBackup = BMS_MODE_STANDBY;
@@ -212,7 +231,7 @@ static void BMS_MonitorTaskEntry(void *paramter)
 		StandbyCount = 0;
 		BMS_GlobalParam.SysMode = BMS_MODE_CHARGE;
 
-		// ������
+		// 调试用
 		if (SysModeBackup != BMS_MODE_CHARGE)
 		{
 			SysModeBackup = BMS_MODE_CHARGE;
@@ -224,7 +243,7 @@ static void BMS_MonitorTaskEntry(void *paramter)
 		StandbyCount = 0;
 		BMS_GlobalParam.SysMode = BMS_MODE_DISCHARGE;
 
-		// ������
+		// 调试用
 		if (SysModeBackup != BMS_MODE_DISCHARGE)
 		{
 			SysModeBackup = BMS_MODE_DISCHARGE;
@@ -294,6 +313,9 @@ void BMS_MonitorStateBatCurrent(BMS_StateTypedef NewState)
 
 
 
+/* 硬件电流告警回调。参数和返回值：无。
+ * 副作用：设置电流采样请求标志，由监控任务完成实际I2C读取。
+ * 注意：该函数可能由中断回调路径调用，应保持短小。 */
 void BMS_MonitorHwCurrent(void)
 {
 	FlagSampleIntCur = true;

@@ -1,14 +1,14 @@
 /**
  * @file drv_soft_i2c.c
- * @brief 使用 GPIO 模拟 I2C 主机，供 BQ769x0 访问寄存器。
+ * @brief 使用GPIO模拟I2C主机，供BQ769x0访问寄存器。
  *
- * 传输顺序为 START/RESTART -> 地址+读写位 -> 数据 -> ACK/NACK -> STOP。
+ * 传输顺序?START/RESTART -> 地址+读写?-> 数据 -> ACK/NACK -> STOP?
  * I2C 是开漏总线，释放线路后由上拉电阻拉高，因此 SDA 需在发送和接收
- * 之间切换方向。
+ * 之间切换方向?
  */
 /**************************************************************************/
-/*********** 该i2c驱动从rtt的i2c驱动框架移植而来,剔除了device层 ***********/
-/**** 考虑了并发情况,考虑到片内资源单独跑os内核的情况可以用,并不占资源 ****/
+/*********** 该i2c驱动从rtt的i2c驱动框架移植而来,剔除了device?***********/
+/**** 考虑了并发情?考虑到片内资源单独跑os内核的情况可以用,并不占资?****/
 /**************************************************************************/
 
 
@@ -19,9 +19,9 @@
 #include "main.h"
 
 
-// 使用互斥锁会被高优先级任务抢占
+// 使用互斥锁会被高优先级任务抢?
 // 偶发性的导致i2c信号传输一半的时候就跑去做其他的
-// 最后导致读写i2c数据不对进而BQ芯片驱动的CRC通不过
+// 否则可能导致I2C读写数据错误，进而导致BQ芯片驱动的CRC校验失败。
 //static struct rt_mutex mutex1 ={0};
 
 //static rt_uint32_t level;
@@ -45,7 +45,7 @@ static void I2C1_Unlock(void)
     taskENABLE_INTERRUPTS();
 }
 
-// 适用于72MHZ
+// 閫傜敤浜?2MHZ
 static void delay_us(uint32_t us)
 {
 	uint16_t i = 0;
@@ -102,7 +102,7 @@ static inline void SDA_SetOutMode(struct I2C_BusTypeDef *bus)
 }
 
 // stm32的IO口结构输出模式下是没有关断输入部分的肖特基触发器,数据依然会读入输入寄存器,故不用设置SDA输入模式
-// 但为了保险起见最好还是写上,也为了方便将该驱动移植到其他平台或者HAL库上
+// 但为了保险起见最好还是写?也为了方便将该驱动移植到其他平台或者HAL库上
 static inline void SDA_SetInMode(struct I2C_BusTypeDef *bus)
 {
 	GPIO_InitTypeDef GPIO_InitStruct;
@@ -238,7 +238,7 @@ static uint16_t I2C_SendBytes(struct I2C_BusTypeDef *bus, struct I2C_MessageType
 	
 	while (count > 0)
 	{
-		if (msg->flags & I2C_CONTROL_BYTE && I2C_WriteByte(bus, msg->cByte) == 0) // 发送控制字节
+		if (msg->flags & I2C_CONTROL_BYTE && I2C_WriteByte(bus, msg->cByte) == 0) // 发送控制字?
 		{
 			I2C_WARNING("send bytes: NACK.");
 			break;

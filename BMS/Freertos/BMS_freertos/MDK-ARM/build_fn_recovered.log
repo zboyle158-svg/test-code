@@ -1,0 +1,48 @@
+*** Using Compiler 'V5.06 update 6 (build 750)', folder: 'I:\keil11\ARM\ARMCC\Bin'
+Build target 'BMS'
+compiling bms_monitor.c...
+..\User\Bms\Core\bms_monitor.c(78): error:  #20: identifier "BMS_MonitorTaskEntry" is undefined
+  	thread = osThreadNew(BMS_MonitorTaskEntry, NULL, &monitorTask_attributes);
+..\User\Bms\Core\bms_monitor.c(92): warning:  #223-D: function "BMS_MonitorBattery" declared implicitly
+  		BMS_MonitorBattery();
+..\User\Bms\Core\bms_monitor.c(93): warning:  #223-D: function "BMS_MonitorSysMode" declared implicitly
+  		BMS_MonitorSysMode();
+..\User\Bms\Core\bms_monitor.c(103): error:  #169: expected a declaration
+  {
+..\User\Bms\Core\bms_monitor.c(124): error:  #169: expected a declaration
+  	{
+..\User\Bms\Core\bms_monitor.c(129): error:  #77-D: this declaration has no storage class or type specifier
+  	CountCellTemp += MONITOR_TASK_PERIOD;
+..\User\Bms\Core\bms_monitor.c(129): error:  #147: declaration is incompatible with "uint16_t CountCellTemp"  (declared at line 52)
+  	CountCellTemp += MONITOR_TASK_PERIOD;
+..\User\Bms\Core\bms_monitor.c(129): error:  #65: expected a ";"
+  	CountCellTemp += MONITOR_TASK_PERIOD;
+..\User\Bms\Core\bms_monitor.c(130): error:  #169: expected a declaration
+  	if (FlagCellTemp == true && CountCellTemp++ >= UPDATE_CELL_TEMP_CYCLE)
+..\User\Bms\Core\bms_monitor.c(317): warning: At end of source:  #12-D: parsing restarts here after previous syntax error
+..\User\Bms\Core\bms_monitor.c(42): warning:  #177-D: variable "FlagSampleIntCur"  was declared but never referenced
+  static bool FlagSampleIntCur = false;
+..\User\Bms\Core\bms_monitor.c(44): warning:  #177-D: variable "FlagCellVoltage"  was declared but never referenced
+  static bool FlagCellVoltage = true;
+..\User\Bms\Core\bms_monitor.c(45): warning:  #177-D: variable "FlagBatVoltage"  was declared but never referenced
+  static bool FlagBatVoltage = true;
+..\User\Bms\Core\bms_monitor.c(46): warning:  #177-D: variable "FlagCellTemp"  was declared but never referenced
+  static bool FlagCellTemp = true;
+..\User\Bms\Core\bms_monitor.c(47): warning:  #177-D: variable "FlagBatCurrent"  was declared but never referenced
+  static bool FlagBatCurrent = true;
+..\User\Bms\Core\bms_monitor.c(50): warning:  #177-D: variable "CountCellVoltage"  was declared but never referenced
+  static uint16_t CountCellVoltage = 0;
+..\User\Bms\Core\bms_monitor.c(51): warning:  #177-D: variable "CountBatVoltage"  was declared but never referenced
+  static uint16_t CountBatVoltage = 0;
+..\User\Bms\Core\bms_monitor.c(88): warning:  #177-D: function "BMS_MonitorTaskEntry"  was declared but never referenced
+  static void BMS_MonitorTaskEntry(void *paramter)
+..\User\Bms\Core\bms_monitor.c: 11 warnings, 7 errors
+compiling bms_hal_monitor.c...
+..\User\Bms\Hal\bms_hal_monitor.c(23): error:  #169: expected a declaration
+  {
+..\User\Bms\Hal\bms_hal_monitor.c(54): error:  #20: identifier "compaer_cell" is undefined
+  	BubbleSort(BMS_MonitorData.CellData, BMS_GlobalParam.Cell_Real_Number, sizeof(BMS_CellDataTypedef), compaer_cell);
+..\User\Bms\Hal\bms_hal_monitor.c: 0 warnings, 2 errors
+"BMS\BMS.axf" - 9 Error(s), 11 Warning(s).
+Target not created.
+Build Time Elapsed:  00:00:03

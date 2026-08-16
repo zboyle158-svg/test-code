@@ -82,7 +82,7 @@ static void BMS_ProtectRelieve(void);
 void BMS_ProtectHwMonitor(void);
 
 
-// ±£»¤ÈÎÎñµÄ³õÊ¼»¯
+// ä¿æŠ¤ä»»åŠ¡çš„åˆå§‹åŒ–
 void BMS_ProtectInit(void)
 {
 	osThreadId_t thread;
@@ -105,7 +105,7 @@ void BMS_ProtectInit(void)
 }
 
 
-// ±£»¤ÈÎÎñÈë¿Ú
+// ä¿æŠ¤ä»»åŠ¡å…¥å£
 static void BMS_ProtectTaskEntry(void *paramter)
 {
 	(void)paramter;
@@ -134,7 +134,7 @@ static void BMS_ProtectTaskEntry(void *paramter)
 	}
 }
 
-// ÓÃÓÚ±£»¤ÈÎÎñµÄ¶¨Ê±Æ÷»Øµ÷Èë¿Ú
+// ç”¨äºŽä¿æŠ¤ä»»åŠ¡çš„å®šæ—¶å™¨å›žè°ƒå…¥å£
 static void BMS_ProtectTimerEntry(void *paramter)
 {
 	(void)paramter;
@@ -143,7 +143,7 @@ static void BMS_ProtectTimerEntry(void *paramter)
 	BMS_INFO("Protect Timer Tigger");
 }
 
-// Æô¶¯ÓÃ»§±£»¤ÈÎÎñµÄ¶¨Ê±Æ÷
+// å¯åŠ¨ç”¨æˆ·ä¿æŠ¤ä»»åŠ¡çš„å®šæ—¶å™¨
 static void BMS_ProtectStartTimer(uint32_t sec)
 {
 	uint32_t tick;
@@ -163,15 +163,15 @@ static void BMS_ProtectStartTimer(uint32_t sec)
 
 
 
-// ³äµç¼à¿Ø:¹ýÁ÷¡¢¹ýÎÂ¡¢µÍÎÂ
-// ´¥·¢ÈýÖÖ±£»¤ÀïÃæµÄÒ»ÖÖ¾Í»á¹Ø±Õ³äµç,Ö±µ½´ïµ½»Ö¸´Ìõ¼þ
+// å……ç”µç›‘æŽ§:è¿‡æµã€è¿‡æ¸©ã€ä½Žæ¸©
+// è§¦å‘ä¸‰ç§ä¿æŠ¤é‡Œé¢çš„ä¸€ç§å°±ä¼šå…³é—­å……ç”µ,ç›´åˆ°è¾¾åˆ°æ¢å¤æ¡ä»¶
 static void BMS_ChargeMonitor(void)
 {
 	static uint32_t ProtectCount = 0;
 
 	if (BMS_MonitorData.BatteryCurrent > BMS_ProtectParam.OCCProtect)
 	{
-		// ¹ýÁ÷
+		// è¿‡æµ
 		ProtectCount += PROTECT_TASK_PERIOD;
 		if (ProtectCount / 60 >= BMS_ProtectParam.OCCDelay)
 		{			
@@ -185,12 +185,12 @@ static void BMS_ChargeMonitor(void)
 	}
 	else if (BMS_MonitorData.CellTempEffectiveNumber == 0)
 	{
-		// ÎÞÐ§µÄÎÂ¶È²»½øÐÐ±È½Ï
+		// æ— æ•ˆçš„æ¸©åº¦ä¸è¿›è¡Œæ¯”è¾ƒ
 		return;
 	}
 	else if (BMS_MonitorData.CellTemp[BMS_MonitorData.CellTempEffectiveNumber-1] > BMS_ProtectParam.OTCProtect)
 	{
-		// ¹ýÎÂ
+		// è¿‡æ¸©
 		BMS_HalCtrlCharge(BMS_STATE_DISABLE);
 		BMS_ProtectAlert = FlAG_ALERT_OTC;	
 		ProtectState = PROTECT_STATE_RELIEVE_WAIT;
@@ -199,7 +199,7 @@ static void BMS_ChargeMonitor(void)
 	}
 	else if (BMS_MonitorData.CellTemp[0] < BMS_ProtectParam.LTCProtect)
 	{
-		// µÍÎÂ
+		// ä½Žæ¸©
 		BMS_HalCtrlCharge(BMS_STATE_DISABLE);
 		BMS_ProtectAlert = FlAG_ALERT_LTC;	
 		ProtectState = PROTECT_STATE_RELIEVE_WAIT;		
@@ -208,22 +208,22 @@ static void BMS_ChargeMonitor(void)
 	}
 	else
 	{
-		// ¸´Î»¼ÆÊý
+		// å¤ä½è®¡æ•°
 		ProtectCount = 0;
 	}
 }
 
-// ·Åµç¼à¿Ø
+// æ”¾ç”µç›‘æŽ§
 static void BMS_DischargeMonitor(void)
 {
 	if (BMS_MonitorData.CellTempEffectiveNumber == 0)
 	{
-		// ÎÞÎÞÐ§µÄÎÂ¶È²»½øÐÐ±È½Ï
+		// æ— æ— æ•ˆçš„æ¸©åº¦ä¸è¿›è¡Œæ¯”è¾ƒ
 		return;
 	}
 	else if (BMS_MonitorData.CellTemp[BMS_MonitorData.CellTempEffectiveNumber-1] > BMS_ProtectParam.OTDProtect)
 	{
-		// ¹ýÎÂ
+		// è¿‡æ¸©
 		BMS_HalCtrlDischarge(BMS_STATE_DISABLE);
 		BMS_ProtectAlert = FlAG_ALERT_OTD;
 		ProtectState = PROTECT_STATE_RELIEVE_WAIT;
@@ -232,7 +232,7 @@ static void BMS_DischargeMonitor(void)
 	}
 	else if (BMS_MonitorData.CellTemp[0] < BMS_ProtectParam.LTDProtect)
 	{
-		// µÍÎÂ
+		// ä½Žæ¸©
 		BMS_HalCtrlDischarge(BMS_STATE_DISABLE);		
 		BMS_ProtectAlert = FlAG_ALERT_LTD;	
 		ProtectState = PROTECT_STATE_RELIEVE_WAIT;
@@ -243,7 +243,7 @@ static void BMS_DischargeMonitor(void)
 }
 
 
-// Èí¼þ±£»¤¼à¿Ø
+// è½¯ä»¶ä¿æŠ¤ç›‘æŽ§
 static void BMS_ProtectSwMonitor(void)
 {
 	switch(BMS_GlobalParam.SysMode)
@@ -265,14 +265,14 @@ static void BMS_ProtectSwMonitor(void)
 
 		case BMS_MODE_SLEEP:
 		{
-			// Ë¯ÃßÔÝÊ±Ã»Ê²Ã´¿É¼à¿ØµÄ
+			// ç¡çœ æš‚æ—¶æ²¡ä»€ä¹ˆå¯ç›‘æŽ§çš„
 		}break;
 		
 		default:;break;
 	}
 }
 
-// ±£»¤½â³ýµÈ´ý»ò¼à¿Ø»Ö¸´Ìõ¼þ
+// ä¿æŠ¤è§£é™¤ç­‰å¾…æˆ–ç›‘æŽ§æ¢å¤æ¡ä»¶
 static void BMS_ProtectRelieveWait(void)
 {
 	switch (BMS_ProtectAlert)
@@ -346,10 +346,10 @@ static void BMS_ProtectRelieveWait(void)
 }
 
 
-// ±£»¤½â³ý
+// ä¿æŠ¤è§£é™¤
 static void BMS_ProtectRelieve(void)
 {	
-	// ¹ýÑ¹ºÍÇ·Ñ¹²»»Ö¸´
+	// è¿‡åŽ‹å’Œæ¬ åŽ‹ä¸æ¢å¤
 	switch(BMS_ProtectAlert)
 	{
 		case FlAG_ALERT_OCC:
@@ -385,7 +385,7 @@ static void BMS_ProtectRelieve(void)
 
 
 
-// Ó²¼þ±£»¤¼à¿Ø
+// ç¡¬ä»¶ä¿æŠ¤ç›‘æŽ§
 void BMS_ProtectHwMonitor(void)
 {
 	switch(BMS_ProtectAlert)
@@ -428,7 +428,7 @@ void BMS_ProtectHwMonitor(void)
 }
 
 
-// ·Åµç¹ýÁ÷(OCD)Ó²¼þ´¥·¢
+// æ”¾ç”µè¿‡æµ(OCD)ç¡¬ä»¶è§¦å‘
 void BMS_ProtectHwOCD(void)
 {
 	if (BMS_ProtectAlert == FlAG_ALERT_NO)
@@ -437,7 +437,7 @@ void BMS_ProtectHwOCD(void)
 	}
 }
 
-// ·Åµç¶ÌÂ·(SCD)Ó²¼þ´¥·¢
+// æ”¾ç”µçŸ­è·¯(SCD)ç¡¬ä»¶è§¦å‘
 void BMS_ProtectHwSCD(void)
 {
 	if (BMS_ProtectAlert == FlAG_ALERT_NO)
@@ -446,7 +446,7 @@ void BMS_ProtectHwSCD(void)
 	}
 }
 
-// ³äµç¹ýÑ¹(OV)Ó²¼þ´¥·¢
+// å……ç”µè¿‡åŽ‹(OV)ç¡¬ä»¶è§¦å‘
 void BMS_ProtectHwOV(void)
 {
 	if (BMS_ProtectAlert == FlAG_ALERT_NO)
@@ -455,7 +455,7 @@ void BMS_ProtectHwOV(void)
 	}
 }
 
-// ·ÅµçÇ·Ñ¹(UV)Ó²¼þ´¥·¢
+// æ”¾ç”µæ¬ åŽ‹(UV)ç¡¬ä»¶è§¦å‘
 void BMS_ProtectHwUV(void)
 {
 	if (BMS_ProtectAlert == FlAG_ALERT_NO)

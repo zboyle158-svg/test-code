@@ -67,7 +67,7 @@ static void BMS_InfoTaskEntry(void *paramter)
 }
 
 
-// µçÁ¿Ö¸Ê¾µÆ
+// ç”µé‡æŒ‡ç¤ºç¯
 static void BMS_BattLow(void)
 {
 	if (BMS_AnalysisData.SOC == 0)
@@ -108,7 +108,7 @@ static void BMS_BattLow(void)
 }
 
 
-// ÊµÊ±´òÓ¡BMSĞÅÏ¢
+// å®æ—¶æ‰“å°BMSä¿¡æ¯
 static void BMS_InfoPrintf(void)
 {
 	uint8_t index;
@@ -116,11 +116,11 @@ static void BMS_InfoPrintf(void)
 
 	BMS_INFO("/*************************************************************/");
 	
-	// µç³Ø°üÊµÊ±ÈİÁ¿
+	// ç”µæ± åŒ…å®æ—¶å®¹é‡
 	sprintf(str, "Battery Real Capacity = %0.1fA/H", BMS_AnalysisData.CapacityReal);
 	BMS_INFO("%s", str);	
 
-	// µç³Ø°üÊ£ÓàÈİÁ¿
+	// ç”µæ± åŒ…å‰©ä½™å®¹é‡
 	sprintf(str, "Battery Remain Capacity = %0.3fA/H", BMS_AnalysisData.CapacityRemain);
 	BMS_INFO("%s", str);
 
@@ -152,30 +152,30 @@ static void BMS_InfoPrintf(void)
 	print_usart1("\r\n");
 
 
-	// µ¥ÌåµçĞ¾×î´óµçÑ¹
+	// å•ä½“ç”µèŠ¯æœ€å¤§ç”µå‹
 	sprintf(str, "Cell Max Voltage = %0.3fV", BMS_AnalysisData.CellVoltMax);
 	BMS_INFO("%s", str);
 
 
-	// µ¥ÌåµçĞ¾×îĞ¡µçÑ¹
+	// å•ä½“ç”µèŠ¯æœ€å°ç”µå‹
 	sprintf(str, "Cell Min Voltage = %0.3fV", BMS_AnalysisData.CellVoltMin);
 	BMS_INFO("%s", str);
 
 	
 
-	// ×î´óµçÑ¹²î
+	// æœ€å¤§ç”µå‹å·®
 	sprintf(str, "Cell Max Voltage Difference = %0.3fV", BMS_AnalysisData.MaxVoltageDifference);
 	BMS_INFO("%s", str);
 
 
 
-	// Æ½¾ùµçÑ¹
+	// å¹³å‡ç”µå‹
 	sprintf(str, "Cell Average Voltage = %0.3fV", BMS_AnalysisData.AverageVoltage);
 	BMS_INFO("%s", str);
 
 
 
-	// ÊµÊ±¹¦ÂÊ
+	// å®æ—¶åŠŸç‡
 	sprintf(str, "Battery Real Power = %0.3fW", BMS_AnalysisData.PowerReal);
 	BMS_INFO("%s", str);
 

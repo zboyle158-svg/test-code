@@ -1,0 +1,54 @@
+*** Using Compiler 'V5.06 update 6 (build 750)', folder: 'I:\keil11\ARM\ARMCC\Bin'
+Build target 'BMS'
+compiling bms_global.c...
+compiling bms_monitor.c...
+..\User\Bms\Core\bms_monitor.c(74): error:  #169: expected a declaration
+  {
+..\User\Bms\Core\bms_monitor.c(87): error:  #169: expected a declaration
+  {
+..\User\Bms\Core\bms_monitor.c(101): error:  #169: expected a declaration
+  {
+..\User\Bms\Core\bms_monitor.c(122): error:  #169: expected a declaration
+  	{
+..\User\Bms\Core\bms_monitor.c(127): error:  #77-D: this declaration has no storage class or type specifier
+  	CountCellTemp += MONITOR_TASK_PERIOD;
+..\User\Bms\Core\bms_monitor.c(127): error:  #147: declaration is incompatible with "uint16_t CountCellTemp"  (declared at line 52)
+  	CountCellTemp += MONITOR_TASK_PERIOD;
+..\User\Bms\Core\bms_monitor.c(127): error:  #65: expected a ";"
+  	CountCellTemp += MONITOR_TASK_PERIOD;
+..\User\Bms\Core\bms_monitor.c(128): error:  #169: expected a declaration
+  	if (FlagCellTemp == true && CountCellTemp++ >= UPDATE_CELL_TEMP_CYCLE)
+..\User\Bms\Core\bms_monitor.c(314): warning: At end of source:  #12-D: parsing restarts here after previous syntax error
+..\User\Bms\Core\bms_monitor.c(42): warning:  #177-D: variable "FlagSampleIntCur"  was declared but never referenced
+  static bool FlagSampleIntCur = false;
+..\User\Bms\Core\bms_monitor.c(44): warning:  #177-D: variable "FlagCellVoltage"  was declared but never referenced
+  static bool FlagCellVoltage = true;
+..\User\Bms\Core\bms_monitor.c(45): warning:  #177-D: variable "FlagBatVoltage"  was declared but never referenced
+  static bool FlagBatVoltage = true;
+..\User\Bms\Core\bms_monitor.c(46): warning:  #177-D: variable "FlagCellTemp"  was declared but never referenced
+  static bool FlagCellTemp = true;
+..\User\Bms\Core\bms_monitor.c(47): warning:  #177-D: variable "FlagBatCurrent"  was declared but never referenced
+  static bool FlagBatCurrent = true;
+..\User\Bms\Core\bms_monitor.c(50): warning:  #177-D: variable "CountCellVoltage"  was declared but never referenced
+  static uint16_t CountCellVoltage = 0;
+..\User\Bms\Core\bms_monitor.c(51): warning:  #177-D: variable "CountBatVoltage"  was declared but never referenced
+  static uint16_t CountBatVoltage = 0;
+..\User\Bms\Core\bms_monitor.c: 8 warnings, 8 errors
+compiling bms_hal_monitor.c...
+..\User\Bms\Hal\bms_hal_monitor.c(23): error:  #169: expected a declaration
+  {
+..\User\Bms\Hal\bms_hal_monitor.c(43): error:  #169: expected a declaration
+  {	
+..\User\Bms\Hal\bms_hal_monitor.c(59): error:  #169: expected a declaration
+  {
+..\User\Bms\Hal\bms_hal_monitor.c(67): error:  #169: expected a declaration
+  {
+..\User\Bms\Hal\bms_hal_monitor.c(75): error:  #169: expected a declaration
+  {	
+..\User\Bms\Hal\bms_hal_monitor.c(96): error:  #169: expected a declaration
+  {
+..\User\Bms\Hal\bms_hal_monitor.c: 0 warnings, 6 errors
+compiling bms_app.c...
+"BMS\BMS.axf" - 14 Error(s), 8 Warning(s).
+Target not created.
+Build Time Elapsed:  00:00:04

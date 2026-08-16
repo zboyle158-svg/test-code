@@ -1,7 +1,7 @@
 /**
  * @file bms_analysis.c
- * @brief 电压统计、功率、容量修正和 SOC 估算。
- * SOC 运行期间采用安时积分：$\Delta Q=I\Delta t/3600$；上电或静置时
+ * @brief 电压统计、功率、容量修正和 SOC 估算?
+ * SOC 运行期间采用安时积分?\Delta Q=I\Delta t/3600$；上电或静置?
  * 使用 OCV 查表校准，并对结果进行容量边界约束。
  */
 #define BMS_DBG_TAG "Analysis"
@@ -49,7 +49,7 @@ BMS_AnalysisDataTypedef BMS_AnalysisData =
 
 
 
-// 三元锂电池 SOC开路电压法计算数据表
+// 三元锂电池SOC开路电压法计算数据表。
 // 支持磷酸铁锂、钛酸锂也得做一张这个表
 uint16_t SocOcvTab[101]=
 {
@@ -100,7 +100,7 @@ void BMS_AnalysisInit(void)
 }
 
 
-// 电池状态分析任务线程入口
+// 电池状态分析任务线程入?
 static void BMS_AnalysisTaskEntry(void *paramter)
 {
 	BMS_AnalysisCapAndSocInit();
@@ -114,7 +114,7 @@ static void BMS_AnalysisTaskEntry(void *paramter)
 }
 
 
-// 简单分析,通过数据直接进行计算就能得到的
+// 简单分析：通过数据直接计算即可得到结果。
 static void BMS_AnalysisEasy(void)
 {
 	uint8_t index;
@@ -135,7 +135,7 @@ static void BMS_AnalysisEasy(void)
 	BMS_AnalysisData.PowerReal = BMS_MonitorData.BatteryVoltage * BMS_MonitorData.BatteryCurrent;	
 
 
-	// 最大和最小电压
+	// 最大和最小电?
 	BMS_AnalysisData.CellVoltMax = BMS_MonitorData.CellData[BMS_GlobalParam.Cell_Real_Number - 1].CellVoltage;
 	BMS_AnalysisData.CellVoltMin = BMS_MonitorData.CellData[0].CellVoltage;
 }
@@ -144,7 +144,7 @@ static void BMS_AnalysisEasy(void)
 
 
 
-// 温度校准,锂电池会因为温度的变化而影响电池容量
+// 温度校准：锂电池会因为温度变化而影响电池容量。
 static void BMS_AnalysisTempCal(void)
 {
 	static int16_t LastTemp = 0;
@@ -160,7 +160,7 @@ static void BMS_AnalysisTempCal(void)
 	}
 
 
-	// 判断温度变化是否超过1度
+	// 判断温度变化是否超过1?
 	if( MinTemp > LastTemp)  
 	{
 		if (MinTemp - LastTemp >= 10)
@@ -238,7 +238,7 @@ static void BMS_AnalysisCalCap(void)
 }
 
 
-// 根据单体电芯最低电压计算出soc值,用于上电和长时间静止状态下的校准
+// 根据单体电芯最低电压计算出soc?用于上电和长时间静止状态下的校?
 static uint16_t BMS_AnalysisOcvToSoc(uint16_t voltage)
 {
 	uint16_t soc = 0;
@@ -257,7 +257,7 @@ static uint16_t BMS_AnalysisOcvToSoc(uint16_t voltage)
 
 		if (voltage == SocOcvTab[index])
 		{
-			// 整数SOC值
+			// 鏁存暟SOC鍊?
 			soc = index * 10;
 		}
 		else
@@ -273,13 +273,13 @@ static uint16_t BMS_AnalysisOcvToSoc(uint16_t voltage)
 // 开路电压法soc计算
 static void BMS_AnalysisOcvSocCalculate(void)
 {
-	// 进入睡眠的条件:待机一段时间以上且没有电池在均衡
+	// 进入睡眠的条?待机一段时间以上且没有电池在均?
 	if (BMS_GlobalParam.SysMode == BMS_MODE_SLEEP)
 	{
-		// 等待一段时间电压平稳,防止均衡才刚结束
+		// 等待一段时间电压平?防止均衡才刚结束
 		osDelay(BALANCE_VOLT_RISE_DELAY);
 
-		// 开路电压校准
+		// 寮€璺數鍘嬫牎鍑?
 		BMS_AnalysisData.SOC = BMS_AnalysisOcvToSoc(BMS_MonitorData.CellData[0].CellVoltage  * 1000) / 1000.0;
 
 		// 剩余容量 = 实际容量 * soc
@@ -289,14 +289,14 @@ static void BMS_AnalysisOcvSocCalculate(void)
 
 
 // 安时积分法soc计算
-// 待机模式下判断最低电压值是否大于等于过压保护值,成立则soc = 100%
-// 待机模式下判断最低电压值是否小于等于欠压保护值,成立则soc = 0%
-// 充电时对进行测量出来的电流值+积分
-// 放电时对进行测量出来的电流值-积分
-// soc = 实时积分的容量 / 电池包实际容量
+// 待机模式下判断最低电压值是否大于等于过压保护?成立则soc = 100%
+// 待机模式下判断最低电压值是否小于等于欠压保护?成立则soc = 0%
+// 充电时对测量得到的电流进行积分。
+// 放电时对测量得到的电流进行积分。
+// soc = 实时积分的容?/ 电池包实际容?
 static void BMS_AnalysisAHSocCalculate(void)
 {
-	// abs取绝对值，除3600把 A/S 单位换算成  A/H
+	// abs取绝对值，?600?A/S 单位换算? A/H
 	float CurrentValue = abs((int32_t)(BMS_MonitorData.BatteryCurrent * 1000)) / 1000.0 / 3600;
 
 	
@@ -336,7 +336,7 @@ static void BMS_AnalysisAHSocCalculate(void)
 	}
 
 	/*
-	else  // 是否考虑静态时的漏电电流10MA
+	else  // 是否考虑静态时的漏电电?0MA
 	{
 		if(BMS_AnalysisData.CapacityRemain >= 0.01)   
 		{
@@ -356,7 +356,7 @@ static void BMS_AnalysisAHSocCalculate(void)
 	}
 }
 
-// soc检查
+// soc妫€鏌?
 static void BMS_AnalysisSocCheck(void)
 {
 	BMS_AnalysisOcvSocCalculate();
@@ -364,7 +364,7 @@ static void BMS_AnalysisSocCheck(void)
 }
 
 
-// 容量和SOC上电初始化
+// 容量和SOC上电初始?
 static void BMS_AnalysisCapAndSocInit(void)
 {
 	uint16_t temp = BMS_MonitorData.CellData[0].CellVoltage * 1000;
@@ -372,7 +372,7 @@ static void BMS_AnalysisCapAndSocInit(void)
 	// soc计算
 	BMS_AnalysisData.SOC = BMS_AnalysisOcvToSoc(BMS_MonitorData.CellData[0].CellVoltage  * 1000) / 1000.0;
 
-	// 实际容量后面再完善,涉及到完整充放电流计算、老化损耗、温度特性曲线、信息存储模块
+	// 实际容量后面再完?涉及到完整充放电流计算、老化损耗、温度特性曲线、信息存储模?
 	BMS_AnalysisData.CapacityReal = BMS_AnalysisData.CapacityRated;
 
 	// 剩余容量 = 实际容量 * soc

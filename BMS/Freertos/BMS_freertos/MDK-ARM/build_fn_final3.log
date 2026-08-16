@@ -1,0 +1,26 @@
+*** Using Compiler 'V5.06 update 6 (build 750)', folder: 'I:\keil11\ARM\ARMCC\Bin'
+Build target 'BMS'
+compiling bms_monitor.c...
+..\User\Bms\Core\bms_monitor.c(78): error:  #20: identifier "BMS_MonitorTaskEntry" is undefined
+  	thread = osThreadNew(BMS_MonitorTaskEntry, NULL, &monitorTask_attributes);
+..\User\Bms\Core\bms_monitor.c(92): warning:  #223-D: function "BMS_MonitorBattery" declared implicitly
+  		BMS_MonitorBattery();
+..\User\Bms\Core\bms_monitor.c(93): warning:  #223-D: function "BMS_MonitorSysMode" declared implicitly
+  		BMS_MonitorSysMode();
+..\User\Bms\Core\bms_monitor.c(103): error:  #159: declaration is incompatible with previous "BMS_MonitorBattery"  (declared at line 92)
+  static void BMS_MonitorBattery(void)
+..\User\Bms\Core\bms_monitor.c(174): error:  #159: declaration is incompatible with previous "BMS_MonitorSysMode"  (declared at line 93)
+  static void BMS_MonitorSysMode(void)
+..\User\Bms\Core\bms_monitor.c(315): error:  #169: expected a declaration
+  {
+..\User\Bms\Core\bms_monitor.c(88): warning:  #177-D: function "BMS_MonitorTaskEntry"  was declared but never referenced
+  static void BMS_MonitorTaskEntry(void *paramter)
+..\User\Bms\Core\bms_monitor.c(103): warning:  #177-D: function "BMS_MonitorBattery"  was declared but never referenced
+  static void BMS_MonitorBattery(void)
+..\User\Bms\Core\bms_monitor.c(174): warning:  #177-D: function "BMS_MonitorSysMode"  was declared but never referenced
+  static void BMS_MonitorSysMode(void)
+..\User\Bms\Core\bms_monitor.c: 5 warnings, 4 errors
+compiling bms_hal_monitor.c...
+"BMS\BMS.axf" - 4 Error(s), 5 Warning(s).
+Target not created.
+Build Time Elapsed:  00:00:02

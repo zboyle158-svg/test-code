@@ -1,7 +1,7 @@
 #ifndef __BMS_TYPE_H__
 #define __BMS_TYPE_H__
 
-/** BMS 公共状态类型；CellIndex 是位图，可用按位或同时选择多节电芯。 */
+/** BMS 公共状态类型；CellIndex 是位图，可用按位或同时选择多节电芯?*/
 
 
 #include <stdbool.h>
@@ -12,13 +12,15 @@
 
 
 
+/* BMS功能开关状态：用于统一表示启用和禁用。 */
 typedef enum
 {
 	BMS_STATE_ENABLE,  /* 允许功能工作 */
-	BMS_STATE_DISABLE  /* 禁止功能工作 */
+	BMS_STATE_DISABLE  /* 绂佹鍔熻兘宸ヤ綔 */
 }BMS_StateTypedef;
 
 
+/* BMS功能开关状态：用于统一表示启用和禁用。 */
 typedef enum
 {
 	BMS_CELL_NULL		= 0x0000,
@@ -38,7 +40,7 @@ typedef enum
 	BMS_CELL_INDEX14 	= 0x2000,
 	BMS_CELL_INDEX15	= 0x4000,
 	BMS_CELL_ALL		= 0x3FFF,
-}BMS_CellIndexTypedef;
+}BMS_CellIndexTypedef; /* 电芯位图类型：bit0对应第1节电芯。 */
 
 
 
@@ -47,25 +49,26 @@ typedef enum
 
 
 
+/* BMS功能开关状态：用于统一表示启用和禁用。 */
 typedef enum
 {
 	BMS_MODE_NULL,
 	BMS_MODE_CHARGE,	// 充电模式
 	BMS_MODE_DISCHARGE,	// 放电模式
-	BMS_MODE_STANDBY,	// 待机模式
-	BMS_MODE_SLEEP,		// 睡眠模式
-}BMS_SysModeTypedef;
+	BMS_MODE_STANDBY,	// 寰呮満妯″紡
+	BMS_MODE_SLEEP,		// 鐫＄湢妯″紡
+}BMS_SysModeTypedef; /* 系统工作模式类型。 */
 
 
 typedef struct
 {
-	BMS_SysModeTypedef SysMode;	// 当前系统处于什么模式
-	BMS_StateTypedef Charge;	// 充电状态
-	BMS_StateTypedef Discharge;	// 放电状态
-	BMS_StateTypedef Balance;	// 均衡状态
+	BMS_SysModeTypedef SysMode;	// 当前系统处于什么模?
+	BMS_StateTypedef Charge;	// 充电状态。
+	BMS_StateTypedef Discharge;	// 放电状态。
+	BMS_StateTypedef Balance;	// 鍧囪　鐘舵€?
 	
-	uint8_t Cell_Real_Number;	// 电芯实时数量
-	uint8_t Temp_Real_Number;	// 温度实时数量
+	uint8_t Cell_Real_Number; /* ǰʵʲĵоλڡ */	// 电芯实时数量
+	uint8_t Temp_Real_Number; /* ǰʵõ¶ͨλ· */	// 温度实时数量
 }BMS_GlobalParamTypedef;
 
 
