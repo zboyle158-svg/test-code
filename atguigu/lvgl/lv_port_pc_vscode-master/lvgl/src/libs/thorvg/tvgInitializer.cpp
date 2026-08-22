@@ -31,6 +31,9 @@
     #include <cstring>
 #endif
 
+#define __STDC_FORMAT_MACROS
+#include <cinttypes>
+
 #ifdef THORVG_SW_RASTER_SUPPORT
     #include "tvgSwRenderer.h"
 #endif
@@ -74,7 +77,7 @@ static bool _buildVersionInfo(uint32_t* major, uint32_t* minor, uint32_t* micro)
     uint32_t microVal = atoi(p);
 
     char sum[7];
-    snprintf(sum, sizeof(sum), "%" PRIu32 "%02" PRIu32 "%02" PRIu32, majorVal, minorVal, microVal);
+    snprintf(sum, sizeof(sum), "%u%02u%02u", (unsigned)majorVal, (unsigned)minorVal, (unsigned)microVal);
     _version = atoi(sum);
 
     if (major) *major = majorVal;
@@ -182,4 +185,3 @@ uint16_t THORVG_VERSION_NUMBER()
 }
 
 #endif /* LV_USE_THORVG_INTERNAL */
-

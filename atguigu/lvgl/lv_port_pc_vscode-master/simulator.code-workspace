@@ -21,6 +21,17 @@
 	// settings.json section
 	"settings": {
 		"cmake.cmakePath": "J:\\github\\test-code\\atguigu\\lvgl\\cmake-4.1.2-windows-x86_64\\bin\\cmake",
+		"cmake.generator": "Ninja",
+		"cmake.buildDirectory": "${workspaceFolder}/build-fixed3",
+		"cmake.configureSettings": {
+			"CMAKE_MAKE_PROGRAM": "I:/Espressif/tools/ninja/1.10.2/ninja.exe",
+			"CMAKE_C_COMPILER": "I:/mingw64/bin/gcc.exe",
+			"CMAKE_CXX_COMPILER": "I:/mingw64/bin/g++.exe"
+		},
+		"cmake.environment": {
+			"ComSpec": "C:\\Windows\\System32\\cmd.exe",
+			"COMSPEC": "C:\\Windows\\System32\\cmd.exe"
+		},
 		"files.trimTrailingWhitespace": true,
 		"files.insertFinalNewline": true,
 		"files.trimFinalNewlines": true,
@@ -28,7 +39,6 @@
 		"files.associations": {
 			"glob.h": "c",
 			"lvgl.h": "c",
-		"cmake.generator":"Niga"
 		},
 	},
 	// tasks.json section

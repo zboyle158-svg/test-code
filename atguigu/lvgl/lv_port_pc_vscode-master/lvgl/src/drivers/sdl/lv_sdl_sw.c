@@ -236,7 +236,11 @@ static void * sdl_draw_buf_realloc_aligned(void * ptr, size_t new_size)
 #define BUF_ALIGN (LV_DRAW_BUF_ALIGN < sizeof(void *) ? sizeof(void *) : LV_DRAW_BUF_ALIGN)
     return aligned_alloc(BUF_ALIGN, LV_ALIGN_UP(new_size, BUF_ALIGN));
 #else
-    return _aligned_malloc(LV_ALIGN_UP(new_size, LV_DRAW_BUF_ALIGN), LV_DRAW_BUF_ALIGN);
+    #if defined(__MINGW32__)
+        return __mingw_aligned_malloc(LV_ALIGN_UP(new_size, LV_DRAW_BUF_ALIGN), LV_DRAW_BUF_ALIGN);
+    #else
+        return _aligned_malloc(LV_ALIGN_UP(new_size, LV_DRAW_BUF_ALIGN), LV_DRAW_BUF_ALIGN);
+    #endif
 #endif /* _WIN32 */
 }
 
@@ -245,7 +249,11 @@ static void sdl_draw_buf_free(void * ptr)
 #ifndef _WIN32
     free(ptr);
 #else
-    _aligned_free(ptr);
+    #if defined(__MINGW32__)
+        __mingw_aligned_free(ptr);
+    #else
+        _aligned_free(ptr);
+    #endif
 #endif /* _WIN32 */
 }
 

@@ -1,0 +1,8 @@
+{
+	"InstallScripts" : 
+	[
+		"J:/github/test-code/atguigu/lvgl/lv_port_pc_vscode-master/build-fixed3/cmake_install.cmake",
+		"J:/github/test-code/atguigu/lvgl/lv_port_pc_vscode-master/build-fixed3/lvgl/cmake_install.cmake"
+	],
+	"Parallel" : false
+}
