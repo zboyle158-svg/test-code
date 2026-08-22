@@ -1,0 +1,17 @@
+*** Using Compiler 'V5.06 update 6 (build 750)', folder: 'I:\keil11\ARM\ARMCC\Bin'
+Build target 'BMS'
+compiling bms_utils.c...
+..\User\Bms\Core\bms_utils.c(123): warning:  #9-D: nested comment is not allowed
+  /** @brief 对整型数组执行冒泡排序。@param a待排序数�? @param n元素数量�? */
+..\User\Bms\Core\bms_utils.c(141): error:  #40: expected an identifier
+  */
+..\User\Bms\Core\bms_utils.c(150): warning:  #12-D: parsing restarts here after previous syntax error
+  int cmp_int8_t(const void *e1, const void *e2)
+..\User\Bms\Core\bms_utils.c(141): error:  #260-D: explicit type is missing ("int" assumed)
+  */
+..\User\Bms\Core\bms_utils.c(152): error:  #120: return value type does not match the function type
+      return *(int8_t *)e1 - *(int8_t *)e2;
+..\User\Bms\Core\bms_utils.c: 2 warnings, 3 errors
+"BMS\BMS.axf" - 3 Error(s), 2 Warning(s).
+Target not created.
+Build Time Elapsed:  00:00:01

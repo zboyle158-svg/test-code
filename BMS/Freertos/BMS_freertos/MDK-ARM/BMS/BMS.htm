@@ -3,7 +3,7 @@
 <title>Static Call Graph - [BMS\BMS.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image BMS\BMS.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060750: Last Updated: Sun Aug 16 09:28:15 2026
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060750: Last Updated: Mon Aug 17 11:20:30 2026
 <BR><P>
 <H3>Maximum Stack Usage =        448 bytes + Unknown(Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -516,7 +516,8 @@ Global Symbols
 </UL>
 
 <P><STRONG><a name="[73]"></a>__aeabi_cfrcmple</STRONG> (Thumb, 20 bytes, Stack size 0 bytes, cfrcmple.o(.text))
-<BR><BR>[Called By]<UL><LI><a href="#[a7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BMS_ProtectRelieveWait
+<BR><BR>[Called By]<UL><LI><a href="#[c4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BubbleFloat
+<LI><a href="#[a7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BMS_ProtectRelieveWait
 <LI><a href="#[8e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BMS_DischargeMonitor
 <LI><a href="#[8b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BMS_ChargeMonitor
 <LI><a href="#[9f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Bms_HalMonitorCellTemperature
@@ -524,7 +525,6 @@ Global Symbols
 <LI><a href="#[90]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BMS_EnergyBalanceManage
 <LI><a href="#[70]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BMS_AnalysisAHSocCalculate
 <LI><a href="#[4a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;compaer_cell
-<LI><a href="#[c4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BubbleFloat
 </UL>
 
 <P><STRONG><a name="[189]"></a>__aeabi_uidiv</STRONG> (Thumb, 0 bytes, Stack size 12 bytes, uidiv.o(.text), UNUSED)
@@ -879,10 +879,10 @@ Global Symbols
 <P><STRONG><a name="[9f]"></a>Bms_HalMonitorCellTemperature</STRONG> (Thumb, 82 bytes, Stack size 16 bytes, bms_hal_monitor.o(i.Bms_HalMonitorCellTemperature))
 <BR><BR>[Stack]<UL><LI>Max Depth = 432<LI>Call Chain = Bms_HalMonitorCellTemperature &rArr; BQ769X0_UpdateTsTemp &rArr; BQ769X0_ReadBlockWithCRC &rArr; I2C_TransferMessages &rArr; I2C_BitSendAddress &rArr; print_usart1 &rArr; HAL_UART_Transmit &rArr; UART_WaitOnFlagUntilTimeout
 </UL>
-<BR>[Calls]<UL><LI><a href="#[73]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_cfrcmple
+<BR>[Calls]<UL><LI><a href="#[c4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BubbleFloat
+<LI><a href="#[73]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_cfrcmple
 <LI><a href="#[74]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_cfcmple
 <LI><a href="#[c2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BQ769X0_UpdateTsTemp
-<LI><a href="#[c4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BubbleFloat
 </UL>
 <BR>[Called By]<UL><LI><a href="#[9c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BMS_MonitorBattery
 </UL>
@@ -890,8 +890,8 @@ Global Symbols
 <P><STRONG><a name="[9d]"></a>Bms_HalMonitorCellVoltage</STRONG> (Thumb, 72 bytes, Stack size 8 bytes, bms_hal_monitor.o(i.Bms_HalMonitorCellVoltage))
 <BR><BR>[Stack]<UL><LI>Max Depth = 424<LI>Call Chain = Bms_HalMonitorCellVoltage &rArr; BQ769X0_UpdateCellVolt &rArr; BQ769X0_ReadBlockWithCRC &rArr; I2C_TransferMessages &rArr; I2C_BitSendAddress &rArr; print_usart1 &rArr; HAL_UART_Transmit &rArr; UART_WaitOnFlagUntilTimeout
 </UL>
-<BR>[Calls]<UL><LI><a href="#[c0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BQ769X0_UpdateCellVolt
-<LI><a href="#[c5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BubbleSort
+<BR>[Calls]<UL><LI><a href="#[c5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BubbleSort
+<LI><a href="#[c0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BQ769X0_UpdateCellVolt
 </UL>
 <BR>[Called By]<UL><LI><a href="#[9c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BMS_MonitorBattery
 </UL>

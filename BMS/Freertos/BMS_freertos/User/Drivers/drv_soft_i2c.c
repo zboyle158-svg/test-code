@@ -1,4 +1,4 @@
-/**
+ /**
  * @file drv_soft_i2c.c
  * @brief 使用GPIO模拟I2C主机，供BQ769x0访问寄存器。
  *
@@ -192,6 +192,11 @@ static inline void I2C_SendAckOrNack(struct I2C_BusTypeDef *bus, int ack)
 	SCL_L(bus);
 }
 
+/** @brief 在I2C总线上发送一个字节并等待从设备应答。
+ * @param bus目标总线；@param data待发送字节。
+ * @return 1表示收到ACK，0表示收到NACK或传输失败。
+ * @note 发送前应确保总线处于有效的START或连续传输状态。
+ */
 static uint8_t I2C_WriteByte(struct I2C_BusTypeDef *bus, uint8_t data)
 {
 	uint8_t mask;
@@ -210,6 +215,11 @@ static uint8_t I2C_WriteByte(struct I2C_BusTypeDef *bus, uint8_t data)
 }
 
 
+/** @brief 从I2C总线读取一个字节。
+ * @param bus目标总线。
+ * @return 从SDA线上采样得到的8位数据。
+ * @note 读取完成后的ACK/NACK由调用者根据是否继续读取决定。
+ */
 static uint8_t I2C_ReadByte(struct I2C_BusTypeDef *bus)
 {
 	uint8_t mask;
@@ -289,6 +299,11 @@ static uint16_t I2C_RecvBytes(struct I2C_BusTypeDef *bus, struct I2C_MessageType
 	return bytes;
 }
 
+/** @brief 发送7位I2C地址及读写方向位，并按配置进行重试。
+ * @param bus目标总线；@param addr已包含方向位的地址字节；@param retries最大重试次数。
+ * @return 1表示从设备应答，0表示未收到应答。
+ * @note 函数失败时会结束当前传输并重新建立时序。
+ */
 static uint8_t I2C_SendAddress(struct I2C_BusTypeDef *bus, uint8_t addr, uint32_t retries)
 {
 	uint8_t i, ret = 0;
@@ -315,6 +330,11 @@ static uint8_t I2C_SendAddress(struct I2C_BusTypeDef *bus, uint8_t addr, uint32_
 	return ret;
 }
 
+/** @brief 根据消息标志发送普通或10位I2C设备地址。
+ * @param bus目标总线；@param msg当前I2C消息描述。
+ * @return 1表示地址阶段成功，0表示从设备未应答。
+ * @note 10位地址和普通7位地址的发送顺序不同，不能直接复用地址字节。
+ */
 static uint8_t I2C_BitSendAddress(struct I2C_BusTypeDef *bus, struct I2C_MessageTypeDef *msg)
 {
 	uint8_t ret, retries, addr1, addr2;

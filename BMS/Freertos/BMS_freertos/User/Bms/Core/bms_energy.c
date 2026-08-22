@@ -1,8 +1,8 @@
-/**
+ /**
  * @file bms_energy.c
- * @brief 充放电开关和电芯被动均衡管理?
- * 根据系统模式、SOC 和保护报警状态控?CHG/DSG；均衡结束由一次?
- * RTOS 定时器处理，并保留电压回升时间，避免使用尚未稳定的电压判断?
+ * @brief 充放电开关和电芯被动均衡管理。
+ * 根据系统模式、SOC和保护告警状态控制CHG/DSG；均衡结束后使用RTOS定时器等待电压回升，
+ * 避免使用尚未稳定的电压再次判断均衡条件。
  */
 #define BMS_DBG_TAG "Energy"
 
@@ -33,6 +33,7 @@
 
 
 
+/* 充放电和均衡模块的全局运行参数及状态数据。 */
 BMS_EnergyDataTypedef BMS_EnergyData = 
 {
 	.SocStopChg   	= SOC_STOP_CHG_VALUE,
@@ -47,15 +48,20 @@ BMS_EnergyDataTypedef BMS_EnergyData =
 };
 
 
-// 使用信号量做一下均衡释?
+// 使用信号量保护均衡控制过程，避免任务和回调同时操作均衡状态。
 osSemaphoreId_t BalanceSem = RT_NULL;
 
 
+/* 均衡电压回升定时器句柄，用于避免均衡刚结束时立即再次开启。 */
 static osTimerId_t pTimerBalance;
+/* 均衡执行状态标志，true表示当前已有电芯处于均衡过程。 */
 static bool BalanceFlag = false;
+/* 均衡结束后的电压回升等待截止时间，单位为RTOS Tick。 */
 static uint32_t BalanceVoltRiseTime;
 
+/* 上一次已经下发到充电MOS通道的状态，用于减少重复写硬件。 */
 static BMS_StateTypedef BMS_CHGStateBackup;
+/* 上一次已经下发到放电MOS通道的状态，用于减少重复写硬件。 */
 static BMS_StateTypedef BMS_DSGStateBackup;
 
 const osThreadAttr_t energyTask_attributes = {
@@ -84,6 +90,7 @@ static void BMS_EnergyBalanceManage(void);
 
 
 
+/** @brief 初始化能量管理任务、均衡信号量和均衡定时器。@note 必须在RTOS内核初始化后调用。 */
 void BMS_EnergyInit(void)
 {
 	osThreadId_t thread;
@@ -109,6 +116,7 @@ void BMS_EnergyInit(void)
 
 
 // 电池能量管理任务线程入口
+/** @brief 能量管理任务入口，周期执行充放电控制和均衡管理。@param paramter未使用。 */
 static void BMS_EnergyTaskEntry(void *paramter)
 {
 	BMS_CHGStateBackup = BMS_GlobalParam.Charge;
@@ -131,6 +139,7 @@ static void BMS_EnergyTaskEntry(void *paramter)
 
 
 // 用于均衡计数的定时器回调入口
+/** @brief 均衡回升定时器回调，结束等待窗口并允许再次判断均衡条件。@param paramter未使用。 */
 static void BMS_BalanceTimerEntry(void *paramter)
 {
 	(void)paramter;
@@ -147,7 +156,8 @@ static void BMS_BalanceTimerEntry(void *paramter)
 	BMS_INFO("Balance Timer End");
 }
 
-// 启动均衡定时器计数任?
+// 启动均衡定时器并记录回升等待时间。
+/** @brief 启动均衡电压回升等待定时器。@param sec等待时间，单位为秒。 */
 static void BMS_BalanceStartTimer(uint32_t sec)
 {
 	uint32_t tick;
@@ -164,7 +174,8 @@ static void BMS_BalanceStartTimer(uint32_t sec)
 
 
 
-// 充放电管?
+// 充放电通道管理。
+/** @brief 根据保护告警、系统模式和SOC控制充电及放电通道。@return无。 */
 static void BMS_EnergyChgDsgManage(void)
 {
 	// 无报警的情况。
@@ -195,10 +206,10 @@ static void BMS_EnergyChgDsgManage(void)
 
 			case BMS_MODE_STANDBY:
 			{
-				// 用户是否开启了充电开?
+				// 判断用户是否允许充电。
 				if (BMS_GlobalParam.Charge == BMS_STATE_ENABLE)	
 				{
-					// 根据SOC值开启充?
+					// 根据SOC值决定是否开启充电。
 					if (BMS_AnalysisData.SOC < BMS_EnergyData.SocStartChg)
 					{
 						// 检查是否处于均衡状态。
@@ -215,10 +226,10 @@ static void BMS_EnergyChgDsgManage(void)
 
 
 
-				// 用户是否开启了放电开?
+				// 判断用户是否允许放电。
 				if (BMS_GlobalParam.Discharge == BMS_STATE_ENABLE) 
 				{
-					// 根据SOC值开启放?
+					// 根据SOC值决定是否开启放电。
 					if (BMS_AnalysisData.SOC > BMS_EnergyData.SocStartDsg)
 					{
 						BMS_HalCtrlDischarge(BMS_STATE_ENABLE);
@@ -242,7 +253,7 @@ static void BMS_EnergyChgDsgManage(void)
 			{
 				BMS_HalCtrlCharge(BMS_STATE_DISABLE);
 			}
-			else if (BMS_GlobalParam.SysMode == BMS_MODE_SLEEP)  // 睡眠模式下可开启充?
+			else if (BMS_GlobalParam.SysMode == BMS_MODE_SLEEP)  // 睡眠模式下可开启充电。
 			{
 				BMS_HalCtrlCharge(BMS_STATE_ENABLE);
 			}
@@ -254,7 +265,7 @@ static void BMS_EnergyChgDsgManage(void)
 			{
 				BMS_HalCtrlDischarge(BMS_STATE_DISABLE);
 			}
-			else if (BMS_GlobalParam.SysMode == BMS_MODE_SLEEP)  // 睡眠模式下可开启放?
+			else if (BMS_GlobalParam.SysMode == BMS_MODE_SLEEP)  // 睡眠模式下可开启放电。
 			{
 				BMS_HalCtrlDischarge(BMS_STATE_ENABLE);
 			}
@@ -265,7 +276,8 @@ static void BMS_EnergyChgDsgManage(void)
 
 
 
-// 鍧囪　绠＄悊
+// 电芯均衡管理。
+/** @brief 判断均衡条件并控制各电芯均衡开关。@return无。@note均衡前必须确认保护状态和采样数据有效。 */
 static void BMS_EnergyBalanceManage(void)
 {
 	uint8_t index;
@@ -274,7 +286,7 @@ static void BMS_EnergyBalanceManage(void)
 	// 处于非均衡状态下且使能了均衡
 	if (BalanceFlag == false && BMS_GlobalParam.Balance == BMS_STATE_ENABLE)
 	{
-		// 静止等待电压回升以防才充放电完或者上一轮均衡结?
+		// 等待电压回升，防止充放电刚结束或上一轮均衡结束后的暂态电压造成误判。
 		// 轮询式延时，让充放电命令控制得到快速响应。
 		if (BalanceVoltRiseTime <= osKernelGetTickCount())
 		{
@@ -283,7 +295,7 @@ static void BMS_EnergyBalanceManage(void)
 			{
 				MinVoltage = BMS_MonitorData.CellData[0].CellVoltage;
 
-				// 单节最大电压是否大于均衡起始电?
+				// 判断最高电芯电压是否达到均衡起始电压。
 				if (BMS_MonitorData.CellData[BMS_GlobalParam.Cell_Real_Number-1].CellVoltage > BMS_EnergyData.BalanceStartVoltage)
 				{
 					float CmpVoltage;
@@ -315,7 +327,7 @@ static void BMS_EnergyBalanceManage(void)
 
 
 					
-					/* 适用于相邻单元不能同时均衡且均衡顺序不按照从大到小进?
+					/* 适用于相邻单元不能同时均衡且均衡顺序不按照从大到小进行的情况。
 					for(index = 0; index < BMS_GlobalParam.Cell_Real_Number; index++)
 					{
 						if (BMS_MonitorData.CellVoltage[index] - MinVoltage > BMS_EnergyData.BalanceDiffeVoltage)
@@ -342,7 +354,7 @@ static void BMS_EnergyBalanceManage(void)
 
 							if (CellNumber == 0)  
 							{
-								// 第一节电芯满足均衡压差情?判断第二节是否添加了均衡标志
+								// 第一节电芯满足均衡压差条件，判断第二节是否已经添加均衡标志。
 								if ((BMS_EnergyData.BalanceRecord & 0x02) == 0)
 								{								
 									result = true;
@@ -350,7 +362,7 @@ static void BMS_EnergyBalanceManage(void)
 							}
 							else if (CellNumber + 1 == BMS_GlobalParam.Cell_Real_Number)
 							{
-								// 最后一节电芯满足均衡压差情?判断前一节是否添加了均衡标志
+								// 最后一节电芯满足均衡压差条件，判断前一节是否已经添加均衡标志。
 								if ((BMS_EnergyData.BalanceRecord & (1 << (CellNumber - 1))) == 0)
 								{
 									result = true;

@@ -1,0 +1,43 @@
+*** Using Compiler 'V5.06 update 6 (build 750)', folder: 'I:\keil11\ARM\ARMCC\Bin'
+Build target 'BMS'
+compiling bms_utils.c...
+..\User\Bms\Core\bms_utils.c(123): warning:  #9-D: nested comment is not allowed
+  /** @brief 对整型数组执行冒泡排序。@param a待排序数�? @param n元素数量�? */
+..\User\Bms\Core\bms_utils.c(141): error:  #40: expected an identifier
+  */
+..\User\Bms\Core\bms_utils.c(150): warning:  #12-D: parsing restarts here after previous syntax error
+  int cmp_int8_t(const void *e1, const void *e2)
+..\User\Bms\Core\bms_utils.c(141): error:  #260-D: explicit type is missing ("int" assumed)
+  */
+..\User\Bms\Core\bms_utils.c(152): error:  #120: return value type does not match the function type
+      return *(int8_t *)e1 - *(int8_t *)e2;
+..\User\Bms\Core\bms_utils.c(266): warning:  #9-D: nested comment is not allowed
+  /** @brief 示例比较回调，用于比较两个整型元素�? */
+..\User\Bms\Core\bms_utils.c(271): error:  #20: identifier "BMS_CellDataTypedef" is undefined
+  	temp1 = (*(BMS_CellDataTypedef *)e1).CellVoltage;
+..\User\Bms\Core\bms_utils.c(271): error:  #29: expected an expression
+  	temp1 = (*(BMS_CellDataTypedef *)e1).CellVoltage;
+..\User\Bms\Core\bms_utils.c(271): error:  #18: expected a ")"
+  	temp1 = (*(BMS_CellDataTypedef *)e1).CellVoltage;
+..\User\Bms\Core\bms_utils.c(272): error:  #29: expected an expression
+  	temp2 = (*(BMS_CellDataTypedef *)e2).CellVoltage;
+..\User\Bms\Core\bms_utils.c(272): error:  #18: expected a ")"
+  	temp2 = (*(BMS_CellDataTypedef *)e2).CellVoltage;
+..\User\Bms\Core\bms_utils.c(287): error:  #20: identifier "BMS_SampleDataTypedef" is undefined
+  	BMS_SampleDataTypedef SampleData;
+..\User\Bms\Core\bms_utils.c(303): error:  #20: identifier "BMS_CELL_MAX" is undefined
+  	BubbleSort(SampleData.CellData, BMS_CELL_MAX, sizeof(BMS_CellDataTypedef), cmp1);
+..\User\Bms\Core\bms_utils.c(303): error:  #20: identifier "BMS_CellDataTypedef" is undefined
+  	BubbleSort(SampleData.CellData, BMS_CELL_MAX, sizeof(BMS_CellDataTypedef), cmp1);
+..\User\Bms\Core\bms_utils.c(307): warning:  #223-D: function "printf" declared implicitly
+  		printf("%f\r\n", SampleData.CellData[index].CellVoltage);
+..\User\Bms\Core\bms_utils.c(309): warning:  #223-D: function "printf" declared implicitly
+  	printf("\r\n");
+..\User\Bms\Core\bms_utils.c(314): error:  #40: expected an identifier
+  */
+..\User\Bms\Core\bms_utils.c(314): error: At end of source:  #65: expected a ";"
+..\User\Bms\Core\bms_utils.c: 5 warnings, 13 errors
+compiling bms_monitor.c...
+"BMS\BMS.axf" - 13 Error(s), 5 Warning(s).
+Target not created.
+Build Time Elapsed:  00:00:03

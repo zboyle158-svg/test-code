@@ -1,0 +1,29 @@
+*** Using Compiler 'V5.06 update 6 (build 750)', folder: 'I:\keil11\ARM\ARMCC\Bin'
+Build target 'BMS'
+compiling drv_softi2c_bq769x0.c...
+..\User\Drivers\drv_softi2c_bq769x0.c(114): warning:  #9-D: nested comment is not allowed
+  /** @brief 初始化BQ769x0相关GPIO和告警引脚。无参数、无返回值；必须在芯片通信初始化后调用�? */
+..\User\Drivers\drv_softi2c_bq769x0.c(119): error:  #40: expected an identifier
+  */
+..\User\Drivers\drv_softi2c_bq769x0.c(122): warning:  #12-D: parsing restarts here after previous syntax error
+  static void BQ769X0_TS1_SetOutMode(void)
+..\User\Drivers\drv_softi2c_bq769x0.c(119): error:  #260-D: explicit type is missing ("int" assumed)
+  */
+..\User\Drivers\drv_softi2c_bq769x0.c(869): warning:  #223-D: function "BQ769X0_TS1_SetOutMode" declared implicitly
+      BQ769X0_TS1_SetOutMode();
+..\User\Drivers\drv_softi2c_bq769x0.c(115): warning:  #177-D: function "BQ769X0_GpioInit"  was declared but never referenced
+  static void BQ769X0_GpioInit(void)
+..\User\Drivers\drv_softi2c_bq769x0.c(268): warning:  #177-D: function "BQ769X0_WriteRegisterByte"  was declared but never referenced
+  static bool BQ769X0_WriteRegisterByte(uint8_t Register, uint8_t data)
+..\User\Drivers\drv_softi2c_bq769x0.c(317): warning:  #177-D: function "BQ769X0_WriteRegisterWordWithCRC"  was declared but never referenced
+  static bool BQ769X0_WriteRegisterWordWithCRC(uint8_t Register, uint16_t data)
+..\User\Drivers\drv_softi2c_bq769x0.c(393): warning:  #177-D: function "BQ769X0_ReadRegisterByte"  was declared but never referenced
+  static bool BQ769X0_ReadRegisterByte(uint8_t Register, uint8_t *data)
+..\User\Drivers\drv_softi2c_bq769x0.c: 7 warnings, 2 errors
+compiling drv_soft_i2c.c...
+..\User\Drivers\drv_soft_i2c.c(375): warning:  #223-D: function "print_usart1" declared implicitly
+  				I2C_ERROR("NACK: sending repeated addr");
+..\User\Drivers\drv_soft_i2c.c: 1 warning, 0 errors
+"BMS\BMS.axf" - 2 Error(s), 8 Warning(s).
+Target not created.
+Build Time Elapsed:  00:00:03

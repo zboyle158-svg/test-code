@@ -1,0 +1,127 @@
+*** Using Compiler 'V5.06 update 6 (build 750)', folder: 'I:\keil11\ARM\ARMCC\Bin'
+Build target 'BMS'
+compiling drv_soft_i2c.c...
+..\User\Drivers\drv_soft_i2c.h(43): error:  #7: unrecognized token
+  `#define I2C_CONTROL_BYTE    (1 << 6)        /* 使用控制字节cByte�? */
+..\User\Drivers\drv_soft_i2c.h(43): error:  #169: expected a declaration
+  `#define I2C_CONTROL_BYTE    (1 << 6)        /* 使用控制字节cByte�? */
+..\User\Drivers\drv_soft_i2c.h(43): error:  #10: "#" not expected here
+  `#define I2C_CONTROL_BYTE    (1 << 6)        /* 使用控制字节cByte�? */
+..\User\Drivers\drv_soft_i2c.h(59): warning:  #12-D: parsing restarts here after previous syntax error
+  };
+..\User\Drivers\drv_soft_i2c.h(79): warning:  #231-D: declaration is not visible outside of function
+  uint32_t I2C_TransferMessages(struct I2C_BusTypeDef *bus, struct I2C_MessageTypeDef msgs[], uint32_t num);
+..\User\Drivers\drv_soft_i2c.c(233): warning:  #231-D: declaration is not visible outside of function
+  static uint16_t I2C_SendBytes(struct I2C_BusTypeDef *bus, struct I2C_MessageTypeDef *msg)
+..\User\Drivers\drv_soft_i2c.c(236): error:  #393: pointer to incomplete class type is not allowed
+  	const uint8_t *ptr = msg->buf;
+..\User\Drivers\drv_soft_i2c.c(237): error:  #393: pointer to incomplete class type is not allowed
+  	uint16_t bytes = 0, count = msg->tLen;
+..\User\Drivers\drv_soft_i2c.c(241): error:  #393: pointer to incomplete class type is not allowed
+  		if (msg->flags & I2C_CONTROL_BYTE && I2C_WriteByte(bus, msg->cByte) == 0) // 发送控制字?
+..\User\Drivers\drv_soft_i2c.c(241): error:  #20: identifier "I2C_CONTROL_BYTE" is undefined
+  		if (msg->flags & I2C_CONTROL_BYTE && I2C_WriteByte(bus, msg->cByte) == 0) // 发送控制字?
+..\User\Drivers\drv_soft_i2c.c(241): error:  #393: pointer to incomplete class type is not allowed
+  		if (msg->flags & I2C_CONTROL_BYTE && I2C_WriteByte(bus, msg->cByte) == 0) // 发送控制字?
+..\User\Drivers\drv_soft_i2c.c(247): error:  #393: pointer to incomplete class type is not allowed
+  		ret = msg->flags & I2C_SAME_BYTE ? I2C_WriteByte(bus, msg->sByte) : I2C_WriteByte(bus, *ptr) , ptr++;
+..\User\Drivers\drv_soft_i2c.c(247): error:  #393: pointer to incomplete class type is not allowed
+  		ret = msg->flags & I2C_SAME_BYTE ? I2C_WriteByte(bus, msg->sByte) : I2C_WriteByte(bus, *ptr) , ptr++;
+..\User\Drivers\drv_soft_i2c.c(249): error:  #393: pointer to incomplete class type is not allowed
+  		if ((ret > 0) || (msg->flags & I2C_IGNORE_NACK && (ret == 0)))
+..\User\Drivers\drv_soft_i2c.c(264): warning:  #231-D: declaration is not visible outside of function
+  static uint16_t I2C_RecvBytes(struct I2C_BusTypeDef *bus, struct I2C_MessageTypeDef *msg)
+..\User\Drivers\drv_soft_i2c.c(267): error:  #393: pointer to incomplete class type is not allowed
+  	uint8_t *ptr = msg->buf;
+..\User\Drivers\drv_soft_i2c.c(268): error:  #393: pointer to incomplete class type is not allowed
+  	uint16_t bytes = 0, count = msg->tLen;
+..\User\Drivers\drv_soft_i2c.c(283): error:  #393: pointer to incomplete class type is not allowed
+  		if (!(msg->flags & I2C_NO_READ_ACK))
+..\User\Drivers\drv_soft_i2c.c(318): warning:  #231-D: declaration is not visible outside of function
+  static uint8_t I2C_BitSendAddress(struct I2C_BusTypeDef *bus, struct I2C_MessageTypeDef *msg)
+..\User\Drivers\drv_soft_i2c.c(321): error:  #393: pointer to incomplete class type is not allowed
+  	uint8_t flags = msg->flags;
+..\User\Drivers\drv_soft_i2c.c(322): error:  #393: pointer to incomplete class type is not allowed
+  	uint8_t ignore_nack = msg->flags & I2C_IGNORE_NACK;
+..\User\Drivers\drv_soft_i2c.c(329): error:  #393: pointer to incomplete class type is not allowed
+  		addr1 = 0xf0 | ((msg->addr >> 7) & 0x06);
+..\User\Drivers\drv_soft_i2c.c(330): error:  #393: pointer to incomplete class type is not allowed
+  		addr2 = msg->addr & 0xff;
+..\User\Drivers\drv_soft_i2c.c(355): warning:  #223-D: function "print_usart1" declared implicitly
+  				I2C_ERROR("NACK: sending repeated addr");
+..\User\Drivers\drv_soft_i2c.c(363): error:  #393: pointer to incomplete class type is not allowed
+  		addr1 = msg->addr << 1;
+..\User\Drivers\drv_soft_i2c.c(375): warning:  #231-D: declaration is not visible outside of function
+  uint32_t I2C_TransferMessages(struct I2C_BusTypeDef *bus, struct I2C_MessageTypeDef msgs[], uint32_t num)
+..\User\Drivers\drv_soft_i2c.c(375): error:  #147-D: declaration is incompatible with "uint32_t I2C_TransferMessages(struct I2C_BusTypeDef *, struct I2C_MessageTypeDef *, uint32_t)"  (declared at line 79 of "..\User\Drivers\drv_soft_i2c.h")
+  uint32_t I2C_TransferMessages(struct I2C_BusTypeDef *bus, struct I2C_MessageTypeDef msgs[], uint32_t num)
+..\User\Drivers\drv_soft_i2c.c(387): error:  #852: expression must be a pointer to a complete object type
+  		msg = &msgs[i];
+..\User\Drivers\drv_soft_i2c.c(388): error:  #393: pointer to incomplete class type is not allowed
+  		ignore_nack = msg->flags & I2C_IGNORE_NACK;
+..\User\Drivers\drv_soft_i2c.c(389): error:  #393: pointer to incomplete class type is not allowed
+  		if (!(msg->flags & I2C_NO_START))
+..\User\Drivers\drv_soft_i2c.c(400): error:  #167: argument of type "struct I2C_MessageTypeDef *" is incompatible with parameter of type "struct I2C_MessageTypeDef *"
+  			ret = I2C_BitSendAddress(bus, msg);
+..\User\Drivers\drv_soft_i2c.c(407): error:  #393: pointer to incomplete class type is not allowed
+  		if (msg->flags & I2C_RD)
+..\User\Drivers\drv_soft_i2c.c(409): error:  #167: argument of type "struct I2C_MessageTypeDef *" is incompatible with parameter of type "struct I2C_MessageTypeDef *"
+  			ret = I2C_RecvBytes(bus, msg);
+..\User\Drivers\drv_soft_i2c.c(410): error:  #393: pointer to incomplete class type is not allowed
+  			msg->rLen = ret;
+..\User\Drivers\drv_soft_i2c.c(415): error:  #167: argument of type "struct I2C_MessageTypeDef *" is incompatible with parameter of type "struct I2C_MessageTypeDef *"
+  			ret = I2C_SendBytes(bus, msg);	
+..\User\Drivers\drv_soft_i2c.c(416): error:  #393: pointer to incomplete class type is not allowed
+  			msg->rLen = ret;
+..\User\Drivers\drv_soft_i2c.c(418): error:  #393: pointer to incomplete class type is not allowed
+  			if (msg->rLen != msg->tLen)
+..\User\Drivers\drv_soft_i2c.c: 7 warnings, 30 errors
+compiling bms_app.c...
+../User/Drivers/drv_soft_i2c.h(43): error:  #7: unrecognized token
+  `#define I2C_CONTROL_BYTE    (1 << 6)        /* 使用控制字节cByte�? */
+../User/Drivers/drv_soft_i2c.h(43): error:  #169: expected a declaration
+  `#define I2C_CONTROL_BYTE    (1 << 6)        /* 使用控制字节cByte�? */
+../User/Drivers/drv_soft_i2c.h(43): error:  #10: "#" not expected here
+  `#define I2C_CONTROL_BYTE    (1 << 6)        /* 使用控制字节cByte�? */
+../User/Drivers/drv_soft_i2c.h(59): warning:  #12-D: parsing restarts here after previous syntax error
+  };
+../User/Drivers/drv_soft_i2c.h(79): warning:  #231-D: declaration is not visible outside of function
+  uint32_t I2C_TransferMessages(struct I2C_BusTypeDef *bus, struct I2C_MessageTypeDef msgs[], uint32_t num);
+..\User\Bms\bms_app.c: 2 warnings, 3 errors
+compiling drv_softi2c_bq769x0.c...
+..\User\Drivers\drv_soft_i2c.h(43): error:  #7: unrecognized token
+  `#define I2C_CONTROL_BYTE    (1 << 6)        /* 使用控制字节cByte�? */
+..\User\Drivers\drv_soft_i2c.h(43): error:  #169: expected a declaration
+  `#define I2C_CONTROL_BYTE    (1 << 6)        /* 使用控制字节cByte�? */
+..\User\Drivers\drv_soft_i2c.h(43): error:  #10: "#" not expected here
+  `#define I2C_CONTROL_BYTE    (1 << 6)        /* 使用控制字节cByte�? */
+..\User\Drivers\drv_soft_i2c.h(59): warning:  #12-D: parsing restarts here after previous syntax error
+  };
+..\User\Drivers\drv_soft_i2c.h(79): warning:  #231-D: declaration is not visible outside of function
+  uint32_t I2C_TransferMessages(struct I2C_BusTypeDef *bus, struct I2C_MessageTypeDef msgs[], uint32_t num);
+..\User\Drivers\drv_softi2c_bq769x0.c(266): error:  #70: incomplete type is not allowed
+  	struct I2C_MessageTypeDef msg = {0};
+..\User\Drivers\drv_softi2c_bq769x0.c(286): error:  #70: incomplete type is not allowed
+  	struct I2C_MessageTypeDef msg = {0};
+..\User\Drivers\drv_softi2c_bq769x0.c(312): error:  #70: incomplete type is not allowed
+  	struct I2C_MessageTypeDef msg = {0};
+..\User\Drivers\drv_softi2c_bq769x0.c(340): error:  #70: incomplete type is not allowed
+  	struct I2C_MessageTypeDef msg = {0};
+..\User\Drivers\drv_softi2c_bq769x0.c(385): error:  #70: incomplete type is not allowed
+  	struct I2C_MessageTypeDef msg[2] = {0};
+..\User\Drivers\drv_softi2c_bq769x0.c(409): error:  #70: incomplete type is not allowed
+  	struct I2C_MessageTypeDef msg[2] = {0};
+..\User\Drivers\drv_softi2c_bq769x0.c(449): error:  #70: incomplete type is not allowed
+  	struct I2C_MessageTypeDef msg[2] = {0};
+..\User\Drivers\drv_softi2c_bq769x0.c(495): error:  #70: incomplete type is not allowed
+  	struct I2C_MessageTypeDef msg[2] = {0};
+..\User\Drivers\drv_softi2c_bq769x0.c(262): warning:  #177-D: function "BQ769X0_WriteRegisterByte"  was declared but never referenced
+  static bool BQ769X0_WriteRegisterByte(uint8_t Register, uint8_t data)
+..\User\Drivers\drv_softi2c_bq769x0.c(309): warning:  #177-D: function "BQ769X0_WriteRegisterWordWithCRC"  was declared but never referenced
+  static bool BQ769X0_WriteRegisterWordWithCRC(uint8_t Register, uint16_t data)
+..\User\Drivers\drv_softi2c_bq769x0.c(383): warning:  #177-D: function "BQ769X0_ReadRegisterByte"  was declared but never referenced
+  static bool BQ769X0_ReadRegisterByte(uint8_t Register, uint8_t *data)
+..\User\Drivers\drv_softi2c_bq769x0.c: 5 warnings, 11 errors
+"BMS\BMS.axf" - 44 Error(s), 14 Warning(s).
+Target not created.
+Build Time Elapsed:  00:00:03

@@ -54,10 +54,10 @@ void BMS_SysInitialize(void)
 	BQ769X0_Initialize(&InitData);
 #endif
 	
-	BMS_MonitorInit(); /* 创建电池监控任务。 */	
-	BMS_ProtectInit(); /* 创建保护任务和保护定时器。 */	
+	BMS_MonitorInit(); 	/* 创建电池监控任务。 */	
+	BMS_ProtectInit(); 	/* 创建保护任务和保护定时器。 */	
 	BMS_AnalysisInit(); /* 创建电池分析和SOC任务。 */	
-	BMS_EnergyInit(); /* 创建能量管理和均衡任务。 */	
-	BMS_InfoInit(); /* 创建信息输出任务。 */		
+	BMS_EnergyInit(); 	/* 创建能量管理和均衡任务。 */	
+	BMS_InfoInit(); 	/* 创建信息输出任务。 */		
 
 }

@@ -13,46 +13,64 @@
 
 
 
-
-
-// thread config
+/* 监控任务栈大小，单位为FreeRTOS StackType_t元素，不是字节数。 */
 #define MONITOR_TASK_STACK_SIZE	512
+/* 监控任务优先级，数值越大表示优先级越高。 */
 #define MONITOR_TASK_PRIORITY	9
+/* 监控任务内部循环间隔，单位为RTOS Tick。 */
 #define MONITOR_TASK_TIMESLICE	25
 
+/* 监控任务的基础执行周期，当前配置下用于周期计数，单位为毫秒。 */
 #define MONITOR_TASK_PERIOD		250
 
 
 
-// sample time config  MS
+/* 电芯电压采样周期，单位为毫秒。 */
 #define UPDATE_CELL_VOLTAGE_CYCLE	250
+/* 电池总电压采样周期，单位为毫秒。宏名称保持原工程定义不变。 */
 #define UPDAYE_BAT_VOLTAGE_CYCLE	250
+/* 电芯温度采样周期，单位为毫秒。 */
 #define UPDATE_CELL_TEMP_CYCLE		2000
+/* 电池电流采样周期，单位为毫秒。 */
 #define UPDATE_BAT_CURRENT_CYCLE	1000
 
 
 
 
-
-
+/* 保存监控任务最近一次采集结果的全局数据对象。 */
 BMS_MonitorDataTypedef BMS_MonitorData;
 
 
 
+/* 外部中断请求电流采样的标志，true表示等待监控任务处理。 */
 static bool FlagSampleIntCur = false;
 
+/* 电芯电压采样使能标志，初始化为允许采样。 */
 static bool FlagCellVoltage = true;
+/* 电池总电压采样使能标志，初始化为允许采样。 */
 static bool FlagBatVoltage = true;
+/* 电芯温度采样使能标志，初始化为允许采样。 */
 static bool FlagCellTemp = true;
+/* 电池电流采样使能标志，初始化为允许采样。 */
 static bool FlagBatCurrent = true;
 
 
+
+/* 电芯电压采样周期累计计数，单位与MONITOR_TASK_PERIOD一致。 */
 static uint16_t CountCellVoltage = 0;
+/* 电池总电压采样周期累计计数，单位与MONITOR_TASK_PERIOD一致。 */
 static uint16_t CountBatVoltage = 0;
+/* 电芯温度采样周期累计计数，单位与MONITOR_TASK_PERIOD一致。 */
 static uint16_t CountCellTemp = 0;
+/* 当前未使用的电池电流周期计数，保留以兼容原工程结构。 */
 //static uint16_t CountBatCurrent = 0;
 
 
+/*
+ * 监控任务的CMSIS-RTOS2属性对象。
+ * name用于调试器识别任务；stack_size指定任务栈大小；priority指定任务优先级。
+ * 注意：stack_size的具体单位由CMSIS-RTOS2适配层处理，不能与普通字节数组混淆。
+ */
 const osThreadAttr_t monitorTask_attributes = {
   .name = "monitorTask",
   .stack_size = MONITOR_TASK_STACK_SIZE,
@@ -75,6 +93,12 @@ static void BMS_MonitorTaskEntry(void *paramter);
 static void BMS_MonitorBattery(void);
 static void BMS_MonitorSysMode(void);
 
+/**
+ * @brief 初始化BMS监控模块并创建监控任务。
+ * @param 无。
+ * @return 无。
+ * @note 应在RTOS内核初始化后调用；任务创建失败时需结合系统日志排查堆空间和任务配置。
+ */
 void BMS_MonitorInit(void)
 {
 	osThreadId_t thread;
@@ -89,6 +113,12 @@ void BMS_MonitorInit(void)
 
 /* 监控任务入口。参数：paramter为任务创建时传入的参数，本任务未使用。
  * 返回：不返回；持续执行采样和模式判断。周期：250ms。 */
+/**
+ * @brief 监控任务入口函数。
+ * @param paramter RTOS任务参数，本实现未使用。
+ * @return 无；函数通常不会返回，而是在循环中持续执行监控流程。
+ * @note 任务周期由MONITOR_TASK_PERIOD决定，不能在此函数中执行长时间阻塞操作。
+ */
 static void BMS_MonitorTaskEntry(void *paramter)
 {
 	while (1)
@@ -104,6 +134,12 @@ static void BMS_MonitorTaskEntry(void *paramter)
 /* 周期单位为 ms；不同采样项通过计数器降低 I2C 访问频率。 */
 /* 按配置周期读取电压、温度和电流。参数和返回值：无。
  * 副作用：更新BMS_MonitorData及内部采样计数器。 */
+/**
+ * @brief 按配置周期采集电芯电压、电池电压、温度和电流。
+ * @param 无。
+ * @return 无；采样结果写入BMS_MonitorData。
+ * @note 各项采样是否执行由对应Flag控制，采样周期使用RTOS节拍累计实现。
+ */
 static void BMS_MonitorBattery(void)
 {
 	// 单体电芯电压
@@ -175,6 +211,12 @@ static void BMS_MonitorBattery(void)
 /* 电流单位为 A：正值表示充电，负值表示放电，±0.02 A 是待机死区。 */
 /* 根据电流判断充电、放电、待机或睡眠模式。参数和返回值：无。
  * 注意：电流阈值使用A，±0.02A为待机死区。 */
+/**
+ * @brief 根据电池电流和保护状态更新系统运行模式。
+ * @param 无。
+ * @return 无；结果写入全局BMS状态，并在模式变化时输出调试信息。
+ * @note 电流正负方向和待机死区必须与硬件电流采样定义保持一致。
+ */
 static void BMS_MonitorSysMode(void)
 {
 	static BMS_SysModeTypedef SysModeBackup = BMS_MODE_NULL;
@@ -261,6 +303,12 @@ static void BMS_MonitorSysMode(void)
 
 
 
+/**
+ * @brief 开启或关闭电芯电压采样。
+ * @param NewState BMS_STATE_ENABLE表示允许采样，BMS_STATE_DISABLE表示停止采样。
+ * @return 无。
+ * @note 这里只修改采样标志，实际采样由监控任务执行。
+ */
 void BMS_MonitorStateCellVoltage(BMS_StateTypedef NewState)
 {
 	if (NewState == BMS_STATE_ENABLE)
@@ -273,6 +321,12 @@ void BMS_MonitorStateCellVoltage(BMS_StateTypedef NewState)
 	}
 }
 
+/**
+ * @brief 开启或关闭电池总电压采样。
+ * @param NewState 采样功能状态。
+ * @return 无。
+ * @note 禁止采样后会清零对应的软件周期计数，重新启用后重新计时。
+ */
 void BMS_MonitorStateBatVoltage(BMS_StateTypedef NewState)
 {
 	if (NewState == BMS_STATE_ENABLE)
@@ -285,6 +339,12 @@ void BMS_MonitorStateBatVoltage(BMS_StateTypedef NewState)
 	}
 }
 
+/**
+ * @brief 开启或关闭电芯温度采样。
+ * @param NewState 采样功能状态。
+ * @return 无。
+ * @note 温度数据的有效性还取决于硬件温度通道配置和传感器连接状态。
+ */
 void BMS_MonitorStateCellTemp(BMS_StateTypedef NewState)
 {
 	if (NewState == BMS_STATE_ENABLE)
@@ -297,6 +357,12 @@ void BMS_MonitorStateCellTemp(BMS_StateTypedef NewState)
 	}	
 }
 
+/**
+ * @brief 开启或关闭电池电流采样。
+ * @param NewState 采样功能状态。
+ * @return 无。
+ * @note 电流采样通常影响充放电模式判断，应避免无故关闭。
+ */
 void BMS_MonitorStateBatCurrent(BMS_StateTypedef NewState)
 {
 	if (NewState == BMS_STATE_ENABLE)

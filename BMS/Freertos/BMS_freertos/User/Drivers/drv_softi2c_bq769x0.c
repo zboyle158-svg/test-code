@@ -117,6 +117,7 @@ static void BQ769X0_GpioInit(void)
 }
 */
 
+/** @brief 将TS1引脚配置为输出模式，用于控制温度采样相关硬件。 */
 static void BQ769X0_TS1_SetOutMode(void)
 {
     GPIO_InitTypeDef GPIO_InitStruct;
@@ -129,6 +130,7 @@ static void BQ769X0_TS1_SetOutMode(void)
     HAL_GPIO_Init(BQ769X0_TS1_GPIO_Port, &GPIO_InitStruct);
 }
 
+/** @brief 将TS1引脚配置为输入模式，用于读取温度传感器信号。 */
 static void BQ769X0_TS1_SetInMode(void)
 {
     GPIO_InitTypeDef GPIO_InitStruct;
@@ -154,6 +156,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 /************************************** utils **********************************************/
 
 // 将采集到的热敏电阻ADC值，转换成实际的温度值
+/** @brief 将BQ769x0 ADC温度原始值转换为摄氏温度。参数为ADC采样值，返回温度值；转换参数来自芯片校准配置。 */
 static int16_t TempChange(uint16_t uiADCV)
 {	
 	uint8_t ucA = 32, TemNK = 0;
@@ -227,6 +230,7 @@ static int16_t TempChange(uint16_t uiADCV)
 }
 
 // CRC8校验
+/** @brief 计算BQ769x0通信帧CRC-8。参数为数据地址、长度和CRC初始键值，返回CRC结果；用于校验通信完整性。 */
 static uint8_t CRC8(uint8_t *ptr, uint8_t len, uint8_t key)
 {
 	uint8_t i, crc=0;
@@ -259,6 +263,7 @@ static uint8_t CRC8(uint8_t *ptr, uint8_t len, uint8_t key)
 
 /********************************** write and read ****************************************/
 
+/** @brief 向BQ769x0指定寄存器写入一个字节。失败返回false；该接口不附加CRC。 */
 static bool BQ769X0_WriteRegisterByte(uint8_t Register, uint8_t data)
 {
     uint8_t dataBuffer[2] = {Register, data};
@@ -280,6 +285,7 @@ static bool BQ769X0_WriteRegisterByte(uint8_t Register, uint8_t data)
     return true;
 }
 
+/** @brief 向BQ769x0指定寄存器写入一个字节并附加CRC校验。返回true表示底层I2C传输成功。 */
 static bool BQ769X0_WriteRegisterByteWithCRC(uint8_t Register, uint8_t data)
 {
     uint8_t dataBuffer[4];
@@ -306,6 +312,7 @@ static bool BQ769X0_WriteRegisterByteWithCRC(uint8_t Register, uint8_t data)
 }
 
 
+/** @brief 向BQ769x0写入一个16位寄存器值并附加CRC。注意高低字节顺序必须符合芯片手册。 */
 static bool BQ769X0_WriteRegisterWordWithCRC(uint8_t Register, uint16_t data)
 {
     uint8_t dataBuffer[6];
@@ -333,6 +340,7 @@ static bool BQ769X0_WriteRegisterWordWithCRC(uint8_t Register, uint16_t data)
 }
 
 
+/** @brief 向BQ769x0连续写入数据块并为通信帧附加CRC。参数包含起始地址、缓冲区和长度。 */
 static bool BQ769X0_WriteBlockWithCRC(uint8_t startAddress, uint8_t *buffer, uint8_t length)
 {
 	uint8_t index;
@@ -380,6 +388,7 @@ static bool BQ769X0_WriteBlockWithCRC(uint8_t startAddress, uint8_t *buffer, uin
 
 
 
+/** @brief 读取BQ769x0指定寄存器的一个字节。数据通过data指针返回。 */
 static bool BQ769X0_ReadRegisterByte(uint8_t Register, uint8_t *data)
 {  	
 	struct I2C_MessageTypeDef msg[2] = {0};
@@ -403,6 +412,7 @@ static bool BQ769X0_ReadRegisterByte(uint8_t Register, uint8_t *data)
     return true;
 }
 
+/** @brief 读取一个寄存器字节并校验返回CRC。校验失败时返回false。 */
 static bool BQ769X0_ReadRegisterByteWithCRC(uint8_t Register, uint8_t *data)
 {  	
 	uint8_t readBuffer[2], crcInput[2], crcValue;
@@ -443,6 +453,7 @@ static bool BQ769X0_ReadRegisterByteWithCRC(uint8_t Register, uint8_t *data)
 
 
 
+/** @brief 读取一个16位寄存器值并校验CRC。返回值通过data指针输出。 */
 static bool BQ769X0_ReadRegisterWordWithCRC(uint8_t Register, uint16_t *data)
 {  	
 	uint8_t readBuffer[4], crcInput[2], crcValue;
@@ -488,6 +499,7 @@ static bool BQ769X0_ReadRegisterWordWithCRC(uint8_t Register, uint16_t *data)
 	return true;
 }
 
+/** @brief 读取BQ769x0连续数据块并校验CRC。调用者必须保证buffer容量不小于length。 */
 static bool BQ769X0_ReadBlockWithCRC(uint8_t Register, uint8_t *buffer, uint8_t length)
 {  	
 	uint8_t index, crcValue, crcInput[2];
@@ -572,6 +584,7 @@ static bool BQ769X0_ReadBlockWithCRC(uint8_t Register, uint8_t *buffer, uint8_t 
 /**************************************** 传感数据采集 *****************************************/
 
 /* 更新单节电芯电压 250ms更新一次 */
+/** @brief 读取并更新全部电芯电压数据，结果写入BMS监控数据结构。 */
 void BQ769X0_UpdateCellVolt(void)
 {
 	uint8_t index = 0;
@@ -598,6 +611,7 @@ void BQ769X0_UpdateCellVolt(void)
 
 
 /* 热敏电阻温度 2s更新一次 */
+/** @brief 读取TS温度通道并转换为摄氏温度，更新BMS温度数据。 */
 void BQ769X0_UpdateTsTemp(void)
 {
 	uint8_t index;
@@ -633,6 +647,7 @@ void BQ769X0_UpdateTsTemp(void)
 
 
 /* 获取ic内部温度,2s更新一次,未测试好 */
+/** @brief 读取BQ769x0芯片内部温度并更新监控数据。 */
 void BQ769X0_UpdateDieTemp(void)
 {
 	uint16_t adc_value = 0;
@@ -659,6 +674,7 @@ void BQ769X0_UpdateDieTemp(void)
 
 
 /* 更新总电流 250ms更新一次 */
+/** @brief 读取库仑计采样值并换算为电池电流，正负方向由硬件定义。 */
 void BQ769X0_UpdateCurrent(void)
 {
 	int32_t temp;
@@ -683,6 +699,7 @@ void BQ769X0_UpdateCurrent(void)
 
 
 /* 更新总电压 250ms更新一次 */
+/** @brief 读取并更新电池总电压。函数名保留原工程拼写。 */
 void BQ769X0_UpadteBatVolt(void)
 {
 	uint16_t adc_value;
@@ -701,6 +718,7 @@ void BQ769X0_UpadteBatVolt(void)
 
 
 // 报警处理
+/** @brief 处理BQ769x0 ALERT告警，包括过压、欠压、过流和短路等状态。 */
 static void BQ769X0_AlertHandler(void)
 {
 	uint8_t reg_value = 0, write_value = 0;
@@ -753,6 +771,7 @@ static void BQ769X0_AlertHandler(void)
 
 
 // 获取增益和偏移量
+/** @brief 读取BQ769x0 ADC增益和偏移校准参数，供后续电压、电流和温度换算使用。 */
 void BQ769X0_GetADCGainOffset(void)
 {
 	BQ769X0_ReadRegisterByteWithCRC(ADCGAIN1, &(Registers.ADCGain1.ADCGain1Byte));
@@ -779,6 +798,7 @@ void BQ769X0_GetADCGainOffset(void)
 
 
 // 配置寄存器
+/** @brief 根据初始化参数配置BQ769x0保护阈值、延时、采样和控制寄存器。 */
 static void BQ769X0_Configuration(void)
 {
 	unsigned char ReadBuffer[8];
@@ -827,6 +847,7 @@ static void BQ769X0_Configuration(void)
 
 // 检测是否接了负载
 // 只有在没使能充电的情况下且CHG引脚电压大于0.7V才会检测到负载
+/** @brief 检测BQ769x0及电池负载状态。返回true表示检测到有效设备或负载。 */
 bool BQ769X0_LoadDetect(void)
 {
 	BQ769X0_ReadRegisterWordWithCRC(SYS_CTRL1, (uint16_t *)&Registers.SysCtrl1.SysCtrl1Byte);
@@ -841,6 +862,7 @@ bool BQ769X0_LoadDetect(void)
 }
 
 // 唤醒BQ芯片
+/** @brief 唤醒BQ769x0，使芯片从休眠或运输状态进入正常工作状态。 */
 void BQ769X0_Wakeup(void)
 {
     BQ769X0_TS1_SetOutMode();
@@ -852,6 +874,7 @@ void BQ769X0_Wakeup(void)
 }
 
 // 进入低功率模式
+/** @brief 使BQ769x0进入运输/船运低功耗模式。进入前应确认系统不再需要采样和保护控制。 */
 void BQ769X0_EntryShip(void)
 {
 	BQ769X0_WriteRegisterByteWithCRC(SYS_CTRL1, 0x00);
@@ -860,6 +883,7 @@ void BQ769X0_EntryShip(void)
 }
 
 // 控制充放电开关
+/** @brief 控制充电或放电MOS通道。参数指定CHG/DSG和启停状态；执行结果影响电池功率路径。 */
 void BQ769X0_ControlDSGOrCHG(BQ769X0_ControlTypedef ControlType, BQ769X0_StateTypedef NewState)
 {
 	if (NewState == BQ_STATE_ENABLE)
@@ -875,6 +899,7 @@ void BQ769X0_ControlDSGOrCHG(BQ769X0_ControlTypedef ControlType, BQ769X0_StateTy
 
 
 // 设置某个电芯均衡状态，可以位与多节，支持BQ769X0系列(相邻单元不能同时均衡)
+/** @brief 控制指定电芯的被动均衡开关。CellIndex为电芯位图，NewState为启用或禁用。 */
 void BQ769X0_CellBalanceControl(BQ769X0_CellIndexTypedef CellIndex, BQ769X0_StateTypedef NewState)
 {
 	static uint8_t CELL_BAL_VALUE[3] = {0};
@@ -897,42 +922,42 @@ void BQ769X0_CellBalanceControl(BQ769X0_CellIndexTypedef CellIndex, BQ769X0_Stat
 
 
 
-
-
-
-
-
-
+/** @brief 设置短路保护延时，参数必须使用合法枚举值。 */
 void BQ769X0_SCDDelaySet(BQ769X0_SCDDelayTypedef SCDDelay)
 {
 	Registers.Protect1.Protect1Bit.SCD_DELAY = SCDDelay;
 	BQ769X0_WriteRegisterByteWithCRC(PROTECT1, Registers.Protect1.Protect1Bit.SCD_DELAY);
 }
 
+/** @brief 设置放电过流保护延时，延时越短响应越快但越容易受瞬态干扰影响。 */
 void BQ769X0_OCDDelaySet(BQ769X0_OCDDelayTypedef OCDDelay)
 {
 	Registers.Protect2.Protect2Bit.OCD_DELAY = OCDDelay;
 	BQ769X0_WriteRegisterByteWithCRC(PROTECT2, Registers.Protect2.Protect2Bit.OCD_DELAY);
 }
 
+/** @brief 设置欠压保护延时。 */
 void BQ769X0_UVDelaySet(BQ769X0_UVDelayTypedef UVDelay)
 {
 	Registers.Protect3.Protect3Bit.UV_DELAY = UVDelay;
 	BQ769X0_WriteRegisterByteWithCRC(PROTECT3, Registers.Protect3.Protect3Bit.UV_DELAY);
 }
 
+/** @brief 设置过压保护延时。 */
 void BQ769X0_OVDelaySet(BQ769X0_OVDelayTypedef OVDelay)
 {
 	Registers.Protect3.Protect3Bit.OV_DELAY = OVDelay;
 	BQ769X0_WriteRegisterByteWithCRC(PROTECT3, Registers.Protect3.Protect3Bit.OV_DELAY);
 }
 
+/** @brief 设置欠压保护阈值，单位和编码必须符合BQ769x0寄存器规定。 */
 void BQ769X0_UVPThresholdSet(uint16_t UVPThreshold)
 {
 	Registers.UVTrip = (uint8_t)((((uint16_t)((UVPThreshold - Adcoffset)/Gain/* + 0.5*/) - UV_THRESH_BASE) >> 4) & 0xFF);
 	BQ769X0_WriteRegisterByteWithCRC(UV_TRIP, Registers.UVTrip);
 }
 
+/** @brief 设置过压保护阈值，必须结合电芯化学体系选择。 */
 void BQ769X0_OVPThresholdSet(uint16_t OVPThreshold)
 {
     Registers.OVTrip = (uint8_t)((((uint16_t)((OVPThreshold - Adcoffset)/Gain/* + 0.5*/) - OV_THRESH_BASE) >> 4) & 0xFF);
@@ -945,6 +970,7 @@ void BQ769X0_OVPThresholdSet(uint16_t OVPThreshold)
 
 
 // BQ芯片初始化
+/** @brief 初始化BQ769x0驱动、GPIO、校准参数、保护配置和告警回调。InitData提供硬件回调和保护配置。 */
 void BQ769X0_Initialize(BQ769X0_InitDataTypedef *InitData)
 {
     //BQ76X0_GpioInit();

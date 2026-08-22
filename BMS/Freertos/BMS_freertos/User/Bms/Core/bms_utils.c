@@ -2,6 +2,7 @@
 
 
 // 查找一个数是否存在数组中
+/** @brief 在有序数组中执行二分查找。@param nums数组 @param left左边界 @param right右边界 @param target目标值 @return目标索引，未找到时返回实现约定的失败值。 */
 int binarySearch(uint16_t *nums, uint8_t left, uint8_t right, uint16_t target)  
 {
     while (left <= right) 
@@ -29,6 +30,7 @@ int binarySearch(uint16_t *nums, uint8_t left, uint8_t right, uint16_t target)
 // start_pos：起始位置
 // end_pos：结束位置
 // 返回-1：表示不存在这个数
+/** @brief 查找有序数组中目标值的右边界。@return最后一个不大于目标值的位置。 */
 int right_bound(uint16_t *nums, uint8_t start_pos, uint8_t end_pos, uint16_t target) 
 {
 	uint16_t left = start_pos;
@@ -62,6 +64,7 @@ int right_bound(uint16_t *nums, uint8_t start_pos, uint8_t end_pos, uint16_t tar
 // start_pos：起始位置
 // end_pos：结束位置
 // 返回-1：表示不存在这个数
+/** @brief 查找有序数组中目标值的左边界。@return第一个不小于目标值的位置。 */
 int left_bound(uint16_t *nums, uint16_t start_pos, uint16_t end_pos, uint16_t target) 
 {
 	uint16_t left = start_pos;
@@ -96,6 +99,7 @@ int left_bound(uint16_t *nums, uint16_t start_pos, uint16_t end_pos, uint16_t ta
 
 
 // 冒泡排序float类型
+/** @brief 对浮点数组执行冒泡排序。@param a待排序数组 @param n元素数量。 */
 void BubbleFloat(float a[], uint32_t n)
 {
 	float t;
@@ -141,26 +145,31 @@ void bubble(int a[],int n)
 
 
 
+/** @brief 比较两个int8_t值，供qsort等排序接口使用。@return大于、等于或小于0。 */
 int cmp_int8_t(const void *e1, const void *e2)
 {
     return *(int8_t *)e1 - *(int8_t *)e2;
 }
 
+/** @brief 比较两个uint8_t值，供qsort等排序接口使用。 */
 int cmp_uint8_t(const void *e1, const void *e2)
 {
     return *(uint8_t *)e1 - *(uint8_t *)e2;
 }
 
+/** @brief 比较两个int16_t值，供qsort等排序接口使用。 */
 int cmp_int16_t(const void *e1, const void *e2)
 {
     return *(int16_t *)e1 - *(int16_t *)e2;
 }
 
+/** @brief 比较两个uint16_t值，供qsort等排序接口使用。 */
 int cmp_uint16_t(const void *e1, const void *e2)
 {
     return *(uint16_t *)e1 - *(uint16_t *)e2;
 }
 
+/** @brief 比较两个float值。@note 仅按大小比较，不处理NaN。 */
 int cmp_float(const void *e1, const void *e2)
 {
 	if (*(float *)e1 > *(float *)e2)
@@ -171,6 +180,7 @@ int cmp_float(const void *e1, const void *e2)
     return 0;    
 }
 
+/** @brief 比较两个double值。@note 仅按大小比较，不处理NaN。 */
 int cmp_double(const void *e1, const void *e2)
 {
 	if (*(double *)e1 > *(double *)e2)
@@ -183,6 +193,7 @@ int cmp_double(const void *e1, const void *e2)
 
 
 // 交换元素,任意类型
+/** @brief 按字节交换两块等长内存。@param width待交换字节数。 */
 void swap(uint8_t *buf1, uint8_t *buf2, uint32_t width)
 {
 	uint8_t temp;
@@ -205,6 +216,7 @@ void swap(uint8_t *buf1, uint8_t *buf2, uint32_t width)
 // width:	单个元素的宽度
 // cmp:		不明确类型的情况下,两个数据的对比结果必须由用户完成
 //			如果e1比e2大则cmp应返回大于0的数,反之则返回小于等于0的数
+/** @brief 使用比较回调对通用数组执行冒泡排序。@param base数组首地址 @param sz元素数量 @param width单个元素字节数 @param cmp比较回调。 */
 void BubbleSort(void *base, uint32_t sz, uint32_t width, int (*cmp)(void *e1, void *e2))
 {
     uint32_t i = 0, j = 0;

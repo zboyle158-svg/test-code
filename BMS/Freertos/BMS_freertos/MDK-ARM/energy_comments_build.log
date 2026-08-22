@@ -1,0 +1,50 @@
+*** Using Compiler 'V5.06 update 6 (build 750)', folder: 'I:\keil11\ARM\ARMCC\Bin'
+Build target 'BMS'
+compiling bms_global.c...
+compiling freertos.c...
+compiling bms_energy.c...
+..\User\Bms\Core\bms_energy.c(339): error:  #29: expected an expression
+  					*/
+..\User\Bms\Core\bms_energy.c(368): warning:  #12-D: parsing restarts here after previous syntax error
+  									result = true;
+..\User\Bms\Core\bms_energy.c(301): warning:  #177-D: variable "CmpVoltage"  was declared but never referenced
+  					float CmpVoltage;
+..\User\Bms\Core\bms_energy.c(374): error:  #20: identifier "CellNumber" is undefined
+  								if (((BMS_EnergyData.BalanceRecord & (1 << (CellNumber - 1))) == 0) &&
+..\User\Bms\Core\bms_energy.c(377): error:  #20: identifier "result" is undefined
+  									result = true;
+..\User\Bms\Core\bms_energy.c(381): error:  #20: identifier "result" is undefined
+  							if (result == true)
+..\User\Bms\Core\bms_energy.c(383): error:  #20: identifier "CellNumber" is undefined
+  								BMS_INFO("Balance Cell:%d", CellNumber + 1);
+..\User\Bms\Core\bms_energy.c(384): error:  #20: identifier "CellNumber" is undefined
+  								BMS_EnergyData.BalanceRecord |= 1 << CellNumber;
+..\User\Bms\Core\bms_energy.c(389): error:  #116: a break statement may only be used within a loop or switch
+  							break;
+..\User\Bms\Core\bms_energy.c(416): error:  #77-D: this declaration has no storage class or type specifier
+  				BMS_EnergyData.BalanceRecord = BMS_CELL_NULL;
+..\User\Bms\Core\bms_energy.c(416): error:  #147: declaration is incompatible with "BMS_EnergyDataTypedef BMS_EnergyData"  (declared at line 37)
+  				BMS_EnergyData.BalanceRecord = BMS_CELL_NULL;
+..\User\Bms\Core\bms_energy.c(416): error:  #65: expected a ";"
+  				BMS_EnergyData.BalanceRecord = BMS_CELL_NULL;
+..\User\Bms\Core\bms_energy.c(417): error:  #260-D: explicit type is missing ("int" assumed)
+  				osSemaphoreRelease(BalanceSem);
+..\User\Bms\Core\bms_energy.c(417): error:  #92: identifier-list parameters may only be used in a function definition
+  				osSemaphoreRelease(BalanceSem);
+..\User\Bms\Core\bms_energy.c(418): error:  #169: expected a declaration
+  			}
+..\User\Bms\Core\bms_energy.c(421): error:  #169: expected a declaration
+  		}
+..\User\Bms\Core\bms_energy.c(425): warning: At end of source:  #12-D: parsing restarts here after previous syntax error
+..\User\Bms\Core\bms_energy.c: 3 warnings, 14 errors
+compiling main.c...
+compiling bms_info.c...
+compiling bms_analysis.c...
+compiling bms_monitor.c...
+compiling bms_app.c...
+compiling bms_hal_control.c...
+compiling bms_protect.c...
+compiling bms_hal_monitor.c...
+"BMS\BMS.axf" - 14 Error(s), 3 Warning(s).
+Target not created.
+Build Time Elapsed:  00:00:09

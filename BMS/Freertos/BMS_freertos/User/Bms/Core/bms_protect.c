@@ -155,14 +155,6 @@ static void BMS_ProtectStartTimer(uint32_t sec)
 }
 
 
-
-
-
-
-
-
-
-
 // 充电监控:过流、过温、低温
 // 触发三种保护里面的一种就会关闭充电,直到达到恢复条件
 static void BMS_ChargeMonitor(void)
